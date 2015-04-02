@@ -5,15 +5,28 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class LoginActivity extends ActionBarActivity {
 
+    EditText mEmailField;
+    EditText mPasswordField;
     Button mLoginButton;
     Button mCreateAccountButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /** Grab instances of the email and password fields.*/
+        mEmailField = (EditText) findViewById(R.id.email_field);
+        mPasswordField = (EditText) findViewById(R.id.password_field);
+
+        /** Grab instances of the login and new account buttons.*/
+        mLoginButton = (Button) findViewById(R.id.login_button);
+        mCreateAccountButton = (Button) findViewById(R.id.new_account_button);
+
+        /** Set the first page view with activity_login.xml. */
         setContentView(R.layout.activity_login);
     }
 
@@ -30,6 +43,7 @@ public class LoginActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement

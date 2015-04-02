@@ -1,12 +1,14 @@
 <resources>
     <string name="app_name">Phase_One</string>
-    <string name="password">Password</string>
+    <string name="password">Password: </string>
     <string name="password_prompt">Enter Password</string>
     <string name="password_prompt_reenter">Re-enter Password</string>
-    <string name="email">Email Address</string>
-    <string name="email_prompt">Enter Email Address</string>
+    <string name="email">Email Address: </string>
+    <string name="email_prompt">New Email Address</string>
     <string name="login">Login</string>
     <string name="create_account">Create New Account</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="enter_password">Enter Password</string>
     <string name="geo_tracker">GeoTracker</string>
     <string name="action_settings">Settings</string>
 </resources>
