@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Phase_One</string>
+    <string name="geo_tracker">GeoTracker</string>
+    <string name="action_settings">Settings</string>
+</resources>
