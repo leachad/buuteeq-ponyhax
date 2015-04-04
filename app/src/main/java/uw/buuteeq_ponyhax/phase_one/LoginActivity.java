@@ -1,9 +1,11 @@
 package uw.buuteeq_ponyhax.phase_one;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -28,6 +30,14 @@ public class LoginActivity extends ActionBarActivity {
 
         /** Set the first page view with activity_login.xml. */
         setContentView(R.layout.activity_login);
+
+        (findViewById(R.id.new_account_button)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent myIntent = new Intent(LoginActivity.this, RegisterActivity.class);
+                    startActivity(myIntent);
+                }
+            });
     }
 
 
