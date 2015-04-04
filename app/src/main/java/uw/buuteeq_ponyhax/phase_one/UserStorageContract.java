@@ -24,6 +24,7 @@ public final class UserStorageContract {
         public static final String PASSWORD = "passWord";
         public static final String SECURITY_QUESTION = "securityQuestion";
         public static final String SECURITY_ANSWER = "securityAnswer";
+        public static final String COLUMN_NAME_NULLABLE = null;
 
 
     }

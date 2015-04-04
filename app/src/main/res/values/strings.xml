@@ -14,12 +14,12 @@
     <string name="geo_tracker">GeoTracker</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_register">RegisterActivity</string>
-
-
+    <string name="security_question">Security Question</string>
+    <string name="security_answer">Question Answer</string>
+    <string name="security_answer_reenter">Re-enter Question Answer</string>
     <string name="nameField">Full Name</string>
     <string name="userNamePrompt">User Name</string>
-
-    <string name="hello_world">Hello world!</string>
+    <string name="confirmButton">Confirm</string>
 
 
 </resources>
