@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="uw.buuteeq_ponyhax.phase_one" >
+    package="uw.buuteeq_ponyhax.app" >
 
     <application
         android:allowBackup="true"
@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".LoginActivity"
+            android:name="uw.buuteeq_ponyhax.app.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,12 +17,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RegisterActivity"
+            android:name="uw.buuteeq_ponyhax.app.RegisterActivity"
             android:label="@string/title_activity_register"
-            android:parentActivityName=".LoginActivity" >
+            android:parentActivityName="uw.buuteeq_ponyhax.app.LoginActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="uw.buuteeq_ponyhax.phase_one.LoginActivity" />
+                android:value="uw.buuteeq_ponyhax.app.LoginActivity" />
         </activity>
     </application>
 

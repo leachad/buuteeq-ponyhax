@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="uw.buuteeq_ponyhax.phase_one.RegisterActivity">
+    tools:context="uw.buuteeq_ponyhax.app.RegisterActivity">
 
     <LinearLayout
         android:layout_width="wrap_content"

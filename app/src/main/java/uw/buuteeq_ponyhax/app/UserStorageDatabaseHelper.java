@@ -1,4 +1,4 @@
-package uw.buuteeq_ponyhax.phase_one;
+package uw.buuteeq_ponyhax.app;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;

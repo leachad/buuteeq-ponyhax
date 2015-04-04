@@ -1,4 +1,4 @@
-package uw.buuteeq_ponyhax.phase_one;
+package uw.buuteeq_ponyhax.app;
 
 import android.content.ContentValues;
 import android.database.DatabaseUtils;
