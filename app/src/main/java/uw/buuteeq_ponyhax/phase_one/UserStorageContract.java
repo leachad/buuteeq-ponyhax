@@ -3,7 +3,9 @@ package uw.buuteeq_ponyhax.phase_one;
 import android.provider.BaseColumns;
 
 /**
- * Created by Andrew on 4/4/2015.
+ * User Storage Contract class used for implementing a SQLite database.
+ * @author Andrew
+ * @version 4.4.15
  */
 public final class UserStorageContract {
 

@@ -63,4 +63,45 @@ public class LoginActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Private helper method that will aid the LoginListener in determining
+     * whether or not the user is already registered in the system.
+     * @return userFound
+     */
+    private boolean checkUserCredentials(){
+        boolean userFound = false;
+
+        /**
+         * TODO I'll mimic the logic in here from the RegisterActivity class
+         * for querying the database in order to determine if the user exists.
+         */
+        return userFound;
+    }
+
+
+    /**
+     * Private class to implement a LoginListener
+     * @author Andrew
+     * @version 4.4.15
+     */
+    private class LoginListener implements View.OnClickListener {
+
+        /**
+         * Constructor in case we need to pass any data to the login
+         * listener.
+         */
+        private LoginListener() {
+            //Avoids instantiation of the default constructor
+        }
+        @Override
+        public void onClick(View v) {
+            if (checkUserCredentials()) {
+               // TODO Decide what Activity will come next.
+               // Example: Intent intent = new Intent(LoginActivity.this, AccountActivity.this);
+            } else {
+                // TODO Toast that displays an error message and clears the password field
+            }
+        }
+    }
 }

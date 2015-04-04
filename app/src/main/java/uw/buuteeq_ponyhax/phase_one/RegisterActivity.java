@@ -1,6 +1,7 @@
 package uw.buuteeq_ponyhax.phase_one;
 
 import android.content.ContentValues;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -30,6 +31,8 @@ public class RegisterActivity extends ActionBarActivity {
         setContentView(R.layout.activity_register);
 
         mDbHelper = new UserStorageDatabaseHelper(getApplicationContext());
+       // getApplicationContext().deleteDatabase(UserStorageDatabaseHelper.DATABASE_NAME);
+        Toast.makeText(getApplicationContext(), "Database has " + DatabaseUtils.queryNumEntries(mDbHelper.getReadableDatabase(), UserStorageContract.UserStorageEntry.TABLE_NAME) + " entries", Toast.LENGTH_SHORT).show();
         /** Find all the EditText widgets.*/
         loadEditTextWidgets();
 
@@ -119,10 +122,12 @@ public class RegisterActivity extends ActionBarActivity {
      * Private helper method to add an entry to the database.
      * TODO Determine if we need an entry id for the table.
      */
-    private void addEntryToDatabase() {
+    private boolean addEntryToDatabase() {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
 
+        /** Get the number of entries before the add.*/
+        long beforeAdd = DatabaseUtils.queryNumEntries(db, UserStorageContract.UserStorageEntry.TABLE_NAME);
         values.put(UserStorageContract.UserStorageEntry.USER_ENTRY_ID, mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].hashCode());
         values.put(UserStorageContract.UserStorageEntry.USERNAME, mNewUserFields[RegisterField.USER_NAME.indexValue].getText().toString());
         values.put(UserStorageContract.UserStorageEntry.EMAIL_ADDRESS, mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getText().toString());
@@ -131,28 +136,40 @@ public class RegisterActivity extends ActionBarActivity {
         values.put(UserStorageContract.UserStorageEntry.SECURITY_ANSWER, mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].getText().toString());
 
         //TODO Determine if we need the returned long from insert a row into the table
-        db.insert(UserStorageContract.UserStorageEntry.TABLE_NAME, UserStorageContract.UserStorageEntry.COLUMN_NAME_NULLABLE, values);
+        db.insertWithOnConflict(UserStorageContract.UserStorageEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+        /** Get the number of entries after the add.*/
+        long afterAdd = DatabaseUtils.queryNumEntries(db, UserStorageContract.UserStorageEntry.TABLE_NAME);
+
+        return !(beforeAdd == afterAdd);
     }
+
+
 
     /**
      * Private helper method to make a bad password toast. Passwords do not match
      */
     private void makeBadPasswordToast() {
-        Toast.makeText(getApplicationContext(), "Passwords do not match!", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Passwords do not match!", Toast.LENGTH_SHORT).show();
     }
 
     /**
      * Private helper method to make a bad security answer toast. Answers do not match
      */
     private void makeBadSecurityAnswerToast() {
-        Toast.makeText(getApplicationContext(), "Security Question Answers do not match!", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Security Question Answers do not match!", Toast.LENGTH_SHORT).show();
     }
 
     /**
      * Private helper method to make a bad field entry toast. Not all fields contain data.
      */
     private void makeBadFieldEntryToast() {
-        Toast.makeText(getApplicationContext(), "All Fields must have values!", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "All Fields must have values!", Toast.LENGTH_SHORT).show();
+    }
+
+    /** Private helper method to make a toast when a user already exists in the database.*/
+    private void makeDuplicateEntryToast() {
+        Toast.makeText(getApplicationContext(), "That User already exists!", Toast.LENGTH_SHORT).show();
     }
 
     public static enum RegisterField {
@@ -186,15 +203,27 @@ public class RegisterActivity extends ActionBarActivity {
         public void onClick(View v) {
             //First, need to confirm that all appropriate initial, subsequent fields match
             if (passwordsAgree() && securityAnswersAgree() && allFieldsEntered()) {
-                addEntryToDatabase();
-                // TODO Check for duplicate entries
-                // TODO Clear all text fields.
 
-            } else if (!passwordsAgree() || !securityAnswersAgree() || !allFieldsEntered()) {
+                boolean unique = addEntryToDatabase();
+                if (!unique) {
+                    makeDuplicateEntryToast();
+                } else {
+                    Toast.makeText(getApplicationContext(), "User Added to Database!", Toast.LENGTH_SHORT).show();
+                    //TODO Use the webservice to send out an automated email to finish registration?
+                    //TODO Create a new intent that sends the user to the Agreement Page?
+                }
+
+
+
+            } else if (!passwordsAgree()) {
                 makeBadPasswordToast();
-                makeBadFieldEntryToast();
-                makeBadSecurityAnswerToast();
                 // TODO Clear password entry fields
+            } else if (!securityAnswersAgree()) {
+                makeBadSecurityAnswerToast();
+                // TODO Clear security answer entry fields
+            } else if (!allFieldsEntered()) {
+                makeBadFieldEntryToast();
+                //TODO move cursor to first instance of a blank text field
             }
         }
     }
