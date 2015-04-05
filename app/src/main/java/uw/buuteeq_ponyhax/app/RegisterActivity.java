@@ -213,6 +213,7 @@ public class RegisterActivity extends ActionBarActivity {
                     makeDuplicateEntryToast();
                 } else {
                     Toast.makeText(getApplicationContext(), "User Added to Database!", Toast.LENGTH_SHORT).show();
+                    finish(); // Start next activity here instead of finish(), most likely My Account
                     //TODO Use the webservice to send out an automated email to finish registration?
                     //TODO Create a new intent that sends the user to the Agreement Page?
                 }
