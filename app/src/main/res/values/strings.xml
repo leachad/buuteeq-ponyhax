@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Phase_One</string>
+    <string name="app_name">Geo Tracker Phase_One</string>
     <string name="password">Password: </string>
     <string name="password_prompt">Enter Password</string>
     <string name="password_prompt_reenter">Re-enter Password</string>
     <string name="email">Email Address: </string>
     <string name="email_prompt">New Email Address</string>
     <string name="login">Login</string>
+    <string name="forgot">Forgot Password</string>
     <string name="create_account">Create New Account</string>
     <string name="enter_email">Enter Email</string>
     <string name="enter_password">Enter Password</string>
