@@ -1,26 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Geo Tracker Phase_One</string>
+    <string name="app_name">Buuteeq-Ponyhax Geo-Tracker</string>
     <string name="password">Password: </string>
     <string name="password_prompt">Enter Password</string>
     <string name="password_prompt_reenter">Re-enter Password</string>
     <string name="email">Email Address: </string>
     <string name="email_prompt">New Email Address</string>
     <string name="login">Login</string>
-    <string name="forgot">Forgot Password</string>
     <string name="create_account">Create New Account</string>
+    <string name="submit">Submit</string>
     <string name="enter_email">Enter Email</string>
     <string name="enter_password">Enter Password</string>
     <string name="geo_tracker">GeoTracker</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_register">User Registration</string>
     <string name="security_question">Security Question</string>
     <string name="security_answer">Question Answer</string>
     <string name="security_answer_reenter">Re-enter Question Answer</string>
     <string name="nameField">Full Name</string>
     <string name="userNamePrompt">User Name</string>
     <string name="confirmButton">Confirm</string>
+    <string name="title_activity_my_account">MyAccount</string>
+
+    <string name="title_section1">My Map</string>
+    <string name="title_section2">My Stats</string>
+    <string name="title_section3">Account Details</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
 
 
 </resources>
