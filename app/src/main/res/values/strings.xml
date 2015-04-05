@@ -12,6 +12,7 @@
     <string name="submit">Submit</string>
     <string name="enter_email">Enter Email</string>
     <string name="enter_password">Enter Password</string>
+    <string name="forgot">Forgot Password</string>
     <string name="geo_tracker">GeoTracker</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_register">User Registration</string>
@@ -21,6 +22,16 @@
     <string name="nameField">Full Name</string>
     <string name="userNamePrompt">User Name</string>
     <string name="confirmButton">Confirm</string>
+    <string name="title_activity_my_account">MyAccount</string>
+
+    <string name="title_section1">My Map</string>
+    <string name="title_section2">My Stats</string>
+    <string name="title_section3">Account Details</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
 
 
 </resources>
