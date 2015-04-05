@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<<<<<<< HEAD
+    <string name="app_name">Geo Tracker Phase_One</string>
+=======
+    <string name="app_name">GeoTracker</string>
+>>>>>>> c126c4ef5c8112a8d36e0c9468216282811cfc48
+    <string name="password">Password: </string>
+    <string name="password_prompt">Enter Password</string>
+    <string name="password_prompt_reenter">Re-enter Password</string>
+    <string name="email">Email Address: </string>
+    <string name="email_prompt">New Email Address</string>
+    <string name="login">Login</string>
+    <string name="forgot">Forgot Password</string>
+    <string name="create_account">Create New Account</string>
+    <string name="submit">Submit</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="geo_tracker">GeoTracker</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_register">User Registration</string>
+    <string name="security_question">Security Question</string>
+    <string name="security_answer">Question Answer</string>
+    <string name="security_answer_reenter">Re-enter Question Answer</string>
+    <string name="nameField">Full Name</string>
+    <string name="userNamePrompt">User Name</string>
+    <string name="confirmButton">Confirm</string>
+
+
+</resources>

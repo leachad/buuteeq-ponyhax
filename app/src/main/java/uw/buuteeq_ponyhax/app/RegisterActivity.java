@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -39,6 +40,9 @@ public class RegisterActivity extends ActionBarActivity {
         /** Instance of the confirm button registered with the Confirm Listener.*/
         Button mConfirmButton = (Button) findViewById(R.id.confirmNewUserButton);
         mConfirmButton.setOnClickListener(new ConfirmUserListener());
+
+        //This line keeps the email field from being selected automatically when the activity is started
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
 
@@ -209,6 +213,7 @@ public class RegisterActivity extends ActionBarActivity {
                     makeDuplicateEntryToast();
                 } else {
                     Toast.makeText(getApplicationContext(), "User Added to Database!", Toast.LENGTH_SHORT).show();
+                    finish(); // Start next activity here instead of finish(), most likely My Account
                     //TODO Use the webservice to send out an automated email to finish registration?
                     //TODO Create a new intent that sends the user to the Agreement Page?
                 }

@@ -6,10 +6,11 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/CustomActionBarTheme" >
         <activity
             android:name="uw.buuteeq_ponyhax.app.LoginActivity"
-            android:label="@string/app_name" >
+            android:theme="@style/AppTheme"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,6 +20,7 @@
         <activity
             android:name="uw.buuteeq_ponyhax.app.RegisterActivity"
             android:label="@string/title_activity_register"
+            android:theme="@style/AppTheme"
             android:parentActivityName="uw.buuteeq_ponyhax.app.LoginActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
