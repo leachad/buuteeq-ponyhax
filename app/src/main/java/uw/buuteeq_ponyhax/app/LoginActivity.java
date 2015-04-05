@@ -31,10 +31,12 @@ public class LoginActivity extends Activity {
         /** Set the first page view with activity_login.xml. */
         setContentView(R.layout.activity_login);
 
+        //START ADDING LISTENERS
+
         (findViewById(R.id.login_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(LoginActivity.this, "Login clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Login clicked", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -58,6 +60,8 @@ public class LoginActivity extends Activity {
                 return false;
             }
         });
+
+        //END ADDING LISTENERS
     }
 
 
