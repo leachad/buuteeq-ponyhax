@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Buuteeq-Ponyhax Geo-Tracker</string>
+    <string name="app_name">GeoTracker</string>
     <string name="password">Password: </string>
     <string name="password_prompt">Enter Password</string>
     <string name="password_prompt_reenter">Re-enter Password</string>
