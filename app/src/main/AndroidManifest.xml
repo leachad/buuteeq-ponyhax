@@ -8,9 +8,8 @@
         android:label="@string/app_name"
         android:theme="@style/CustomActionBarTheme" >
         <activity
-            android:name="uw.buuteeq_ponyhax.app.LoginActivity"
-            android:theme="@style/AppTheme"
-            >
+            android:name=".LoginActivity"
+            android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,13 +17,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="uw.buuteeq_ponyhax.app.RegisterActivity"
+            android:name=".RegisterActivity"
             android:label="@string/title_activity_register"
-            android:theme="@style/AppTheme"
-            android:parentActivityName="uw.buuteeq_ponyhax.app.LoginActivity" >
+            android:parentActivityName=".LoginActivity"
+            android:theme="@style/AppTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="uw.buuteeq_ponyhax.app.LoginActivity" />
+        </activity>
+        <activity
+            android:name=".MyAccount"
+            android:label="@string/title_activity_my_account" >
         </activity>
     </application>
 
