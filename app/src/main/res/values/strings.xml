@@ -24,8 +24,8 @@
     <string name="confirmButton">Confirm</string>
     <string name="title_activity_my_account">MyAccount</string>
 
-    <string name="title_section1">My Map</string>
-    <string name="title_section2">My Stats</string>
+    <string name="title_section1">Overview</string>
+    <string name="title_section2">My Map</string>
     <string name="title_section3">Account Details</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
