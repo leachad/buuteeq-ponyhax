@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-<<<<<<< HEAD
-    <string name="app_name">Geo Tracker Phase_One</string>
-=======
     <string name="app_name">GeoTracker</string>
->>>>>>> c126c4ef5c8112a8d36e0c9468216282811cfc48
     <string name="password">Password: </string>
     <string name="password_prompt">Enter Password</string>
     <string name="password_prompt_reenter">Re-enter Password</string>
