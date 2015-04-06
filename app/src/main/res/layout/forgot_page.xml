@@ -1,19 +1,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10dp"
     android:gravity="center"
-    android:background="@color/background_material_dark"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+    style="@style/AppTheme">
 
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Forgot Password? \n Reset it now!"
+        android:text="@string/reset_password"
         android:id="@+id/textView"
+        style="@style/editTextTheme"
         android:textSize="30dp" />
 
     <Space
@@ -29,7 +30,9 @@
         android:ems="10"
         android:id="@+id/editText"
         android:layout_gravity="center_horizontal"
-        android:text="Enter Email Adress" />
+        android:text="Enter Email Adress"
+        style="@style/editTextTheme"
+        />
 
     <Space
         android:layout_width="match_parent"
@@ -38,14 +41,16 @@
         android:layout_weight="0.07" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Your Security Question Here :)"
         android:id="@+id/textView2"
         android:layout_gravity="center_horizontal"
         android:textSize="20dp"
-        android:layout_weight="0.21" />
+        android:layout_weight="0.21"
+        style="@style/editTextTheme"
+        />
 
     <EditText
         android:layout_width="match_parent"
@@ -54,7 +59,9 @@
         android:layout_gravity="center_horizontal"
         android:text="Enter Your Security Answer"
         android:paddingBottom="10dp"
-        android:paddingTop="30dp" />
+        android:paddingTop="30dp"
+        style="@style/editTextTheme"
+        />
 
     <Space
         android:layout_width="match_parent"
@@ -65,9 +72,11 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="@string/submit"
         android:id="@+id/button2"
-        android:layout_gravity="center_horizontal"
-        android:padding="20dp" />
+        android:layout_gravity="left"
+        android:padding="20dp"
+        style="@style/buttonTheme"
+        />
 
 </LinearLayout>

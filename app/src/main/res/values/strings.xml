@@ -23,6 +23,7 @@
     <string name="userNamePrompt">User Name</string>
     <string name="confirmButton">Confirm</string>
     <string name="title_activity_my_account">MyAccount</string>
+    <string name="reset_password">Password Reset</string>
 
     <string name="title_section1">Overview</string>
     <string name="title_section2">My Map</string>
