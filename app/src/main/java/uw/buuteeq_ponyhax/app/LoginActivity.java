@@ -37,6 +37,8 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "Login clicked", Toast.LENGTH_SHORT).show();
+                Intent myIntent = new Intent(LoginActivity.this, MyAccount.class);
+                startActivity(myIntent);
             }
         });
 

@@ -30,7 +30,7 @@
         android:ems="10"
         android:id="@+id/editText"
         android:layout_gravity="center_horizontal"
-        android:text="Enter Email Adress"
+        android:text="@string/enter_email"
         style="@style/editTextTheme"
         />
 
