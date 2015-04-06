@@ -1,6 +1,7 @@
 package uw.buuteeq_ponyhax.app;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -123,6 +124,24 @@ public class RegisterActivity extends ActionBarActivity {
     }
 
     /**
+     * Private helper method to determine where the first empty field
+     * exists in the array of EditText widgets.
+     *
+     * @return index of the first empty EditText Widget
+     */
+    private int getFirstOccurenceEmptyField() {
+        int firstOccurrence = 0;
+
+        for (int i = 0; i < mNewUserFields.length; i++) {
+            if (mNewUserFields[i].getText().toString().trim().matches("")) {
+                firstOccurrence = i;
+                break;
+            }
+        }
+        return firstOccurrence;
+    }
+
+    /**
      * Private helper method to add an entry to the database.
      * TODO Determine if we need an entry id for the table.
      */
@@ -213,22 +232,25 @@ public class RegisterActivity extends ActionBarActivity {
                     makeDuplicateEntryToast();
                 } else {
                     Toast.makeText(getApplicationContext(), "User Added to Database!", Toast.LENGTH_SHORT).show();
-                    finish(); // Start next activity here instead of finish(), most likely My Account
+                    Intent intent = new Intent(RegisterActivity.this, AgreementActivity.class);
+                    startActivity(intent);
                     //TODO Use the webservice to send out an automated email to finish registration?
-                    //TODO Create a new intent that sends the user to the Agreement Page?
                 }
 
 
 
             } else if (!passwordsAgree()) {
                 makeBadPasswordToast();
-                // TODO Clear password entry fields
+                mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].setText("");
+                mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue].setText("");
             } else if (!securityAnswersAgree()) {
                 makeBadSecurityAnswerToast();
-                // TODO Clear security answer entry fields
+                mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].setText("");
+                mNewUserFields[RegisterField.SECURITY_ANSWER_SUBSEQUENT.indexValue].setText("");
             } else if (!allFieldsEntered()) {
                 makeBadFieldEntryToast();
-                //TODO move cursor to first instance of a blank text field
+                int resumeCursor = getFirstOccurenceEmptyField();
+                mNewUserFields[resumeCursor].requestFocus();
             }
         }
     }

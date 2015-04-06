@@ -2,52 +2,49 @@ package uw.buuteeq_ponyhax.app;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 public class LoginActivity extends Activity {
+    private UserStorageDatabaseHelper mDbHelper;
 
-    EditText mEmailField;
-    EditText mPasswordField;
-    Button mLoginButton;
-    Button mCreateAccountButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /** Grab instances of the email and password fields.*/
-        mEmailField = (EditText) findViewById(R.id.email_field);
-        mPasswordField = (EditText) findViewById(R.id.password_field);
+        /** Initialize the database helper. */
+        mDbHelper = new UserStorageDatabaseHelper(getApplicationContext());
 
-        /** Grab instances of the login and new account buttons.*/
-        mLoginButton = (Button) findViewById(R.id.login_button);
-        mCreateAccountButton = (Button) findViewById(R.id.new_account_button);
+        mDbHelper = new UserStorageDatabaseHelper(getApplicationContext());
+        // getApplicationContext().deleteDatabase(UserStorageDatabaseHelper.DATABASE_NAME);
+        Toast.makeText(getApplicationContext(), "Database has " +
+                        DatabaseUtils.queryNumEntries(mDbHelper.getReadableDatabase(),
+                                UserStorageContract.UserStorageEntry.TABLE_NAME) + " entries",
+                Toast.LENGTH_SHORT).show();
 
         /** Set the first page view with activity_login.xml. */
         setContentView(R.layout.activity_login);
 
         //START ADDING LISTENERS
 
-        (findViewById(R.id.login_button)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Login clicked", Toast.LENGTH_SHORT).show();
-                Intent myIntent = new Intent(LoginActivity.this, MyAccount.class);
-                startActivity(myIntent);
-            }
-        });
+        /** Registers the custom login listener with the Login Button.*/
+        (findViewById(R.id.login_button)).setOnClickListener(new LoginListener());
 
         (findViewById(R.id.new_account_button)).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent myIntent = new Intent(LoginActivity.this, RegisterActivity.class);
-                    startActivity(myIntent);
-                }
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(myIntent);
+            }
         });
 
         (findViewById(R.id.password_field)).setOnKeyListener(new View.OnKeyListener() {
@@ -93,21 +90,58 @@ public class LoginActivity extends Activity {
     /**
      * Private helper method that will aid the LoginListener in determining
      * whether or not the user is already registered in the system.
+     *
      * @return userFound
      */
-    private boolean checkUserCredentials(){
-        boolean userFound = false;
+    private boolean checkUserCredentials() {
 
-        /**
-         * TODO I'll mimic the logic in here from the RegisterActivity class
-         * for querying the database in order to determine if the user exists.
-         */
-        return userFound;
+        boolean toRet = false;
+        EditText mPasswordField = (EditText) findViewById(R.id.password_field);
+        EditText mEmailField = (EditText) findViewById(R.id.email_field);
+
+        if (!mPasswordField.getText().toString().trim().matches("") || !mEmailField.getText().toString().trim().matches("")) {
+            SQLiteDatabase db = mDbHelper.getReadableDatabase();
+            String[] projection = {UserStorageContract.UserStorageEntry.USER_ENTRY_ID,
+                    UserStorageContract.UserStorageEntry.USERNAME, UserStorageContract.UserStorageEntry.EMAIL_ADDRESS,
+                    UserStorageContract.UserStorageEntry.PASSWORD, UserStorageContract.UserStorageEntry.SECURITY_QUESTION,
+                    UserStorageContract.UserStorageEntry.SECURITY_ANSWER};
+
+            String sortOrder = UserStorageContract.UserStorageEntry.EMAIL_ADDRESS + " DESC";
+
+            String selection = UserStorageContract.UserStorageEntry.EMAIL_ADDRESS + " LIKE?";
+
+            String[] selectionArgs = {String.valueOf(mEmailField.getText().toString().trim().hashCode())};
+
+
+            Cursor c = null;
+//                    db.query(
+//                    UserStorageContract.UserStorageEntry.TABLE_NAME,
+//                    projection,
+//                    selection,
+//                    selectionArgs,
+//                    null,
+//                    null,
+//                    sortOrder
+//            );
+//
+//            c.moveToFirst();
+
+            long userID = c.getLong(c.getColumnIndexOrThrow(UserStorageContract.UserStorageEntry.USER_ENTRY_ID));
+            //  c.close();
+
+            toRet = (userID == mEmailField.getText().toString().trim().hashCode());
+
+        }
+
+
+        return toRet;
+
     }
 
 
     /**
      * Private class to implement a LoginListener
+     *
      * @author Andrew
      * @version 4.4.15
      */
@@ -120,13 +154,17 @@ public class LoginActivity extends Activity {
         private LoginListener() {
             //Avoids instantiation of the default constructor
         }
+
         @Override
         public void onClick(View v) {
             if (checkUserCredentials()) {
-               // TODO Decide what Activity will come next.
-               // Example: Intent intent = new Intent(LoginActivity.this, AccountActivity.this);
+                Intent intent = new Intent(LoginActivity.this, MyAccount.class);
+                startActivity(intent);
             } else {
-                // TODO Toast that displays an error message and clears the password field
+                ((EditText) findViewById(R.id.email_field)).setText("");
+                ((EditText) findViewById(R.id.password_field)).setText("");
+                ((EditText) findViewById(R.id.email_field)).requestFocus();
+                Toast.makeText(getApplicationContext(), "User not found!", Toast.LENGTH_SHORT).show();
             }
         }
     }

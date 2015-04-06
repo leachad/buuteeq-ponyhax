@@ -29,6 +29,10 @@
             android:name=".MyAccount"
             android:label="@string/title_activity_my_account" >
         </activity>
+        <activity
+            android:name=".AgreementActivity"
+            android:label="@string/title_activity_agreement" >
+        </activity>
     </application>
 
 </manifest>
