@@ -1,10 +1,12 @@
 package uw.buuteeq_ponyhax.app;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -55,6 +57,7 @@ public class LoginActivity extends Activity {
 
 
         (findViewById(R.id.password_field)).setOnKeyListener(new View.OnKeyListener() {
+
 
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -136,15 +139,15 @@ public class LoginActivity extends Activity {
 
         @Override
         public void onClick(View v) {
-            if (checkUserCredentials()) {
+            //if (checkUserCredentials()) {
                 Intent intent = new Intent(LoginActivity.this, MyAccount.class);
                 startActivity(intent);
-            } else {
-                ((EditText) findViewById(R.id.email_field)).setText("");
-                ((EditText) findViewById(R.id.password_field)).setText("");
-                ((EditText) findViewById(R.id.email_field)).requestFocus();
-                Toast.makeText(getApplicationContext(), "User not found!", Toast.LENGTH_SHORT).show();
-            }
+            //} else {
+            //    ((EditText) findViewById(R.id.email_field)).setText("");
+            //    ((EditText) findViewById(R.id.password_field)).setText("");
+            //    ((EditText) findViewById(R.id.email_field)).requestFocus();
+//                Toast.makeText(getApplicationContext(), "User not found!", Toast.LENGTH_SHORT).show();
+//            }
         }
     }
 }

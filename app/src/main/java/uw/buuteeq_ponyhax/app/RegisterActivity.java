@@ -242,8 +242,6 @@ public class RegisterActivity extends ActionBarActivity {
                     //TODO Use the webservice to send out an automated email to finish registration?
                 }
 
-
-
             } else if (!passwordsAgree()) {
                 makeBadPasswordToast();
                 mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].setText("");
