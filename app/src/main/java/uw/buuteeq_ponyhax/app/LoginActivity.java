@@ -8,9 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 public class LoginActivity extends Activity {
@@ -42,7 +40,7 @@ public class LoginActivity extends Activity {
         (findViewById(R.id.new_account_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(LoginActivity.this, RegisterActivity.class);
+                Intent myIntent = new Intent(LoginActivity.this, AgreementActivity.class);
                 startActivity(myIntent);
             }
         });

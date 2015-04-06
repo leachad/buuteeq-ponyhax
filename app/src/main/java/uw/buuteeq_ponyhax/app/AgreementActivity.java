@@ -1,11 +1,12 @@
 package uw.buuteeq_ponyhax.app;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import uw.buuteeq_ponyhax.app.R;
+import android.view.View;
+import android.widget.Button;
 
 public class AgreementActivity extends ActionBarActivity {
 
@@ -13,6 +14,19 @@ public class AgreementActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agreement);
+
+
+        Button agreeButton = (Button)findViewById(R.id.agreeButton);
+        agreeButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(AgreementActivity.this, RegisterActivity.class);
+                myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(myIntent);
+                finish();
+            }
+        });
     }
 
     @Override

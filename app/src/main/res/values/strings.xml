@@ -37,5 +37,8 @@
 
     <string name="hello_world">Hello world!</string>
 
+    <string name="agreement_statement">We are privilege to your first born.</string>
+    <string name="agree">Agree to Terms</string>
+
 
 </resources>
