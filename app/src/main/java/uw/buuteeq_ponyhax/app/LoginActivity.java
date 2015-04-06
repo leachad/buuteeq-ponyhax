@@ -45,6 +45,15 @@ public class LoginActivity extends Activity {
             }
         });
 
+        (findViewById(R.id.forgot_button)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(LoginActivity.this, ForgotActivity.class);
+                startActivity(myIntent);
+            }
+        });
+
+
         (findViewById(R.id.password_field)).setOnKeyListener(new View.OnKeyListener() {
 
             @Override

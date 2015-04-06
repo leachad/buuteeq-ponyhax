@@ -10,6 +10,7 @@
     <string name="login">Login</string>
     <string name="create_account">Create New Account</string>
     <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
     <string name="enter_email">Enter Email</string>
     <string name="enter_password">Enter Password</string>
     <string name="forgot">Forgot Password</string>
