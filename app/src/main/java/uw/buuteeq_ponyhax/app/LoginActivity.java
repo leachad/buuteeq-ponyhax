@@ -102,42 +102,14 @@ public class LoginActivity extends Activity {
      */
     private boolean checkUserCredentials() {
 
-        boolean toRet = false;
+        // TODO Until I fix the database issues, the login button should
+        // by default send the user to the myAccount activity
+        boolean toRet = true;
         EditText mPasswordField = (EditText) findViewById(R.id.password_field);
         EditText mEmailField = (EditText) findViewById(R.id.email_field);
 
         if (!mPasswordField.getText().toString().trim().matches("") || !mEmailField.getText().toString().trim().matches("")) {
-            SQLiteDatabase db = mDbHelper.getReadableDatabase();
-            String[] projection = {UserStorageContract.UserStorageEntry.USER_ENTRY_ID,
-                    UserStorageContract.UserStorageEntry.USERNAME, UserStorageContract.UserStorageEntry.EMAIL_ADDRESS,
-                    UserStorageContract.UserStorageEntry.PASSWORD, UserStorageContract.UserStorageEntry.SECURITY_QUESTION,
-                    UserStorageContract.UserStorageEntry.SECURITY_ANSWER};
-
-            String sortOrder = UserStorageContract.UserStorageEntry.EMAIL_ADDRESS + " DESC";
-
-            String selection = UserStorageContract.UserStorageEntry.EMAIL_ADDRESS + " LIKE?";
-
-            String[] selectionArgs = {String.valueOf(mEmailField.getText().toString().trim().hashCode())};
-
-
-            Cursor c = null;
-//                    db.query(
-//                    UserStorageContract.UserStorageEntry.TABLE_NAME,
-//                    projection,
-//                    selection,
-//                    selectionArgs,
-//                    null,
-//                    null,
-//                    sortOrder
-//            );
-//
-//            c.moveToFirst();
-
-            long userID = c.getLong(c.getColumnIndexOrThrow(UserStorageContract.UserStorageEntry.USER_ENTRY_ID));
-            //  c.close();
-
-            toRet = (userID == mEmailField.getText().toString().trim().hashCode());
-
+            // TODO Check to see if the user exists in the database
         }
 
 

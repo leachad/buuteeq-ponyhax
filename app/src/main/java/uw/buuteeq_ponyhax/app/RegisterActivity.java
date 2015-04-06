@@ -14,13 +14,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.sql.Date;
+
 
 public class RegisterActivity extends ActionBarActivity {
-
-    /**
-     * Instance of the SQLite database to hold UserData.
-     */
-    private UserStorageDatabaseHelper mDbHelper;
 
     /**
      * Instance of an array to hold all of the EditText widgets on the new user screen.
@@ -32,9 +29,6 @@ public class RegisterActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        mDbHelper = new UserStorageDatabaseHelper(getApplicationContext());
-       // getApplicationContext().deleteDatabase(UserStorageDatabaseHelper.DATABASE_NAME);
-        Toast.makeText(getApplicationContext(), "Database has " + DatabaseUtils.queryNumEntries(mDbHelper.getReadableDatabase(), UserStorageContract.UserStorageEntry.TABLE_NAME) + " entries", Toast.LENGTH_SHORT).show();
         /** Find all the EditText widgets.*/
         loadEditTextWidgets();
 
@@ -129,7 +123,7 @@ public class RegisterActivity extends ActionBarActivity {
      *
      * @return index of the first empty EditText Widget
      */
-    private int getFirstOccurenceEmptyField() {
+    private int getFirstOccurrenceEmptyField() {
         int firstOccurrence = 0;
 
         for (int i = 0; i < mNewUserFields.length; i++) {
@@ -146,27 +140,38 @@ public class RegisterActivity extends ActionBarActivity {
      * TODO Determine if we need an entry id for the table.
      */
     private boolean addEntryToDatabase() {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
+        UserStorageDatabaseHelper dBHelper = new UserStorageDatabaseHelper(getApplicationContext());
 
-        /** Get the number of entries before the add.*/
-        long beforeAdd = DatabaseUtils.queryNumEntries(db, UserStorageContract.UserStorageEntry.TABLE_NAME);
-        values.put(UserStorageContract.UserStorageEntry.USER_ENTRY_ID, mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].hashCode());
-        values.put(UserStorageContract.UserStorageEntry.USERNAME, mNewUserFields[RegisterField.USER_NAME.indexValue].getText().toString());
-        values.put(UserStorageContract.UserStorageEntry.EMAIL_ADDRESS, mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getText().toString());
-        values.put(UserStorageContract.UserStorageEntry.PASSWORD, mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getText().toString());
-        values.put(UserStorageContract.UserStorageEntry.SECURITY_QUESTION, mNewUserFields[RegisterField.SECURITY_QUESTION.indexValue].getText().toString());
-        values.put(UserStorageContract.UserStorageEntry.SECURITY_ANSWER, mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].getText().toString());
+        UserStorageDatabaseHelper.UserCursor cursor = dBHelper.queryUsers();
+        cursor.moveToFirst();
 
-        //TODO Determine if we need the returned long from insert a row into the table
-        db.insertWithOnConflict(UserStorageContract.UserStorageEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        while (cursor.moveToNext()) {
+            long userID = cursor.getUser().getUserID();
 
-        /** Get the number of entries after the add.*/
-        long afterAdd = DatabaseUtils.queryNumEntries(db, UserStorageContract.UserStorageEntry.TABLE_NAME);
+        }
+        long beforeAdd = dBHelper.getNumEntries();
+        dBHelper.insertUser(getNewUser());
+        long afterAdd = dBHelper.getNumEntries();
 
-        return !(beforeAdd == afterAdd);
+        return beforeAdd == afterAdd;
     }
 
+
+
+    /**
+     * Private helper method to generate a new user and add to the database via the helper.
+     * @return theNewUser
+     */
+    private User getNewUser() {
+        User theNewUser = new User();
+        theNewUser.setEmail(mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getText().toString().trim());
+        theNewUser.setUserName(mNewUserFields[RegisterField.USER_NAME.indexValue].getText().toString().trim());
+        theNewUser.setPassword(mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getText().toString().trim());
+        theNewUser.setSecurityQuestion(mNewUserFields[RegisterField.SECURITY_QUESTION.indexValue].getText().toString().trim());
+        theNewUser.setSecurityAnswer(mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].getText().toString().trim());
+
+        return theNewUser;
+    }
 
 
     /**
@@ -249,7 +254,7 @@ public class RegisterActivity extends ActionBarActivity {
                 mNewUserFields[RegisterField.SECURITY_ANSWER_SUBSEQUENT.indexValue].setText("");
             } else if (!allFieldsEntered()) {
                 makeBadFieldEntryToast();
-                int resumeCursor = getFirstOccurenceEmptyField();
+                int resumeCursor = getFirstOccurrenceEmptyField();
                 mNewUserFields[resumeCursor].requestFocus();
             }
         }
