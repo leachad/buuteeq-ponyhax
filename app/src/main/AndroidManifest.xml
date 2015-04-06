@@ -26,6 +26,15 @@
                 android:value="uw.buuteeq_ponyhax.app.LoginActivity" />
         </activity>
         <activity
+            android:name=".ForgotActivity"
+            android:label="@string/forgot"
+            android:parentActivityName=".ForgotActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="uw.buuteeq_ponyhax.app.ForgotActivity" />
+        </activity>
+        <activity
             android:name=".MyAccount"
             android:label="@string/title_activity_my_account" >
         </activity>
