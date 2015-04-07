@@ -1,7 +1,5 @@
 package uw.buuteeq_ponyhax.app;
 
-import android.widget.EditText;
-
 import java.sql.Date;
 
 /**

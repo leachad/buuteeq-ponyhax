@@ -1,24 +1,17 @@
 package uw.buuteeq_ponyhax.app;
 
 import android.app.Activity;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.Gravity;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
-
-import uw.buuteeq_ponyhax.app.R;
 
 public class MyAccount extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -52,8 +45,23 @@ public class MyAccount extends ActionBarActivity
     public void onNavigationDrawerItemSelected(int position) {
         //Update fragment view on navigation selection
         FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = null;
+
+        switch (position) {
+            case 0:
+                fragment = PlaceholderFragment.newInstance(position + 1);
+                break;
+            case 1:
+                fragment = new MyMap();
+                break;
+            case 3:
+                //TODO Make a fragment for this.
+                fragment = PlaceholderFragment.newInstance(position + 1);
+                break;
+        }
+
         fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                .replace(R.id.container, fragment)
                 .commit();
     }
 
