@@ -40,6 +40,7 @@
 
     <string name="agreement_statement">We are privilege to your first born.</string>
     <string name="agree">Agree to Terms</string>
+    <string name="title_activity_my_map">Map</string>
 
 
 </resources>
