@@ -136,14 +136,6 @@ public class RegisterActivity extends ActionBarActivity {
      */
     private boolean addEntryToDatabase() {
         UserStorageDatabaseHelper dBHelper = new UserStorageDatabaseHelper(getApplicationContext());
-
-        UserStorageDatabaseHelper.UserCursor cursor = dBHelper.queryUsers();
-        cursor.moveToFirst();
-
-        while (cursor.moveToNext()) {
-            long userID = cursor.getUser().getUserID();
-
-        }
         long beforeAdd = dBHelper.getNumEntries();
         dBHelper.insertUser(getNewUser());
         long afterAdd = dBHelper.getNumEntries();
@@ -195,13 +187,13 @@ public class RegisterActivity extends ActionBarActivity {
         Toast.makeText(getApplicationContext(), "That User already exists!", Toast.LENGTH_SHORT).show();
     }
 
-    public static enum RegisterField {
+    public enum RegisterField {
         EMAIL_FIELD(0), USER_NAME(1), PASSWORD_INITIAL(2), PASSWORD_SUBSEQUENT(3), SECURITY_QUESTION(4),
         SECURITY_ANSWER_INITIAL(5), SECURITY_ANSWER_SUBSEQUENT(6);
 
         public int indexValue;
 
-        private RegisterField(int index) {
+        RegisterField(int index) {
             indexValue = index;
         }
 

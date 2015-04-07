@@ -18,9 +18,11 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "user_storage.db";
 
-    /** Name and Column of the "key" table for accessing Users.*/
+    /**
+     * Name and Column of the "key" table for accessing Users.
+     */
     private static final String TABLE_USER = "user";
-    private static final String COLUMN_ID = "_id";
+    private static final String COLUMN_USER_ID = "user_id";
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_EMAIL_ADDRESS = "email_address";
     private static final String COLUMN_PASSWORD = "password";
@@ -28,37 +30,40 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_SECURITY_ANSWER = "security_answer";
 
 
-    public UserStorageDatabaseHelper(Context context){
+    public UserStorageDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     public void onCreate(SQLiteDatabase db) {
         /** Create the User Table.*/
-        db.execSQL("create table user (" + "_id integer primary ket autoincrement, " +
+        db.execSQL("create table user (" + "user_id integer primary key autoincrement, " +
                 "username varchar(100), email_address varchar(100), " +
-                        "password varchar(100), security_question varchar(100), " +
-                        "security_answer varchar(100)");
+                "password varchar(100), security_question varchar(100), " +
+                "security_answer varchar(100))");
 
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Understand what the onUpgrade() means, does, how it should be implemented
     }
+
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }
 
     /**
      * Public helper method to return the current number of entries to the user.
+     *
      * @return theNumEntries as a long
      */
     public long getNumEntries() {
-        return DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_NAME);
+        return DatabaseUtils.queryNumEntries(getReadableDatabase(), TABLE_USER);
     }
 
     /******************************WRITE TO THE DATABASE*******************************/
     /**
      * Publicly accessible method to add a new User to the database.
+     *
      * @param user is the user passed to the database.
      */
     public long insertUser(User user) {
@@ -71,35 +76,40 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         return getWritableDatabase().insert(TABLE_USER, null, cv);
     }
 
-    /*****************************READ FROM THE DATABASE*******************************/
+    /**
+     * **************************READ FROM THE DATABASE******************************
+     */
     public UserCursor queryUsers() {
         Cursor wrapped = getReadableDatabase()
-                .query(TABLE_USER, null, null, null, null, null, COLUMN_ID + " asc");
+                .query(TABLE_USER, null, null, null, null, null, COLUMN_USER_ID + " asc");
         return new UserCursor(wrapped);
     }
 
 
-    /** Instance of a private inner class that returns a Cursors that probes the rows
+    /**
+     * Instance of a private inner class that returns a Cursors that probes the rows
      * from the user table.
      */
     public static class UserCursor extends CursorWrapper {
-        private UserCursor(Cursor c) {
+        public UserCursor(Cursor c) {
             super(c);
         }
 
-        /** Returns a User object configured for the current row, or null
+        /**
+         * Returns a User object configured for the current row, or null
          * if the current row is invalid.
          */
         public User getUser() {
             User user = new User();
             if (isBeforeFirst() || isAfterLast())
                 return null;
-            long userID = getLong(getColumnIndex(COLUMN_ID));
-            user.setID(userID);
-
+            user.setID(getLong(getColumnIndex(COLUMN_USER_ID)));
+            user.setEmail(getString(getColumnIndex(COLUMN_EMAIL_ADDRESS)));
+            user.setPassword(getString(getColumnIndex(COLUMN_PASSWORD)));
+            user.setSecurityQuestion(getString(getColumnIndex(COLUMN_SECURITY_QUESTION)));
+            user.setSecurityAnswer(getString(getColumnIndex(COLUMN_SECURITY_ANSWER)));
             return user;
         }
-
 
 
         //TODO Create the rest of the methods that will return to the user

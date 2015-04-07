@@ -38,8 +38,9 @@ public class User {
     }
 
     public User() {
-        //Default no arg constructor for pulling all data from database
+        //no arg constructor
     }
+    public String toString() { return myUserName + " " + myUserEmail; }
 
     public long getUserID() {
         return myUserID;

@@ -21,11 +21,7 @@ public class LoginActivity extends Activity {
         mDbHelper = new UserStorageDatabaseHelper(getApplicationContext());
 
         mDbHelper = new UserStorageDatabaseHelper(getApplicationContext());
-        // getApplicationContext().deleteDatabase(UserStorageDatabaseHelper.DATABASE_NAME);
-        Toast.makeText(getApplicationContext(), "Database has " +
-                        DatabaseUtils.queryNumEntries(mDbHelper.getReadableDatabase(),
-                                UserStorageContract.UserStorageEntry.TABLE_NAME) + " entries",
-                Toast.LENGTH_SHORT).show();
+        // getApplicationContext().deleteDatabase(UserStorageDatabaseHelper.DATABASE_NAME
 
         /** Set the first page view with activity_login.xml. */
         setContentView(R.layout.activity_login);
@@ -103,15 +99,20 @@ public class LoginActivity extends Activity {
 
         // TODO Until I fix the database issues, the login button should
         // by default send the user to the myAccount activity
-        boolean toRet = true;
+        boolean toRet = false;
         EditText mPasswordField = (EditText) findViewById(R.id.password_field);
         EditText mEmailField = (EditText) findViewById(R.id.email_field);
 
-        if (!mPasswordField.getText().toString().trim().matches("") || !mEmailField.getText().toString().trim().matches("")) {
-            // TODO Check to see if the user exists in the database
+        if (!mPasswordField.getText().toString().trim().matches("") && !mEmailField.getText().toString().trim().matches("")) {
+            UserStorageDatabaseHelper helper = new UserStorageDatabaseHelper(getApplicationContext());
+            UserStorageDatabaseHelper.UserCursor cursor = helper.queryUsers();
+            Toast.makeText(getApplicationContext(), "Database has " + helper.getNumEntries() + " entries", Toast.LENGTH_SHORT).show();
+            while (cursor.moveToNext()) {
+                User temp = cursor.getUser();
+                Toast.makeText(getApplicationContext(), temp.toString(), Toast.LENGTH_SHORT).show();
+
+            }
         }
-
-
         return toRet;
 
     }
@@ -135,15 +136,15 @@ public class LoginActivity extends Activity {
 
         @Override
         public void onClick(View v) {
-            //if (checkUserCredentials()) {
+            if (checkUserCredentials()) {
                 Intent intent = new Intent(LoginActivity.this, MyAccount.class);
                 startActivity(intent);
-            //} else {
-            //    ((EditText) findViewById(R.id.email_field)).setText("");
-            //    ((EditText) findViewById(R.id.password_field)).setText("");
-            //    ((EditText) findViewById(R.id.email_field)).requestFocus();
-//                Toast.makeText(getApplicationContext(), "User not found!", Toast.LENGTH_SHORT).show();
-//            }
+            } else {
+                ((EditText) findViewById(R.id.email_field)).setText("");
+                ((EditText) findViewById(R.id.password_field)).setText("");
+                ((EditText) findViewById(R.id.email_field)).requestFocus();
+                Toast.makeText(getApplicationContext(), "User not found!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
