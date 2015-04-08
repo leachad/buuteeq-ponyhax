@@ -67,6 +67,7 @@ public class MyAccount extends ActionBarActivity
 
     /**
      * Change title when navigation has been selected.
+     *
      * @param number The nav item index
      */
     public void onSectionAttached(int number) {
