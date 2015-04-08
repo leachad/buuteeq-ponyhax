@@ -157,19 +157,10 @@ public class RegisterActivity extends ActionBarActivity {
      */
     private User getNewUser() {
         User theNewUser = new User();
-        Log.d("EMAIL BEFORE DB: ", mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getText().toString().trim());
         theNewUser.setEmail(mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getText().toString().trim());
-
-        Log.d("USERNAME BEFORE DB: ", mNewUserFields[RegisterField.USER_NAME.indexValue].getText().toString().trim());
         theNewUser.setUserName(mNewUserFields[RegisterField.USER_NAME.indexValue].getText().toString().trim());
-
-        Log.d("PASSWORD BEFORE DB: ", mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getText().toString().trim());
         theNewUser.setPassword(mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getText().toString().trim());
-
-        Log.d("QUESTION BEFORE DB: ", mNewUserFields[RegisterField.SECURITY_QUESTION.indexValue].getText().toString().trim());
         theNewUser.setSecurityQuestion(mNewUserFields[RegisterField.SECURITY_QUESTION.indexValue].getText().toString().trim());
-
-        Log.d("ANSWER BEFORE DB: ", mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].getText().toString().trim());
         theNewUser.setSecurityAnswer(mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].getText().toString().trim());
 
         return theNewUser;
@@ -239,7 +230,7 @@ public class RegisterActivity extends ActionBarActivity {
                     makeDuplicateEntryToast();
                 } else {
                     Toast.makeText(getApplicationContext(), "User Added to Database!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(RegisterActivity.this, AgreementActivity.class);
+                    Intent intent = new Intent(RegisterActivity.this, MyAccount.class);
                     startActivity(intent);
                     //TODO Use the webservice to send out an automated email to finish registration?
                 }

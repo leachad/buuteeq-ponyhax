@@ -120,7 +120,28 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         }
 
 
-        //TODO Create the rest of the methods that will return to the user
-        // each individual data field represented within the User class.
+        public long getUserID() {
+            return getLong(getColumnIndex(COLUMN_USER_ID));
+        }
+
+        public String getUsername() {
+            return getString(getColumnIndex(COLUMN_USERNAME));
+        }
+
+        public String getEmailAddress() {
+            return getString(getColumnIndex(COLUMN_EMAIL_ADDRESS));
+        }
+
+        public String getPassword() {
+            return getString(getColumnIndex(COLUMN_PASSWORD));
+        }
+
+        public String getSecurityQuestion() {
+            return getString(getColumnIndex(COLUMN_SECURITY_QUESTION));
+        }
+
+        public String getSecurityAnswer() {
+            return getString(getColumnIndex(COLUMN_SECURITY_ANSWER));
+        }
     }
 }

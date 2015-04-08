@@ -26,6 +26,20 @@
     <string name="title_activity_my_account">MyAccount</string>
     <string name="reset_password">Password Reset</string>
 
+    <!-- List of questions for Spinner (Drop-down box) in the
+    Register Activity.
+    -->
+    <string-array name="question_options">question-arrays
+        <item name="gf_middle_name">What is your grandfather\'s middle name?</item>
+        <item name="fav_color">What is your favorite color?</item>
+        <item name="anniversary">What day is your anniversary?</item>
+        <item name="where_born">In what city were you born?</item>
+        <item name="fav_activity">What is your favorite activity?</item>
+        <item name="mother_maiden">What is your mother\'s maiden name?</item>
+        <item name="fav_sports_team">What is your favorite sports team?</item>
+        <item name="first_job">What was your first job?</item>
+    </string-array>
+
     <string name="title_section1">Overview</string>
     <string name="title_section2">My Map</string>
     <string name="title_section3">Account Details</string>
