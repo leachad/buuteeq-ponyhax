@@ -79,7 +79,7 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         Log.d("CV QUESTION", cv.get(COLUMN_SECURITY_QUESTION).toString());
         cv.put(COLUMN_SECURITY_ANSWER, user.getSecurityAnswer());
         Log.d("CV ANSWER", cv.get(COLUMN_SECURITY_ANSWER).toString());
-        cv.put(COLUMN_USER_ID, user.getUserID());
+
         return getWritableDatabase().insert(TABLE_USER, null, cv);
     }
 
