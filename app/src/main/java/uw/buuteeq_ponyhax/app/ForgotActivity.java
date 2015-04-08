@@ -6,7 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 /**
  * Created by eduard_prokhor on 4/4/15.
  */
-public class ForgotActivity extends ActionBarActivity{
+public class ForgotActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

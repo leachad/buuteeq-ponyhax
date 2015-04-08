@@ -4,6 +4,7 @@ import android.provider.BaseColumns;
 
 /**
  * User Storage Contract class used for implementing a SQLite database.
+ *
  * @author Andrew
  * @version 4.4.15
  */
@@ -13,7 +14,8 @@ public final class UserStorageContract {
      * Do nothing empty constructor to prevent
      * instantiation of the super class
      */
-    public UserStorageContract() {}
+    public UserStorageContract() {
+    }
 
     /**
      * Inner class to define the contents of the table.

@@ -16,7 +16,7 @@ public class AgreementActivity extends ActionBarActivity {
         setContentView(R.layout.activity_agreement);
 
 
-        Button agreeButton = (Button)findViewById(R.id.agreeButton);
+        Button agreeButton = (Button) findViewById(R.id.agreeButton);
         agreeButton.setOnClickListener(new View.OnClickListener() {
 
             @Override

@@ -3,7 +3,6 @@ package uw.buuteeq_ponyhax.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -150,9 +149,9 @@ public class RegisterActivity extends ActionBarActivity {
     }
 
 
-
     /**
      * Private helper method to generate a new user and add to the database via the helper.
+     *
      * @return theNewUser
      */
     private User getNewUser() {
@@ -188,7 +187,9 @@ public class RegisterActivity extends ActionBarActivity {
         Toast.makeText(getApplicationContext(), "All Fields must have values!", Toast.LENGTH_SHORT).show();
     }
 
-    /** Private helper method to make a toast when a user already exists in the database.*/
+    /**
+     * Private helper method to make a toast when a user already exists in the database.
+     */
     private void makeDuplicateEntryToast() {
         Toast.makeText(getApplicationContext(), "That User already exists!", Toast.LENGTH_SHORT).show();
     }
