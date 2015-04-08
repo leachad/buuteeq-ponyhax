@@ -13,4 +13,15 @@ public class ForgotActivity extends ActionBarActivity{
         setContentView(R.layout.forgot_page);
 
     }
+
+
+    public void findUser() {
+        UserStorageDatabaseHelper dbHelper = new UserStorageDatabaseHelper(getApplicationContext());
+        UserStorageDatabaseHelper.UserCursor cursor = dbHelper.queryUsers();
+
+        while(cursor.moveToNext()){
+            cursor.
+        }
+    }
+
 }
