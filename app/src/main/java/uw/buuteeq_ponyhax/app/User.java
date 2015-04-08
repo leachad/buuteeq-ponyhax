@@ -26,21 +26,17 @@ public class User {
 
     private String mySecurityAnswer;
 
-    public User(final Date theDate, final String theUserEmail, final String theUserName,
-                final String thePassword, final String theSecurityQuestion, final String theSecurityAnswer) {
-        myUserID = 0;
-        myUserEmail = theUserEmail;
-        myUserName = theUserName;
-        myPassword = thePassword;
-        mySecurityQuestion = theSecurityQuestion;
-        mySecurityAnswer = theSecurityAnswer;
-
-    }
 
     public User() {
-        //no arg constructor
+
+        myUserID = 0;
+        myUserEmail = null;
+        myUserName = null;
+        myPassword = null;
+        mySecurityQuestion = null;
+        mySecurityAnswer = null;
     }
-    public String toString() { return myUserName + " " + myUserEmail; }
+    public String toString() { return " Username:" + myUserName + " Email:" + myUserEmail + " ID:" + myUserID + " Password:" + myPassword + " Question:" + mySecurityQuestion; }
 
     public long getUserID() {
         return myUserID;

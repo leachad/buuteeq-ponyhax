@@ -7,6 +7,7 @@ import android.database.CursorWrapper;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Utilization of the SQLiteOpenHelper to create a database for storing User Data for
@@ -68,11 +69,16 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
      */
     public long insertUser(User user) {
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_EMAIL_ADDRESS, user.getEmail());
         cv.put(COLUMN_USERNAME, user.getUserName());
+        Log.d("CV USERNAME", user.getUserName() + " " + cv.get(COLUMN_USERNAME).toString());
+        cv.put(COLUMN_EMAIL_ADDRESS, user.getEmail());
+        Log.d("CV EMAIL", user.getEmail() + " " + cv.get(COLUMN_EMAIL_ADDRESS).toString());
         cv.put(COLUMN_PASSWORD, user.getPassword());
+        Log.d("CV COLUMN_PASSWORD", cv.get(COLUMN_PASSWORD).toString());
         cv.put(COLUMN_SECURITY_QUESTION, user.getSecurityQuestion());
+        Log.d("CV QUESTION", cv.get(COLUMN_SECURITY_QUESTION).toString());
         cv.put(COLUMN_SECURITY_ANSWER, user.getSecurityAnswer());
+        Log.d("CV ANSWER", cv.get(COLUMN_SECURITY_ANSWER).toString());
         return getWritableDatabase().insert(TABLE_USER, null, cv);
     }
 
@@ -104,6 +110,7 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
             if (isBeforeFirst() || isAfterLast())
                 return null;
             user.setID(getLong(getColumnIndex(COLUMN_USER_ID)));
+            user.setUserName(getString(getColumnIndex(COLUMN_USERNAME)));
             user.setEmail(getString(getColumnIndex(COLUMN_EMAIL_ADDRESS)));
             user.setPassword(getString(getColumnIndex(COLUMN_PASSWORD)));
             user.setSecurityQuestion(getString(getColumnIndex(COLUMN_SECURITY_QUESTION)));

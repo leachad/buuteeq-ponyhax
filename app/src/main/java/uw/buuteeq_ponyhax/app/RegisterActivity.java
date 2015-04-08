@@ -140,7 +140,7 @@ public class RegisterActivity extends ActionBarActivity {
         dBHelper.insertUser(getNewUser());
         long afterAdd = dBHelper.getNumEntries();
 
-        return beforeAdd == afterAdd;
+        return !(beforeAdd == afterAdd);
     }
 
 

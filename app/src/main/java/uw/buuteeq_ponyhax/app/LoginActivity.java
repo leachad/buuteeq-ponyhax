@@ -103,10 +103,12 @@ public class LoginActivity extends Activity {
         EditText mPasswordField = (EditText) findViewById(R.id.password_field);
         EditText mEmailField = (EditText) findViewById(R.id.email_field);
 
+        UserStorageDatabaseHelper helper = new UserStorageDatabaseHelper(getApplicationContext());
+        UserStorageDatabaseHelper.UserCursor cursor = helper.queryUsers();
+        Toast.makeText(getApplicationContext(), "Database has " + helper.getNumEntries() + " entries", Toast.LENGTH_SHORT).show();
+
         if (!mPasswordField.getText().toString().trim().matches("") && !mEmailField.getText().toString().trim().matches("")) {
-            UserStorageDatabaseHelper helper = new UserStorageDatabaseHelper(getApplicationContext());
-            UserStorageDatabaseHelper.UserCursor cursor = helper.queryUsers();
-            Toast.makeText(getApplicationContext(), "Database has " + helper.getNumEntries() + " entries", Toast.LENGTH_SHORT).show();
+
             while (cursor.moveToNext()) {
                 User temp = cursor.getUser();
                 Toast.makeText(getApplicationContext(), temp.toString(), Toast.LENGTH_SHORT).show();
