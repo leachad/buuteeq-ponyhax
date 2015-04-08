@@ -3,6 +3,7 @@ package uw.buuteeq_ponyhax.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,12 +18,17 @@ public class RegisterActivity extends ActionBarActivity {
     /**
      * Instance of an array to hold all of the EditText widgets on the new user screen.
      */
-    private EditText[] mNewUserFields = new EditText[RegisterField.getNumberIndices()];
+    private EditText[] mNewUserFields;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        /** Instantiate the Array of Text Widgets.*/
+        mNewUserFields = new EditText[RegisterField.getNumberIndices()];
+
+        Toast.makeText(getApplicationContext(), "There are " + mNewUserFields.length + " text widgets", Toast.LENGTH_SHORT).show();
+
 
         /** Find all the EditText widgets.*/
         loadEditTextWidgets();
@@ -66,12 +72,12 @@ public class RegisterActivity extends ActionBarActivity {
      */
     private void loadEditTextWidgets() {
         mNewUserFields[RegisterField.EMAIL_FIELD.indexValue] = (EditText) findViewById(R.id.emailEdit);
-        mNewUserFields[RegisterField.USER_NAME.indexValue] = (EditText) findViewById(R.id.emailEdit);
-        mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue] = (EditText) findViewById(R.id.emailEdit);
-        mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue] = (EditText) findViewById(R.id.emailEdit);
-        mNewUserFields[RegisterField.SECURITY_QUESTION.indexValue] = (EditText) findViewById(R.id.emailEdit);
-        mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue] = (EditText) findViewById(R.id.emailEdit);
-        mNewUserFields[RegisterField.SECURITY_ANSWER_SUBSEQUENT.indexValue] = (EditText) findViewById(R.id.emailEdit);
+        mNewUserFields[RegisterField.USER_NAME.indexValue] = (EditText) findViewById(R.id.userNameEdit);
+        mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue] = (EditText) findViewById(R.id.passwordEditInitial);
+        mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue] = (EditText) findViewById(R.id.passwordEditSubsequent);
+        mNewUserFields[RegisterField.SECURITY_QUESTION.indexValue] = (EditText) findViewById(R.id.securityQuestion);
+        mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue] = (EditText) findViewById(R.id.securityQuestionAnswerInitial);
+        mNewUserFields[RegisterField.SECURITY_ANSWER_SUBSEQUENT.indexValue] = (EditText) findViewById(R.id.securityQuestionAnswerSubsequent);
     }
 
     /**
@@ -151,10 +157,19 @@ public class RegisterActivity extends ActionBarActivity {
      */
     private User getNewUser() {
         User theNewUser = new User();
+        Log.d("EMAIL BEFORE DB: ", mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getText().toString().trim());
         theNewUser.setEmail(mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getText().toString().trim());
+
+        Log.d("USERNAME BEFORE DB: ", mNewUserFields[RegisterField.USER_NAME.indexValue].getText().toString().trim());
         theNewUser.setUserName(mNewUserFields[RegisterField.USER_NAME.indexValue].getText().toString().trim());
+
+        Log.d("PASSWORD BEFORE DB: ", mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getText().toString().trim());
         theNewUser.setPassword(mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getText().toString().trim());
+
+        Log.d("QUESTION BEFORE DB: ", mNewUserFields[RegisterField.SECURITY_QUESTION.indexValue].getText().toString().trim());
         theNewUser.setSecurityQuestion(mNewUserFields[RegisterField.SECURITY_QUESTION.indexValue].getText().toString().trim());
+
+        Log.d("ANSWER BEFORE DB: ", mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].getText().toString().trim());
         theNewUser.setSecurityAnswer(mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].getText().toString().trim());
 
         return theNewUser;

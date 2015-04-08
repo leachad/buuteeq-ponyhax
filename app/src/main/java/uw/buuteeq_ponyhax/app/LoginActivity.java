@@ -105,13 +105,19 @@ public class LoginActivity extends Activity {
 
         UserStorageDatabaseHelper helper = new UserStorageDatabaseHelper(getApplicationContext());
         UserStorageDatabaseHelper.UserCursor cursor = helper.queryUsers();
+        /** If necessary to delete a localized database, comment in the line below.*/
+        //getApplicationContext().deleteDatabase(helper.getDatabaseName());
         Toast.makeText(getApplicationContext(), "Database has " + helper.getNumEntries() + " entries", Toast.LENGTH_SHORT).show();
 
         if (!mPasswordField.getText().toString().trim().matches("") && !mEmailField.getText().toString().trim().matches("")) {
 
             while (cursor.moveToNext()) {
                 User temp = cursor.getUser();
-                Toast.makeText(getApplicationContext(), temp.toString(), Toast.LENGTH_SHORT).show();
+                if (temp.getEmail().trim().matches(mEmailField.getText().toString().trim())
+                        && temp.getPassword().trim().matches(mPasswordField.getText().toString().trim())) {
+                    toRet = true;
+                    break;
+                }
 
             }
         }

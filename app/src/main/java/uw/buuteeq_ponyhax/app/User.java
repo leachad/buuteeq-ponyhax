@@ -29,12 +29,12 @@ public class User {
 
     public User() {
 
-        myUserID = 0;
-        myUserEmail = null;
-        myUserName = null;
-        myPassword = null;
-        mySecurityQuestion = null;
-        mySecurityAnswer = null;
+        this.myUserID = 0;
+        this.myUserEmail = null;
+        this.myUserName = null;
+        this.myPassword = null;
+        this.mySecurityQuestion = null;
+        this.mySecurityAnswer = null;
     }
     public String toString() { return " Username:" + myUserName + " Email:" + myUserEmail + " ID:" + myUserID + " Password:" + myPassword + " Question:" + mySecurityQuestion; }
 
@@ -63,27 +63,27 @@ public class User {
     }
 
     public void setID(final long theUserID) {
-        myUserID = theUserID;
+        this.myUserID = theUserID;
     }
 
     public void setEmail(final String theEmail) {
-        myUserEmail = theEmail;
+        this.myUserEmail = theEmail;
     }
 
     public void setUserName(final String theUserName) {
-        myUserName = theUserName;
+        this.myUserName = theUserName;
     }
 
     public void setPassword(final String thePassword) {
-        myPassword = thePassword;
+        this.myPassword = thePassword;
     }
 
     public void setSecurityQuestion(final String theSecurityQuestion) {
-        mySecurityQuestion = theSecurityQuestion;
+        this.mySecurityQuestion = theSecurityQuestion;
     }
 
     public void setSecurityAnswer(final String theSecurityAnswer) {
-        mySecurityAnswer = theSecurityAnswer;
+        this.mySecurityAnswer = theSecurityAnswer;
     }
 
 }
