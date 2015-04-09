@@ -25,7 +25,7 @@
     <string name="confirmButton">Confirm</string>
     <string name="title_activity_my_account">MyAccount</string>
     <string name="reset_password">Password Reset</string>
-    <string name="reset_security_question">Security Quesiton Here!!!</string>
+    <string name="reset_security_question">Security Question will appeare after you type your username!</string>
     <string name="enter_security_answer">Enter Your Security Answer</string>
 
     <!-- List of questions for Spinner (Drop-down box) in the

@@ -25,4 +25,5 @@ dependencies {
     compile 'com.android.support:cardview-v7:22.0.0'
     compile 'com.android.support:recyclerview-v7:22.0.0'
     compile 'com.google.android.gms:play-services:7.0.0'
+    compile files('build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/libs/apache-rat-0.6.jar')
 }
