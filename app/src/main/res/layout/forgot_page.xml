@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:inputType="textImeMultiLine"
             android:ems="10"
-            android:id="@+id/editText"
+            android:id="@+id/userForPasswordreset"
             android:layout_gravity="center_horizontal"
             android:hint="@string/userNamePrompt"
             android:layout_weight="0.10"
@@ -43,13 +43,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Your Security Question Here :)"
-            android:id="@+id/ResetSecurityQuestion"
+            android:text="@string/reset_security_question"
+            android:id="@+id/resetSecurityQuestion"
             android:layout_gravity="center_horizontal"
             android:textSize="20sp"
             android:layout_weight="0.10"
-            style="@style/editTextTheme"
-            />
+            style="@style/editTextTheme" />
 
         <EditText
             android:layout_width="match_parent"
@@ -57,11 +56,10 @@
             android:id="@+id/editText2"
             android:inputType="textImeMultiLine"
             android:layout_gravity="center_horizontal"
-            android:hint="Enter Your Security Answer"
+            android:hint="@string/enter_security_answer"
             android:layout_weight=".10"
             android:textSize="20sp"
-            style="@style/editTextTheme"
-            />
+            style="@style/editTextTheme" />
     </LinearLayout>
 
     <LinearLayout
