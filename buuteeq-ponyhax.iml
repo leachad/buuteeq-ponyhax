@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD:buuteeq-ponyhax.iml
 <module external.linked.project.id="buuteeq-ponyhax" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$" external.system.id="GRADLE" external.system.module.group="" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
-=======
-<module external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$" external.system.id="GRADLE" external.system.module.group="" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
->>>>>>> 9aa85500c5e6d718acbfed8fa418a4c409f86bdd:buuteeq-ponyhax.iml
   <component name="FacetManager">
     <facet type="java-gradle" name="Java-Gradle">
       <configuration>
         <option name="BUILD_FOLDER_PATH" value="$MODULE_DIR$/build" />
+        <option name="BUILDABLE" value="false" />
       </configuration>
     </facet>
   </component>
@@ -20,4 +17,3 @@
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
-

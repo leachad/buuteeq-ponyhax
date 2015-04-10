@@ -11,10 +11,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import email.EmailSend;
+
 /**
  * Created by eduard_prokhor on 4/4/15.
  */
 public class ForgotActivity extends ActionBarActivity {
+
+    EmailSend email = new EmailSend();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +33,7 @@ public class ForgotActivity extends ActionBarActivity {
                 startActivity(myIntent);
             }
         });
+
 
         checkUser();
     }
@@ -71,8 +77,13 @@ public class ForgotActivity extends ActionBarActivity {
                             String testPass = Long.toHexString(Double.doubleToLongBits(Math.random()));
                             dbHelper.modifyUserPassword(testPass, temp.getUserID());
                             Log.d("TEST PASS------->", testPass);
+
+
+                            //testing to send to my email.
+                            email.sendEmail("prokhoreduard@gmail.com", testPass);
+
                             Toast.makeText(getApplicationContext(),
-                                    "Your new randomly generated pass was send to your email", Toast.LENGTH_SHORT).show();
+                                    "Your new randomly generated pass was sent to your email", Toast.LENGTH_SHORT).show();
 
                         }
                     }
