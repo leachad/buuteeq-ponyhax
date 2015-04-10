@@ -88,6 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/editTextTheme"
+            android:imeOptions="actionGo"
             android:hint="@string/security_answer_reenter"
             />
 
