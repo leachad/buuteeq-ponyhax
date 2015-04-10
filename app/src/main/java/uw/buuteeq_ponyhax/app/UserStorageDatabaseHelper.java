@@ -92,11 +92,45 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
     public long modifyUserPassword(final String theNewPassword, final long theUserRowID) {
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_PASSWORD, theNewPassword);
-
-
         return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
     }
 
+    /**
+     *
+     */
+    public long modifyUsername(final String theNewUsername, final long theUserRowID) {
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_USERNAME, theNewUsername);
+        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
+
+    }
+
+    /**
+     *
+     */
+    public long modifyEmailAddress(final String theNewEmailAddress, final long theUserRowID) {
+	ContentValues cv = new ContentValues();
+	cv.put(COLUMN_EMAIL_ADDRESS, theNewEmailAddress);
+        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
+    }
+
+    /**
+     *
+     */
+    public long modifySecurityQuestion(final String theNewSecurityQuestion, final long theUserRowID) {
+	ContentValues cv = new ContentValues();
+	cv.put(COLUMN_SECURITY_QUESTION, theNewSecurityQuestion);
+        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
+    }
+
+    /**
+     *
+     */
+    public long modifySecurityAnswer(final String theNewSecurityAnswer, final long theUserRowID) {
+	ContentValues cv = new ContentValues();
+	cv.put(COLUMN_SECURITY_ANSWER, theNewSecurityAnswer);
+        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
+    }
     /**
      * **************************READ FROM THE DATABASE******************************
      */
