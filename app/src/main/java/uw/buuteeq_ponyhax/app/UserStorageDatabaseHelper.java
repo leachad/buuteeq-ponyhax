@@ -8,6 +8,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * Utilization of the SQLiteOpenHelper to create a database for storing User Data for
@@ -69,18 +70,43 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
      */
     public long insertUser(User user) {
         ContentValues cv = new ContentValues();
+
         cv.put(COLUMN_USERNAME, user.getUserName());
-        Log.d("CV USERNAME", user.getUserName() + " " + cv.get(COLUMN_USERNAME).toString());
         cv.put(COLUMN_EMAIL_ADDRESS, user.getEmail());
-        Log.d("CV EMAIL", user.getEmail() + " " + cv.get(COLUMN_EMAIL_ADDRESS).toString());
         cv.put(COLUMN_PASSWORD, user.getPassword());
-        Log.d("CV COLUMN_PASSWORD", cv.get(COLUMN_PASSWORD).toString());
         cv.put(COLUMN_SECURITY_QUESTION, user.getSecurityQuestion());
-        Log.d("CV QUESTION", cv.get(COLUMN_SECURITY_QUESTION).toString());
         cv.put(COLUMN_SECURITY_ANSWER, user.getSecurityAnswer());
-        Log.d("CV ANSWER", cv.get(COLUMN_SECURITY_ANSWER).toString());
 
         return getWritableDatabase().insert(TABLE_USER, null, cv);
+    }
+
+    /**
+     * Private method to insert a new password for a specific requested User.
+     * @param theNewPassword
+     * @return confirmation
+     */
+    private long insertPassword(final String theNewPassword, final long theUserRowID) {
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_USER_ID, theUserRowID);
+        cv.put(COLUMN_PASSWORD, theNewPassword);
+        return getWritableDatabase().insert(TABLE_USER, null, cv);
+    }
+
+    /**
+     * Publicly accessible method to modify the password of a given User.
+     *
+     * @param theNewPassword
+     * @param theUserRowID
+     */
+    public long modifyUserPassword(final String theNewPassword, final long theUserRowID) {
+        Cursor cursor = getRowDetails(theUserRowID);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            String value = cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD));
+            Log.d("AFTER ROW QUERY-->", value);
+        }
+
+        return insertPassword(theNewPassword, theUserRowID);
     }
 
     /**
@@ -90,6 +116,19 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         Cursor wrapped = getReadableDatabase()
                 .query(TABLE_USER, null, null, null, null, null, COLUMN_USER_ID + " asc");
         return new UserCursor(wrapped);
+    }
+
+    /**Private helper method to access a value by a given row (by returning a cursor,
+     * rather than iterate through the entirety of the database using the publicly
+     * accessible queryUsers method.
+     * @param theRowID
+     * @return theRowCursor
+     */
+    private Cursor getRowDetails(final long theRowID) {
+        String[] select = {COLUMN_USER_ID, COLUMN_USERNAME, COLUMN_EMAIL_ADDRESS, COLUMN_PASSWORD, COLUMN_SECURITY_QUESTION, COLUMN_SECURITY_ANSWER};
+        String[] from = {COLUMN_USER_ID};
+        String where = COLUMN_USER_ID + "=" + Long.toString(theRowID);
+        return getReadableDatabase().query(true, TABLE_USER, select, where, from, null, null, null, null);
     }
 
 
