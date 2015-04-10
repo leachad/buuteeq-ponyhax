@@ -80,35 +80,57 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         return getWritableDatabase().insert(TABLE_USER, null, cv);
     }
 
-    /**
-     * Private method to insert a new password for a specific requested User.
-     * @param theNewPassword
-     * @return confirmation
-     */
-    private long insertPassword(final String theNewPassword, final long theUserRowID) {
-        ContentValues cv = new ContentValues();
-        cv.put(COLUMN_USER_ID, theUserRowID);
-        cv.put(COLUMN_PASSWORD, theNewPassword);
-        return getWritableDatabase().insert(TABLE_USER, null, cv);
-    }
+
 
     /**
      * Publicly accessible method to modify the password of a given User.
+     * Does NOT check for null values.
      *
      * @param theNewPassword
      * @param theUserRowID
      */
     public long modifyUserPassword(final String theNewPassword, final long theUserRowID) {
-        Cursor cursor = getRowDetails(theUserRowID);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            String value = cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD));
-            Log.d("AFTER ROW QUERY-->", value);
-        }
-
-        return insertPassword(theNewPassword, theUserRowID);
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_PASSWORD, theNewPassword);
+        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
     }
 
+    /**
+     *
+     */
+    public long modifyUsername(final String theNewUsername, final long theUserRowID) {
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_USERNAME, theNewUsername);
+        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
+
+    }
+
+    /**
+     *
+     */
+    public long modifyEmailAddress(final String theNewEmailAddress, final long theUserRowID) {
+	ContentValues cv = new ContentValues();
+	cv.put(COLUMN_EMAIL_ADDRESS, theNewEmailAddress);
+        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
+    }
+
+    /**
+     *
+     */
+    public long modifySecurityQuestion(final String theNewSecurityQuestion, final long theUserRowID) {
+	ContentValues cv = new ContentValues();
+	cv.put(COLUMN_SECURITY_QUESTION, theNewSecurityQuestion);
+        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
+    }
+
+    /**
+     *
+     */
+    public long modifySecurityAnswer(final String theNewSecurityAnswer, final long theUserRowID) {
+	ContentValues cv = new ContentValues();
+	cv.put(COLUMN_SECURITY_ANSWER, theNewSecurityAnswer);
+        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
+    }
     /**
      * **************************READ FROM THE DATABASE******************************
      */
