@@ -72,18 +72,20 @@ public class ForgotActivity extends ActionBarActivity {
                         User temp = cursor2.getUser();
                         if (temp.getUserName().trim().matches(userinput.getText().toString().trim())
                                 && temp.getSecurityAnswer().trim().matches(secAnswer.getText().toString().trim())){
+                            String usersEmail = temp.getEmail();
 
                             //make a random pass and send it to their email.
                             String testPass = Long.toHexString(Double.doubleToLongBits(Math.random()));
+
+                            //update the database with the new pass of the user
                             dbHelper.modifyUserPassword(testPass, temp.getUserID());
-                            Log.d("TEST PASS------->", testPass);
 
 
                             //testing to send to my email.
-                            email.sendEmail("prokhoreduard@gmail.com", testPass);
-
+                            email.sendEmail(usersEmail, testPass);
                             Toast.makeText(getApplicationContext(),
                                     "Your new randomly generated pass was sent to your email", Toast.LENGTH_SHORT).show();
+                            finish();
 
                         }
                     }
