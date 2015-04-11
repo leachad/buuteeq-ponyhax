@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 
@@ -19,15 +20,19 @@ public class RegisterActivity extends ActionBarActivity {
      */
     private EditText[] mNewUserFields;
 
+    /** Instance of a spinner to hold all the security questions for selection by the user.*/
+    private Spinner mQuestionSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
         /** Instantiate the Array of Text Widgets.*/
         mNewUserFields = new EditText[RegisterField.getNumberIndices()];
 
-        Toast.makeText(getApplicationContext(), "There are " + mNewUserFields.length + " text widgets", Toast.LENGTH_SHORT).show();
-
+        /** Instantiante the security question spinner.*/
+        mQuestionSpinner = (Spinner) findViewById(R.id.spinnerSecurityQuestions);
 
         /** Find all the EditText widgets.*/
         loadEditTextWidgets();
@@ -74,7 +79,6 @@ public class RegisterActivity extends ActionBarActivity {
         mNewUserFields[RegisterField.USER_NAME.indexValue] = (EditText) findViewById(R.id.userNameEdit);
         mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue] = (EditText) findViewById(R.id.passwordEditInitial);
         mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue] = (EditText) findViewById(R.id.passwordEditSubsequent);
-        mNewUserFields[RegisterField.SECURITY_QUESTION.indexValue] = (EditText) findViewById(R.id.securityQuestion);
         mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue] = (EditText) findViewById(R.id.securityQuestionAnswerInitial);
         mNewUserFields[RegisterField.SECURITY_ANSWER_SUBSEQUENT.indexValue] = (EditText) findViewById(R.id.securityQuestionAnswerSubsequent);
     }
@@ -156,11 +160,15 @@ public class RegisterActivity extends ActionBarActivity {
      */
     private User getNewUser() {
         User theNewUser = new User();
+
+        /** String values to update the New User fields are gleaned from the EditText widgets.*/
         theNewUser.setEmail(mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getText().toString().trim());
         theNewUser.setUserName(mNewUserFields[RegisterField.USER_NAME.indexValue].getText().toString().trim());
         theNewUser.setPassword(mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getText().toString().trim());
-        theNewUser.setSecurityQuestion(mNewUserFields[RegisterField.SECURITY_QUESTION.indexValue].getText().toString().trim());
         theNewUser.setSecurityAnswer(mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].getText().toString().trim());
+
+        /** String value to update the New User security question field is gleaned from the spinner.*/
+        theNewUser.setSecurityQuestion(mQuestionSpinner.getSelectedItem().toString().trim());
 
         return theNewUser;
     }
@@ -195,8 +203,8 @@ public class RegisterActivity extends ActionBarActivity {
     }
 
     public enum RegisterField {
-        EMAIL_FIELD(0), USER_NAME(1), PASSWORD_INITIAL(2), PASSWORD_SUBSEQUENT(3), SECURITY_QUESTION(4),
-        SECURITY_ANSWER_INITIAL(5), SECURITY_ANSWER_SUBSEQUENT(6);
+        EMAIL_FIELD(0), USER_NAME(1), PASSWORD_INITIAL(2), PASSWORD_SUBSEQUENT(3),
+        SECURITY_ANSWER_INITIAL(4), SECURITY_ANSWER_SUBSEQUENT(5);
 
         public int indexValue;
 

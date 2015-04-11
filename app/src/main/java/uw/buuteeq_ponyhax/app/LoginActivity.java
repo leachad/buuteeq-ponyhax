@@ -98,9 +98,6 @@ public class LoginActivity extends Activity {
      * @return userFound
      */
     private boolean checkUserCredentials() {
-
-        // TODO Until I fix the database issues, the login button should
-        // by default send the user to the myAccount activity
         boolean toRet = false;
         EditText mPasswordField = (EditText) findViewById(R.id.password_field);
         EditText mEmailField = (EditText) findViewById(R.id.email_field);
@@ -108,20 +105,29 @@ public class LoginActivity extends Activity {
         UserStorageDatabaseHelper helper = new UserStorageDatabaseHelper(getApplicationContext());
         UserStorageDatabaseHelper.UserCursor cursor = helper.queryUsers();
         /** If necessary to delete a localized database, comment in the line below.*/
-        //getApplicationContext().deleteDatabase(helper.getDatabaseName());
+       // getApplicationContext().deleteDatabase(helper.getDatabaseName());
         Toast.makeText(getApplicationContext(), "Database has " + helper.getNumEntries() + " entries", Toast.LENGTH_SHORT).show();
 
         if (!mPasswordField.getText().toString().trim().matches("") && !mEmailField.getText().toString().trim().matches("")) {
 
-            while (cursor.moveToNext()) {
-                User temp = cursor.getUser();
-                if (temp.getEmail().trim().matches(mEmailField.getText().toString().trim())
-                        && temp.getPassword().trim().matches(mPasswordField.getText().toString().trim())) {
-                    toRet = true;
-                    break;
-                }
 
-            }
+            long userID = helper.obtainUserID(mEmailField.getText().toString().trim(), mPasswordField.getText().toString().trim());
+
+            if (helper.obtainUserEmail(userID).matches(mEmailField.getText().toString().trim())
+                        && helper.obtainUserPassword(userID).matches(mPasswordField.getText().toString().trim())) {
+                    toRet = true;
+
+                     }
+//
+//            while (cursor.moveToNext()) {
+//                User temp = cursor.getUser();
+//                if (temp.getEmail().trim().matches(mEmailField.getText().toString().trim())
+//                        && temp.getPassword().trim().matches(mPasswordField.getText().toString().trim())) {
+//                    toRet = true;
+//                    break;
+//                }
+//
+//            }
         }
         return toRet;
 
@@ -152,7 +158,7 @@ public class LoginActivity extends Activity {
             } else {
                 ((EditText) findViewById(R.id.email_field)).setText("");
                 ((EditText) findViewById(R.id.password_field)).setText("");
-                ((EditText) findViewById(R.id.email_field)).requestFocus();
+                (findViewById(R.id.email_field)).requestFocus();
                 Toast.makeText(getApplicationContext(), "User not found!", Toast.LENGTH_SHORT).show();
             }
         }

@@ -7,8 +7,6 @@ import android.database.CursorWrapper;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-import android.widget.Toast;
 
 /**
  * Utilization of the SQLiteOpenHelper to create a database for storing User Data for
@@ -30,6 +28,7 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_PASSWORD = "password";
     private static final String COLUMN_SECURITY_QUESTION = "security_question";
     private static final String COLUMN_SECURITY_ANSWER = "security_answer";
+    private static final String COLUMN_ISSUED_RESET = "issued_reset";
 
 
     public UserStorageDatabaseHelper(Context context) {
@@ -41,7 +40,7 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("create table user (" + "user_id integer primary key autoincrement, " +
                 "username varchar(100), email_address varchar(100), " +
                 "password varchar(100), security_question varchar(100), " +
-                "security_answer varchar(100))");
+                "security_answer varchar(100), issued_reset integer )");
 
     }
 
@@ -76,18 +75,19 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_PASSWORD, user.getPassword());
         cv.put(COLUMN_SECURITY_QUESTION, user.getSecurityQuestion());
         cv.put(COLUMN_SECURITY_ANSWER, user.getSecurityAnswer());
+        cv.put(COLUMN_ISSUED_RESET, user.getResetStatus());
 
         return getWritableDatabase().insert(TABLE_USER, null, cv);
     }
-
 
 
     /**
      * Publicly accessible method to modify the password of a given User.
      * Does NOT check for null values.
      *
-     * @param theNewPassword
-     * @param theUserRowID
+     * @param theNewPassword is the newly generated password
+     * @param theUserRowID   is the row id for the current user
+     * @return updateConfirmation
      */
     public long modifyUserPassword(final String theNewPassword, final long theUserRowID) {
         ContentValues cv = new ContentValues();
@@ -96,7 +96,12 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * Publicly accessible method to modify the username of a given User.
+     * Does NOT check for null values.
      *
+     * @param theNewUsername is the new username as changed by the user
+     * @param theUserRowID   is the row id for the current user
+     * @return updateConfirmation
      */
     public long modifyUsername(final String theNewUsername, final long theUserRowID) {
         ContentValues cv = new ContentValues();
@@ -106,53 +111,114 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * Publicly accessible method to modify the email address of a given User.
+     * Does NOT check for null values.
      *
+     * @param theNewEmailAddress is the new email address as changed by the user
+     * @param theUserRowID       is the row id for the current user
+     * @return updateConfirmation
      */
     public long modifyEmailAddress(final String theNewEmailAddress, final long theUserRowID) {
-	ContentValues cv = new ContentValues();
-	cv.put(COLUMN_EMAIL_ADDRESS, theNewEmailAddress);
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_EMAIL_ADDRESS, theNewEmailAddress);
         return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
     }
 
     /**
+     * Publicly accessible method to modify the security question of a given User.
+     * Does NOT check for null values.
      *
+     * @param theNewSecurityQuestion is the new security question as changed by the user
+     * @param theUserRowID           is the row id for the current user
+     * @return updateConfirmation
      */
     public long modifySecurityQuestion(final String theNewSecurityQuestion, final long theUserRowID) {
-	ContentValues cv = new ContentValues();
-	cv.put(COLUMN_SECURITY_QUESTION, theNewSecurityQuestion);
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_SECURITY_QUESTION, theNewSecurityQuestion);
         return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
     }
 
     /**
+     * Publicly accessible method to modify the security answer of a given User.
+     * Does NOT check for null values.
      *
+     * @param theNewSecurityAnswer is the new security question as changed by the user
+     * @param theUserRowID         is the row id for the current user
+     * @return updateConfirmation
      */
     public long modifySecurityAnswer(final String theNewSecurityAnswer, final long theUserRowID) {
-	ContentValues cv = new ContentValues();
-	cv.put(COLUMN_SECURITY_ANSWER, theNewSecurityAnswer);
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_SECURITY_ANSWER, theNewSecurityAnswer);
         return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
     }
+
     /**
      * **************************READ FROM THE DATABASE******************************
      */
+
+    public long obtainUserID(final String theEmail, final String thePassword) {
+        Cursor currentRow = getReadableDatabase().rawQuery("select * from " + TABLE_USER + " where " + COLUMN_EMAIL_ADDRESS + "='" + theEmail + "' and "
+                + COLUMN_PASSWORD + "='" + thePassword + "'", null);
+
+        long userID = 0;
+        if (currentRow.moveToNext()) {
+            userID = currentRow.getLong(currentRow.getColumnIndex(COLUMN_USER_ID));
+        }
+        currentRow.close();
+        return userID;
+    }
+
+    public String obtainUserEmail(final long theUserID) {
+        Cursor currentRow = getReadableDatabase().rawQuery("select * from " + TABLE_USER + " where " + COLUMN_USER_ID + "='" + Long.toString(theUserID) + "'", null);
+        String userEmail = null;
+        if (currentRow.moveToNext()) {
+            userEmail = currentRow.getString(currentRow.getColumnIndex(COLUMN_EMAIL_ADDRESS));
+        }
+        currentRow.close();
+        return userEmail;
+    }
+
+    public String obtainUserPassword(final long theUserID) {
+        Cursor currentRow = getReadableDatabase().rawQuery("select * from " + TABLE_USER + " where " + COLUMN_USER_ID + "='" + Long.toString(theUserID) + "'", null);
+        String userPassword = null;
+        if (currentRow.moveToNext()) {
+            userPassword = currentRow.getString(currentRow.getColumnIndex(COLUMN_PASSWORD));
+        }
+        currentRow.close();
+        return userPassword;
+    }
+
+
+    public String obtainUserSecurityQuestion(final long theUserID) {
+        Cursor currentRow = getReadableDatabase().rawQuery("select * from " + TABLE_USER + " where " + COLUMN_USER_ID + "='" + Long.toString(theUserID) + "'", null);
+        String userSecurityQuestion = null;
+        if (currentRow.moveToNext()) {
+            userSecurityQuestion = currentRow.getString(currentRow.getColumnIndex(COLUMN_SECURITY_QUESTION));
+        }
+        currentRow.close();
+        return userSecurityQuestion;
+    }
+
+
+    public String obtainUserSecurityAnswer(final long theUserID) {
+        Cursor currentRow = getReadableDatabase().rawQuery("select * from " + TABLE_USER + " where " + COLUMN_USER_ID + "='" + Long.toString(theUserID) + "'", null);
+        String userSecurityAnswer = null;
+        if (currentRow.moveToNext()) {
+            userSecurityAnswer = currentRow.getString(currentRow.getColumnIndex(COLUMN_SECURITY_ANSWER));
+        }
+        currentRow.close();
+        return userSecurityAnswer;
+    }
+
+    /**
+     * This method returns an instance of a UserCursor to the calling code.
+     *
+     * @return userCursor
+     */
     public UserCursor queryUsers() {
-        Cursor wrapped = getReadableDatabase()
-                .query(TABLE_USER, null, null, null, null, null, COLUMN_USER_ID + " asc");
+        Cursor wrapped = getReadableDatabase().query(TABLE_USER, null, null, null, null, null, COLUMN_USER_ID + " asc");
         return new UserCursor(wrapped);
     }
-
-    /**Private helper method to access a value by a given row (by returning a cursor,
-     * rather than iterate through the entirety of the database using the publicly
-     * accessible queryUsers method.
-     * @param theRowID
-     * @return theRowCursor
-     */
-    private Cursor getRowDetails(final long theRowID) {
-        String[] select = {COLUMN_USER_ID, COLUMN_USERNAME, COLUMN_EMAIL_ADDRESS, COLUMN_PASSWORD, COLUMN_SECURITY_QUESTION, COLUMN_SECURITY_ANSWER};
-        String[] from = {COLUMN_USER_ID};
-        String where = COLUMN_USER_ID + "=" + Long.toString(theRowID);
-        return getReadableDatabase().query(true, TABLE_USER, select, where, from, null, null, null, null);
-    }
-
 
     /**
      * Instance of a private inner class that returns a Cursors that probes the rows
@@ -165,7 +231,10 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
 
         /**
          * Returns a User object configured for the current row, or null
-         * if the current row is invalid.
+         * if the current row is invalid. Allows the calling code to iterate
+         * over the entirety of the rows in the database.
+         *
+         * @return user
          */
         public User getUser() {
             User user = new User();
@@ -177,36 +246,12 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
             user.setPassword(getString(getColumnIndex(COLUMN_PASSWORD)));
             user.setSecurityQuestion(getString(getColumnIndex(COLUMN_SECURITY_QUESTION)));
             user.setSecurityAnswer(getString(getColumnIndex(COLUMN_SECURITY_ANSWER)));
+            user.setResetStatus(getInt(getColumnIndex(COLUMN_ISSUED_RESET)));
             return user;
-        }
-
-
-        public long getUserID() {
-
-            return getLong(getColumnIndex(COLUMN_USER_ID));
-        }
-
-        public String getUsername() {
-
-            return getString(getColumnIndex(COLUMN_USERNAME));
-        }
-
-        public String getEmailAddress() {
-
-            return getString(getColumnIndex(COLUMN_EMAIL_ADDRESS));
-        }
-
-        public String getPassword() {
-
-            return getString(getColumnIndex(COLUMN_PASSWORD));
         }
 
         public String getSecurityQuestion() {
             return getString(getColumnIndex(COLUMN_SECURITY_QUESTION));
-        }
-
-        public String getSecurityAnswer() {
-            return getString(getColumnIndex(COLUMN_SECURITY_ANSWER));
         }
 
     }

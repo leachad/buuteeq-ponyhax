@@ -7,15 +7,13 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="uw.buuteeq_ponyhax.app.RegisterActivity"
-    >
+    tools:context="uw.buuteeq_ponyhax.app.RegisterActivity">
 
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@mipmap/earth_icon"
-        android:background="@null"
-        />
+        android:background="@null" />
 
 
     <ScrollView
@@ -31,73 +29,68 @@
             android:orientation="vertical"
             android:alpha="100">
 
-        <EditText
-            android:id="@+id/emailEdit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/editTextTheme"
-            android:hint="@string/enter_email"
-            android:inputType="textEmailAddress"
+            <EditText
+                android:id="@+id/emailEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/editTextTheme"
+                android:hint="@string/enter_email"
+                android:inputType="textEmailAddress"
 
-            />
+                />
 
-        <EditText
-            android:id="@+id/userNameEdit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/editTextTheme"
-            android:hint="@string/userNamePrompt"
-            />
+            <EditText
+                android:id="@+id/userNameEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/editTextTheme"
+                android:hint="@string/userNamePrompt" />
 
-        <EditText
-            android:id="@+id/passwordEditInitial"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/editTextTheme"
-            android:hint="@string/password_prompt"
-            android:inputType="textPassword"
-            />
+            <EditText
+                android:id="@+id/passwordEditInitial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/editTextTheme"
+                android:hint="@string/password_prompt"
+                android:inputType="textPassword" />
 
-        <EditText
-            android:id="@+id/passwordEditSubsequent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/editTextTheme"
-            android:hint="@string/password_prompt_reenter"
-            android:inputType="textPassword"
-            />
+            <EditText
+                android:id="@+id/passwordEditSubsequent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/editTextTheme"
+                android:hint="@string/password_prompt_reenter"
+                android:inputType="textPassword" />
 
-        <EditText
-            android:id="@+id/securityQuestion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/editTextTheme"
-            android:hint="@string/security_question"
-            />
+            <Spinner
+                android:id="@+id/spinnerSecurityQuestions"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:spinnerMode="dropdown"
+                android:entries="@array/question_options"
+                android:prompt="@string/security_question" />
 
-        <EditText
-            android:id="@+id/securityQuestionAnswerInitial"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/editTextTheme"
-            android:hint="@string/security_answer"
-            />
 
-        <EditText
-            android:id="@+id/securityQuestionAnswerSubsequent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/editTextTheme"
-            android:hint="@string/security_answer_reenter"
-            />
+            <EditText
+                android:id="@+id/securityQuestionAnswerInitial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/editTextTheme"
+                android:hint="@string/security_answer" />
 
-        <Button
-            android:id="@+id/confirmNewUserButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/submit"
-            style="@style/buttonTheme"
-            />
+            <EditText
+                android:id="@+id/securityQuestionAnswerSubsequent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/editTextTheme"
+                android:hint="@string/security_answer_reenter" />
+
+            <Button
+                android:id="@+id/confirmNewUserButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/submit"
+                style="@style/buttonTheme" />
 
         </LinearLayout>
 
