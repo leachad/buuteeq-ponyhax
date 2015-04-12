@@ -22,7 +22,6 @@
         <item name="android:selectAllOnFocus">true</item>
         <item name="android:state_focused">false</item>
         <item name="android:imeOptions">actionNext</item>
-        <item name="android:inputType">textImeMultiLine</item>
 
     </style>
 

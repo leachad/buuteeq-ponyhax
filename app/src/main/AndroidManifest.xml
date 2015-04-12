@@ -61,6 +61,14 @@
             android:name=".MyMap"
             android:label="@string/title_activity_my_map" >
         </activity>
+        <activity
+            android:name=".CreateNewPasswordActivity"
+            android:label="@string/title_activity_create_new_password"
+            android:parentActivityName=".LoginActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="uw.buuteeq_ponyhax.app.LoginActivity" />
+        </activity>
     </application>
 
 </manifest>
