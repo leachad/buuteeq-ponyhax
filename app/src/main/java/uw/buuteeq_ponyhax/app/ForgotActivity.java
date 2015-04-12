@@ -1,6 +1,7 @@
 package uw.buuteeq_ponyhax.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -53,6 +54,7 @@ public class ForgotActivity extends ActionBarActivity {
                             User temp = cursor.getUser();
 
                             if (temp.getUserName().trim().matches(userinput.getText().toString().trim())) {
+                                Log.d(ForgotActivity.this.getLocalClassName(), "Setting question");
                                 ((TextView) findViewById(R.id.resetSecurityQuestion)).setText(cursor.getSecurityQuestion());
                             }
                         }
@@ -85,6 +87,11 @@ public class ForgotActivity extends ActionBarActivity {
                             email.sendEmail(usersEmail, testPass);
                             Toast.makeText(getApplicationContext(),
                                     "Your new randomly generated pass was sent to your email", Toast.LENGTH_SHORT).show();
+
+
+                            SharedPreferences resetPrefs = getSharedPreferences(User.PERM_PREFS, MODE_PRIVATE);
+                            resetPrefs.edit().putBoolean(User.USER_RESET, true).commit();
+
                             finish();
 
                         }

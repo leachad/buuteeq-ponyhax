@@ -1,13 +1,20 @@
 package uw.buuteeq_ponyhax.app;
 
-import java.sql.Date;
-
 /**
  * Created by andrew on 4/6/15.
  * Instance of a new user that is being accessed from the database or
  * sent to the database.
  */
 public class User {
+
+    public static final String USER_PREFS = "userPrefs";
+    public static final String PERM_PREFS = "permPrefs";
+    public static final String USER_RESET = "passwordReset";
+    public static final String USER_ID = "userID";
+    public static final String USER_PASSWORD = "password";
+    public static final String USER_QUESTION = "secQuestion";
+    public static final String USER_ANSWER = "secAnswer";
+    public static final String USER_EMAIL = "userEmail";
 
 
     /**

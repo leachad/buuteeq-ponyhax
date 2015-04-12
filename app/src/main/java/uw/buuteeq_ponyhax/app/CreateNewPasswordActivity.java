@@ -1,14 +1,62 @@
 package uw.buuteeq_ponyhax.app;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class CreateNewPasswordActivity extends ActionBarActivity {
+
+
+    private EditText mPassword;
+    private EditText mPassConfirm;
+    private Button mSubmitButton;
+    private UserStorageDatabaseHelper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_password);
+
+
+        mPassword = (EditText) findViewById(R.id.password_first);
+        mPassConfirm = (EditText) findViewById(R.id.password_second);
+        mSubmitButton = (Button) findViewById(R.id.newPasswordSubmit);
+
+
+
+        mSubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(mPassword.getText().toString().trim().equals(mPassConfirm.getText().toString().trim())) {
+
+                    //This should be done either way to ensure that our local copy of the user is up to date.
+                    SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
+                    prefs.edit().putInt(User.USER_PASSWORD, mPassword.getText().hashCode()).commit();
+
+                    //attempt to update the database with the new user password
+                    helper = new UserStorageDatabaseHelper(getApplicationContext());
+                    helper.modifyUserPassword(mPassword.getText().toString(), prefs.getLong(User.USER_ID, MODE_PRIVATE));
+
+
+                    SharedPreferences resetPrefs = getSharedPreferences(User.PERM_PREFS, MODE_PRIVATE);
+                    resetPrefs.edit().putBoolean(User.USER_RESET, new Boolean(false)).commit();
+
+                    Intent myIntent = new Intent(CreateNewPasswordActivity.this, MyAccount.class);
+                    startActivity(myIntent);
+                    finish();
+
+                }
+
+            }
+        });
+
+
+
 
 
     }

@@ -17,6 +17,7 @@
     <string name="geo_tracker">GeoTracker</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_register">User Registration</string>
+    <string name="title_activity_createNew">Create New Password</string>
     <string name="security_question">Security Question</string>
     <string name="security_answer">Question Answer</string>
     <string name="security_answer_reenter">Re-enter Question Answer</string>
@@ -27,13 +28,14 @@
     <string name="reset_password">Password Reset</string>
     <string name="reset_security_question">Security Question will appeare after you type your username!</string>
     <string name="enter_security_answer">Enter Your Security Answer</string>
+    <string name="signature">Buuteeq-PonyHax Designs</string>
 
     <!--
     List of questions for Spinner (Drop-down box) in the
     Register Activity.
     -->
     <string-array name="question_options">
-question-arrays        <item name="default position">Please choose a security question</item>
+question-arrays                <item name="default position">Please choose a security question</item>
         <item name="gf_middle_name">What is your grandfather\'s middle name?</item>
         <item name="fav_color">What is your favorite color?</item>
         <item name="anniversary">What day is your anniversary?</item>
@@ -56,5 +58,6 @@ question-arrays        <item name="default position">Please choose a security qu
     <string name="agree">Agree to Terms</string>
     <string name="title_activity_my_map">Map</string>
     <string name="title_activity_create_new_password">CreateNewPasswordActivity</string>
+    <string name="title_activity_splash">SplashActivity</string>
 
 </resources>

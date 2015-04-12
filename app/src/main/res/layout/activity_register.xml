@@ -1,5 +1,13 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="20dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -16,11 +24,6 @@
         android:background="@null" />
 
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -65,9 +68,12 @@
             <Spinner
                 android:id="@+id/spinnerSecurityQuestions"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAlignment="center"
                 android:spinnerMode="dropdown"
                 android:entries="@array/question_options"
+                android:layout_marginBottom="30dp"
                 android:prompt="@string/security_question" />
 
 
@@ -95,6 +101,8 @@
 
         </LinearLayout>
 
-    </ScrollView>
+
 
 </LinearLayout>
+
+</ScrollView>

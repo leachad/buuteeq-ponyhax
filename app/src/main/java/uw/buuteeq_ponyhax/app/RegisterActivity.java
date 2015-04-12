@@ -241,6 +241,7 @@ public class RegisterActivity extends ActionBarActivity {
                     Toast.makeText(getApplicationContext(), "User Added to Database!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegisterActivity.this, MyAccount.class);
                     startActivity(intent);
+                    finish();
                     //TODO Use the webservice to send out an automated email to finish registration?
                 }
 

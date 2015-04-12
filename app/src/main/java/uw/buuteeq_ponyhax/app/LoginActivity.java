@@ -2,14 +2,12 @@ package uw.buuteeq_ponyhax.app;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import email.EmailSend;
 
 public class LoginActivity extends Activity {
     private UserStorageDatabaseHelper mDbHelper;
@@ -117,7 +115,17 @@ public class LoginActivity extends Activity {
                         && helper.obtainUserPassword(userID).matches(mPasswordField.getText().toString().trim())) {
                     toRet = true;
 
-                     }
+                //setup shared preferences
+                SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
+
+                prefs.edit().putLong(User.USER_ID, userID).commit();
+                prefs.edit().putInt(User.USER_PASSWORD, mPasswordField.getText().toString().trim().hashCode()).commit();
+                prefs.edit().putString(User.USER_EMAIL, mEmailField.getText().toString().trim()).commit();
+                prefs.edit().putString(User.USER_QUESTION, helper.obtainUserSecurityQuestion(userID)).commit();
+                prefs.edit().putString(User.USER_ANSWER, helper.obtainUserSecurityAnswer(userID)).commit();
+
+
+             }
 //
 //            while (cursor.moveToNext()) {
 //                User temp = cursor.getUser();
@@ -153,14 +161,25 @@ public class LoginActivity extends Activity {
         @Override
         public void onClick(View v) {
             if (checkUserCredentials()) {
-                Intent intent = new Intent(LoginActivity.this, MyAccount.class);
+
+                SharedPreferences resetPrefs = getSharedPreferences(User.PERM_PREFS, MODE_PRIVATE);
+                boolean reset = resetPrefs.getBoolean(User.USER_RESET, true);
+                Intent intent;
+                if (!reset) {
+                    intent = new Intent(LoginActivity.this, MyAccount.class);
+
+                } else {
+                    intent = new Intent(LoginActivity.this, CreateNewPasswordActivity.class);
+                }
                 startActivity(intent);
+                finish();
             } else {
                 ((EditText) findViewById(R.id.email_field)).setText("");
                 ((EditText) findViewById(R.id.password_field)).setText("");
                 (findViewById(R.id.email_field)).requestFocus();
                 Toast.makeText(getApplicationContext(), "User not found!", Toast.LENGTH_SHORT).show();
             }
+
         }
     }
 }
