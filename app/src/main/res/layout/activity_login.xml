@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
@@ -7,7 +8,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     style="@style/AppTheme"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity">
 
 
     <LinearLayout
@@ -22,21 +24,20 @@
             android:src="@mipmap/earth_icon"
             android:background="@null"
             android:layout_gravity="left"
-            android:layout_marginLeft="50dp"
-            />
+            android:layout_marginLeft="50dp" />
 
 
-        <TextView android:layout_width="match_parent"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingBottom="24dp"
             android:text="@string/app_name"
             android:textSize="@dimen/abc_text_size_display_2_material"
             android:textColor="@color/material_deep_teal_500"
-            android:layout_marginBottom="30dp"
-            />
+            android:layout_marginBottom="30dp" />
 
-        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,8 +52,7 @@
             android:hint="@string/enter_email"
             android:inputType="textEmailAddress"
             style="@style/editTextTheme"
-            android:textAppearance="@style/TextAppearance.AppCompat"/>
-
+            android:textAppearance="@style/TextAppearance.AppCompat" />
 
 
     </LinearLayout>
@@ -71,7 +71,7 @@
             android:inputType="textPassword"
             style="@style/editTextTheme"
             android:textAppearance="@style/TextAppearance.AppCompat"
-            android:imeOptions="actionDone"/>
+            android:imeOptions="actionDone" />
 
     </LinearLayout>
 
@@ -86,14 +86,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/buttonTheme"
-            android:text="@string/login"/>
+            android:text="@string/login" />
 
         <Button
             android:id="@+id/new_account_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/buttonTheme"
-            android:text="@string/create_account"/>
+            android:text="@string/create_account" />
 
     </LinearLayout>
 

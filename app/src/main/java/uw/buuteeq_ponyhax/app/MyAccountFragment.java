@@ -30,20 +30,18 @@ public class MyAccountFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.fragment_my_account, container, false);
 
-        SharedPreferences prefs = v.getContext().getApplicationContext().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        return v;
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences prefs = getActivity().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
 
-
-        //These for some reason crash the program
-//        ((TextView) v.findViewById(R.id.text_account_name)).setText("User ID: \n" + prefs.getString(User.USER_ID, "0"));
-//
-//        ((TextView) v.findViewById(R.id.text_account_email)).setText("Email: \n" + prefs.getString(User.USER_EMAIL, "N/A"));
-//
-//        ((TextView) v.findViewById(R.id.text_account_numDataPoints)).setText("Data Points Logged: \n" + "N/A");
-
-
+        ((TextView) getActivity().findViewById(R.id.text_account_name)).setText("User ID: \n" + prefs.getString(User.USER_ID, "0"));
+        ((TextView) getActivity().findViewById(R.id.text_account_email)).setText("Email: \n" + prefs.getString(User.USER_EMAIL, "N/A"));
+        ((TextView) getActivity().findViewById(R.id.text_account_numDataPoints)).setText("Data Points Logged: \n" + "N/A");
         prefs.edit().clear().commit();
 
-        return v;
     }
 }

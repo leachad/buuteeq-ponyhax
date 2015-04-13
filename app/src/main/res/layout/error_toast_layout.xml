@@ -6,15 +6,16 @@
     android:layout_height="fill_parent"
     android:padding="8dp"
     android:background="#DAAA">
-<ImageView
-    android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginRight="8dp"/>
 
-<TextView
-    android:id="@+id/text"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:textColor="#FF0000"/>
+    <ImageView
+        android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FF0000" />
 </LinearLayout>

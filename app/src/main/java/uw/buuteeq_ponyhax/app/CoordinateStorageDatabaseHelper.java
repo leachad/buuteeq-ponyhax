@@ -20,8 +20,6 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-
-
     @Override
     public void onCreate(SQLiteDatabase db) {
 

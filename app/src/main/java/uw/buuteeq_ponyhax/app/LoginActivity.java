@@ -103,7 +103,7 @@ public class LoginActivity extends Activity {
         UserStorageDatabaseHelper helper = new UserStorageDatabaseHelper(getApplicationContext());
         UserStorageDatabaseHelper.UserCursor cursor = helper.queryUsers();
         /** If necessary to delete a localized database, comment in the line below.*/
-       // getApplicationContext().deleteDatabase(helper.getDatabaseName());
+        // getApplicationContext().deleteDatabase(helper.getDatabaseName());
         Toast.makeText(getApplicationContext(), "Database has " + helper.getNumEntries() + " entries", Toast.LENGTH_SHORT).show();
 
         if (!mPasswordField.getText().toString().trim().matches("") && !mEmailField.getText().toString().trim().matches("")) {
@@ -112,8 +112,8 @@ public class LoginActivity extends Activity {
             long userID = helper.obtainUserID(mEmailField.getText().toString().trim(), mPasswordField.getText().toString().trim());
 
             if (helper.obtainUserEmail(userID).matches(mEmailField.getText().toString().trim())
-                        && helper.obtainUserPassword(userID).matches(mPasswordField.getText().toString().trim())) {
-                    toRet = true;
+                    && helper.obtainUserPassword(userID).matches(mPasswordField.getText().toString().trim())) {
+                toRet = true;
 
                 //setup shared preferences
                 SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
@@ -125,7 +125,7 @@ public class LoginActivity extends Activity {
                 prefs.edit().putString(User.USER_ANSWER, helper.obtainUserSecurityAnswer(userID)).commit();
 
 
-             }
+            }
 //
 //            while (cursor.moveToNext()) {
 //                User temp = cursor.getUser();

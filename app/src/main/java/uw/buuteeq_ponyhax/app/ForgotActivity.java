@@ -39,7 +39,7 @@ public class ForgotActivity extends ActionBarActivity {
         checkUser();
     }
 
-    public  void checkUser(){
+    public void checkUser() {
         final UserStorageDatabaseHelper dbHelper = new UserStorageDatabaseHelper(getApplicationContext());
         final UserStorageDatabaseHelper.UserCursor cursor = dbHelper.queryUsers();
 
@@ -69,11 +69,11 @@ public class ForgotActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 EditText secAnswer = (EditText) findViewById(R.id.resetPassSecAnswer);
-                if (!secAnswer.getText().toString().trim().matches("")){
+                if (!secAnswer.getText().toString().trim().matches("")) {
                     while (cursor2.moveToNext()) {
                         User temp = cursor2.getUser();
                         if (temp.getUserName().trim().matches(userinput.getText().toString().trim())
-                                && temp.getSecurityAnswer().trim().matches(secAnswer.getText().toString().trim())){
+                                && temp.getSecurityAnswer().trim().matches(secAnswer.getText().toString().trim())) {
                             String usersEmail = temp.getEmail();
 
                             //make a random pass and send it to their email.

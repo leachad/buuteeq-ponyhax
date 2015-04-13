@@ -20,7 +20,9 @@ public class RegisterActivity extends ActionBarActivity {
      */
     private EditText[] mNewUserFields;
 
-    /** Instance of a spinner to hold all the security questions for selection by the user.*/
+    /**
+     * Instance of a spinner to hold all the security questions for selection by the user.
+     */
     private Spinner mQuestionSpinner;
 
     @Override

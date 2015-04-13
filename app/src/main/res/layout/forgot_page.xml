@@ -36,8 +36,7 @@
             android:hint="@string/userNamePrompt"
             android:layout_weight="0.10"
             android:textSize="20sp"
-            style="@style/editTextTheme"
-            />
+            style="@style/editTextTheme" />
 
         <TextView
             android:layout_width="match_parent"

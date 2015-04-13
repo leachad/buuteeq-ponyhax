@@ -8,7 +8,6 @@ import android.os.Bundle;
 public class SplashActivity extends Activity {
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +50,6 @@ public class SplashActivity extends Activity {
         startActivity(myIntent);
 
     }
-
 
 
 }

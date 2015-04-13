@@ -35,7 +35,8 @@
     Register Activity.
     -->
     <string-array name="question_options">
-question-arrays                <item name="default position">Please choose a security question</item>
+        question-arrays
+        <item name="default position">Please choose a security question</item>
         <item name="gf_middle_name">What is your grandfather\'s middle name?</item>
         <item name="fav_color">What is your favorite color?</item>
         <item name="anniversary">What day is your anniversary?</item>

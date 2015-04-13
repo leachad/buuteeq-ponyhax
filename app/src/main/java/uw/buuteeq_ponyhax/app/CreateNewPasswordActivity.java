@@ -27,12 +27,11 @@ public class CreateNewPasswordActivity extends ActionBarActivity {
         mSubmitButton = (Button) findViewById(R.id.newPasswordSubmit);
 
 
-
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(mPassword.getText().toString().trim().equals(mPassConfirm.getText().toString().trim())) {
+                if (mPassword.getText().toString().trim().equals(mPassConfirm.getText().toString().trim())) {
 
                     //This should be done either way to ensure that our local copy of the user is up to date.
                     SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
@@ -56,19 +55,7 @@ public class CreateNewPasswordActivity extends ActionBarActivity {
         });
 
 
-
-
-
     }
-
-
-
-
-
-
-
-
-
 
 
 //    @Override
