@@ -10,18 +10,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class LoginActivity extends Activity {
-    private UserStorageDatabaseHelper mDbHelper;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        /** Initialize the database helper. */
-        mDbHelper = new UserStorageDatabaseHelper(getApplicationContext());
-
-        mDbHelper = new UserStorageDatabaseHelper(getApplicationContext());
-        // getApplicationContext().deleteDatabase(UserStorageDatabaseHelper.DATABASE_NAME
 
         /** Set the first page view with activity_login.xml. */
         setContentView(R.layout.activity_login);
@@ -66,29 +57,6 @@ public class LoginActivity extends Activity {
     }
 
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_login, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
     /**
      * Private helper method that will aid the LoginListener in determining
      * whether or not the user is already registered in the system.
@@ -99,43 +67,33 @@ public class LoginActivity extends Activity {
         boolean toRet = false;
         EditText mPasswordField = (EditText) findViewById(R.id.password_field);
         EditText mEmailField = (EditText) findViewById(R.id.email_field);
+        UserStorageDatabaseHelper mDbHelper = new UserStorageDatabaseHelper(getApplicationContext());
 
-        UserStorageDatabaseHelper helper = new UserStorageDatabaseHelper(getApplicationContext());
-        UserStorageDatabaseHelper.UserCursor cursor = helper.queryUsers();
         /** If necessary to delete a localized database, comment in the line below.*/
-        // getApplicationContext().deleteDatabase(helper.getDatabaseName());
-        Toast.makeText(getApplicationContext(), "Database has " + helper.getNumEntries() + " entries", Toast.LENGTH_SHORT).show();
+        //getApplicationContext().deleteDatabase(mDbHelper.getDatabaseName());
+        Toast.makeText(getApplicationContext(), "Database has " + mDbHelper.getNumEntries() + " entries", Toast.LENGTH_SHORT).show();
 
-        if (!mPasswordField.getText().toString().trim().matches("") && !mEmailField.getText().toString().trim().matches("")) {
+        if (!mPasswordField.getText().toString().trim().matches("") && !mEmailField.getText().toString().trim().matches("")
+                && mDbHelper.obtainUserID(mEmailField.getText().toString().trim(), mPasswordField.getText().toString().trim()) != 0){
 
 
-            long userID = helper.obtainUserID(mEmailField.getText().toString().trim(), mPasswordField.getText().toString().trim());
+            long userID = mDbHelper.obtainUserID(mEmailField.getText().toString().trim(), mPasswordField.getText().toString().trim());
 
-            if (helper.obtainUserEmail(userID).matches(mEmailField.getText().toString().trim())
-                    && helper.obtainUserPassword(userID).matches(mPasswordField.getText().toString().trim())) {
+            if (mDbHelper.obtainUserEmail(userID).matches(mEmailField.getText().toString().trim())
+                    && mDbHelper.obtainUserPassword(userID).matches(mPasswordField.getText().toString().trim())) {
                 toRet = true;
 
                 //setup shared preferences
                 SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
 
-                prefs.edit().putLong(User.USER_ID, userID).commit();
-                prefs.edit().putInt(User.USER_PASSWORD, mPasswordField.getText().toString().trim().hashCode()).commit();
-                prefs.edit().putString(User.USER_EMAIL, mEmailField.getText().toString().trim()).commit();
-                prefs.edit().putString(User.USER_QUESTION, helper.obtainUserSecurityQuestion(userID)).commit();
-                prefs.edit().putString(User.USER_ANSWER, helper.obtainUserSecurityAnswer(userID)).commit();
+                prefs.edit().putLong(User.USER_ID, userID).apply();
+                prefs.edit().putInt(User.USER_PASSWORD, mPasswordField.getText().toString().trim().hashCode()).apply();
+                prefs.edit().putString(User.USER_EMAIL, mEmailField.getText().toString().trim()).apply();
+                prefs.edit().putString(User.USER_QUESTION, mDbHelper.obtainUserSecurityQuestion(userID)).apply();
+                prefs.edit().putString(User.USER_ANSWER, mDbHelper.obtainUserSecurityAnswer(userID)).apply();
 
 
             }
-//
-//            while (cursor.moveToNext()) {
-//                User temp = cursor.getUser();
-//                if (temp.getEmail().trim().matches(mEmailField.getText().toString().trim())
-//                        && temp.getPassword().trim().matches(mPasswordField.getText().toString().trim())) {
-//                    toRet = true;
-//                    break;
-//                }
-//
-//            }
         }
         return toRet;
 

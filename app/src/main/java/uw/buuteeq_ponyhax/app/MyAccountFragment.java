@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 /**
  * Created by BrentYoung on 4/12/15.
  */
@@ -37,8 +39,7 @@ public class MyAccountFragment extends Fragment {
     public void onResume() {
         super.onResume();
         SharedPreferences prefs = getActivity().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-
-        ((TextView) getActivity().findViewById(R.id.text_account_name)).setText("User ID: \n" + prefs.getString(User.USER_ID, "0"));
+        ((TextView) getActivity().findViewById(R.id.text_account_name)).setText("User ID: \n" + Long.toString(prefs.getLong(User.USER_ID, 0)));
         ((TextView) getActivity().findViewById(R.id.text_account_email)).setText("Email: \n" + prefs.getString(User.USER_EMAIL, "N/A"));
         ((TextView) getActivity().findViewById(R.id.text_account_numDataPoints)).setText("Data Points Logged: \n" + "N/A");
         prefs.edit().clear().commit();

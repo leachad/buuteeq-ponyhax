@@ -1,6 +1,7 @@
 package uw.buuteeq_ponyhax.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -25,6 +26,9 @@ public class RegisterActivity extends ActionBarActivity {
      */
     private Spinner mQuestionSpinner;
 
+    /** Private field to hold a reference to the current user gleaned from User input.*/
+    private User myRegisteredUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +39,8 @@ public class RegisterActivity extends ActionBarActivity {
 
         /** Instantiante the security question spinner.*/
         mQuestionSpinner = (Spinner) findViewById(R.id.spinnerSecurityQuestions);
+
+        myRegisteredUser = null;
 
         /** Find all the EditText widgets.*/
         loadEditTextWidgets();
@@ -161,18 +167,29 @@ public class RegisterActivity extends ActionBarActivity {
      * @return theNewUser
      */
     private User getNewUser() {
-        User theNewUser = new User();
+        myRegisteredUser = new User();
 
         /** String values to update the New User fields are gleaned from the EditText widgets.*/
-        theNewUser.setEmail(mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getText().toString().trim());
-        theNewUser.setUserName(mNewUserFields[RegisterField.USER_NAME.indexValue].getText().toString().trim());
-        theNewUser.setPassword(mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getText().toString().trim());
-        theNewUser.setSecurityAnswer(mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].getText().toString().trim());
+        myRegisteredUser.setEmail(mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getText().toString().trim());
+        myRegisteredUser.setUserName(mNewUserFields[RegisterField.USER_NAME.indexValue].getText().toString().trim());
+        myRegisteredUser.setPassword(mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getText().toString().trim());
+        myRegisteredUser.setSecurityAnswer(mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].getText().toString().trim());
+        myRegisteredUser.setResetStatus(0);
 
         /** String value to update the New User security question field is gleaned from the spinner.*/
-        theNewUser.setSecurityQuestion(mQuestionSpinner.getSelectedItem().toString().trim());
+        myRegisteredUser.setSecurityQuestion(mQuestionSpinner.getSelectedItem().toString().trim());
 
-        return theNewUser;
+        return myRegisteredUser;
+    }
+
+    private void setPrefs() {
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
+
+        prefs.edit().putLong(User.USER_ID, myRegisteredUser.getUserID()).apply();
+        prefs.edit().putInt(User.USER_PASSWORD, myRegisteredUser.getPassword().trim().hashCode()).apply();
+        prefs.edit().putString(User.USER_EMAIL, myRegisteredUser.getEmail().trim()).apply();
+        prefs.edit().putString(User.USER_QUESTION, myRegisteredUser.getSecurityQuestion()).apply();
+        prefs.edit().putString(User.USER_ANSWER, myRegisteredUser.getSecurityAnswer()).apply();
     }
 
 
@@ -243,6 +260,7 @@ public class RegisterActivity extends ActionBarActivity {
                     Toast.makeText(getApplicationContext(), "User Added to Database!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegisterActivity.this, MyAccount.class);
                     startActivity(intent);
+                    setPrefs();
                     finish();
                     //TODO Use the webservice to send out an automated email to finish registration?
                 }
