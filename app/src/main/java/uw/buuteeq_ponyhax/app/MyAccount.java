@@ -1,6 +1,8 @@
 package uw.buuteeq_ponyhax.app;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -57,8 +59,8 @@ public class MyAccount extends ActionBarActivity
                 fragment = new MyMap();
                 break;
             case 3:
-                //TODO Make a fragment for this.
-                fragment = new MyAccountFragment();
+                SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+                prefs.edit().clear().commit();
                 break;
         }
 
@@ -95,10 +97,10 @@ public class MyAccount extends ActionBarActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-//            restoreActionBar();
+        /*if (!mNavigationDrawerFragment.isDrawerOpen()) {
+            restoreActionBar();
             return true;
-        }
+        }*/
         return super.onCreateOptionsMenu(menu);
     }
 

@@ -49,7 +49,8 @@
 
     <string name="title_section1">Overview</string>
     <string name="title_section2">My Map</string>
-    <string name="title_section3">Account Details</string>
+    <string name="title_section3">Log out</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
