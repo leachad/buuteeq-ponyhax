@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import db.User;
+import db.UserStorageDatabaseHelper;
+
 public class CreateNewPasswordActivity extends ActionBarActivity {
 
 

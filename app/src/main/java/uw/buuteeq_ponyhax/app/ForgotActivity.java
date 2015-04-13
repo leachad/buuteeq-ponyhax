@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import db.User;
+import db.UserStorageDatabaseHelper;
 import email.EmailSend;
 
 /**

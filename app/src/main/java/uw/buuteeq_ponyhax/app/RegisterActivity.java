@@ -13,6 +13,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import db.User;
+import db.UserStorageDatabaseHelper;
+
 
 public class RegisterActivity extends ActionBarActivity {
 

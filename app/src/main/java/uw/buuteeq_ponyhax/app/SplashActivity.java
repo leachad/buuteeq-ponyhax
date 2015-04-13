@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import db.User;
+
 public class SplashActivity extends Activity {
 
 

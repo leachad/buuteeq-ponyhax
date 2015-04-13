@@ -1,4 +1,4 @@
-package uw.buuteeq_ponyhax.app;
+package db;
 
 /**
  * Created by andrew on 4/6/15.

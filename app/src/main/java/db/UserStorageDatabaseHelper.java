@@ -1,4 +1,4 @@
-package uw.buuteeq_ponyhax.app;
+package db;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.database.CursorWrapper;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.Toast;
 
 /**
  * Utilization of the SQLiteOpenHelper to create a database for storing User Data for
@@ -88,9 +87,9 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * Private helper method to determine if a User is unique within the database.
+     *
      * @param user
      * @return isUnique
-     *
      */
     private boolean isUnique(User user) {
         UserCursor cursor = queryUsers();

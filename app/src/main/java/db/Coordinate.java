@@ -1,4 +1,4 @@
-package uw.buuteeq_ponyhax.app;
+package db;
 
 /**
  * Java class that holds all the fields pertinent to a coordinate in a given
