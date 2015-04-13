@@ -70,14 +70,36 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
     public long insertUser(User user) {
         ContentValues cv = new ContentValues();
 
-        cv.put(COLUMN_USERNAME, user.getUserName());
-        cv.put(COLUMN_EMAIL_ADDRESS, user.getEmail());
-        cv.put(COLUMN_PASSWORD, user.getPassword());
-        cv.put(COLUMN_SECURITY_QUESTION, user.getSecurityQuestion());
-        cv.put(COLUMN_SECURITY_ANSWER, user.getSecurityAnswer());
-        cv.put(COLUMN_ISSUED_RESET, user.getResetStatus());
+        if (isUnique(user)) {
+            cv.put(COLUMN_USERNAME, user.getUserName());
+            cv.put(COLUMN_EMAIL_ADDRESS, user.getEmail());
+            cv.put(COLUMN_PASSWORD, user.getPassword());
+            cv.put(COLUMN_SECURITY_QUESTION, user.getSecurityQuestion());
+            cv.put(COLUMN_SECURITY_ANSWER, user.getSecurityAnswer());
+            cv.put(COLUMN_ISSUED_RESET, user.getResetStatus());
+
+
+        }
 
         return getWritableDatabase().insert(TABLE_USER, null, cv);
+    }
+
+    /**
+     * Private helper method to determine if a User is unique within the database.
+     * @param user
+     * @return isUnique
+     *
+     */
+    private boolean isUnique(User user) {
+        UserCursor cursor = queryUsers();
+        boolean isUnique = true;
+        while (cursor.moveToNext()) {
+            if (cursor.getUser().getEmail().matches(user.getEmail())) {
+                isUnique = false;
+                break;
+            }
+        }
+        return isUnique;
     }
 
 
