@@ -62,6 +62,9 @@ public class MyAccount extends ActionBarActivity
                 SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
                 prefs.edit().clear().commit();
                 break;
+            case 4:
+                fragment = new SettingsFragment();
+                break;
         }
 
         fragmentManager.beginTransaction()
@@ -84,6 +87,9 @@ public class MyAccount extends ActionBarActivity
                 break;
             case 3:
                 mTitle = getString(R.string.title_section3);
+                break;
+            case 4:
+                mTitle = getString(R.string.title_section4);
                 break;
         }
     }
