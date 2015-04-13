@@ -54,10 +54,13 @@ question-arrays                <item name="default position">Please choose a sec
     <string name="action_example">Example action</string>
     <string name="title_activity_agreement">AgreementActivity</string>
     <string name="hello_world">Hello world!</string>
-    <string name="agreement_statement">We are privilege to your first born.</string>
     <string name="agree">Agree to Terms</string>
     <string name="title_activity_my_map">Map</string>
     <string name="title_activity_create_new_password">CreateNewPasswordActivity</string>
     <string name="title_activity_splash">SplashActivity</string>
+
+
+    <string name="agreement_statement">GeoTracker will require access to: \n\nInternet and Web Services\nNetwork State\nExternal Storage\nAccessing and Reading GPS services\nAccess to Location information</string>
+
 
 </resources>

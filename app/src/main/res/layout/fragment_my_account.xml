@@ -1,40 +1,69 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     style="@style/AppTheme"
-    android:orientation="vertical"
-    tools:context="uw.buuteeq_ponyhax.app.MyAccount$PlaceholderFragment">
+    >
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:gravity="center"
-        android:text="My Account"
-        android:id="@+id/textView3"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        style="@style/editTextTheme"
-        />
 
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card_view"
-        android:layout_width="match_parent"
+
+    <LinearLayout android:layout_width="match_parent"
         android:layout_height="match_parent"
-        card_view:cardCornerRadius="6dp">
+        android:orientation="vertical"
+        tools:context="uw.buuteeq_ponyhax.app.MyAccount$PlaceholderFragment">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:gravity="center"
+            android:text="My Account"
+            android:id="@+id/textView3"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            style="@style/editTextTheme"
+            />
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:id="@+id/card_layout"
-            android:padding="5dp"
+            android:orientation="vertical"
             >
 
-            <LinearLayout
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:text="Name: \nEmmaWatson"
+                style="@style/editTextTheme"
+                android:layout_marginTop="10dp"
+                android:id="@+id/text_account_name" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:text="Email: \nemma@hotharrypottergals.com"
+                style="@style/editTextTheme"
+                android:layout_marginTop="10dp"
+                android:id="@+id/text_account_email" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:text="Data Points Recorded: 10"
+                style="@style/editTextTheme"
+                android:layout_marginTop="10dp"
+                android:id="@+id/text_account_numDataPoints" />
+
+
+            <!-- <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -48,20 +77,18 @@
                     android:src="@mipmap/emma_watson"
                     android:scaleType="centerCrop" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="EmmaWatson"
-                    style="@style/editTextTheme"
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/textView4" />
 
-            </LinearLayout>
+
+            </LinearLayout> -->
 
         </LinearLayout>
-    </android.support.v7.widget.CardView>
 
 
 
-</LinearLayout>
+    </LinearLayout>
+
+
+</ScrollView>
+
+
+

@@ -42,7 +42,7 @@ public class SplashActivity extends Activity {
 
         Intent myIntent;
         SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
-        if (prefs.contains(User.USER_ID)) {
+        if (prefs != null && prefs.contains(User.USER_ID)) {
             myIntent = new Intent(SplashActivity.this, MyAccount.class);
         } else {
             myIntent = new Intent(SplashActivity.this, LoginActivity.class);

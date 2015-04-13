@@ -39,6 +39,8 @@ public class MyAccount extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        setTitle("");
     }
 
     @Override
@@ -49,7 +51,7 @@ public class MyAccount extends ActionBarActivity
 
         switch (position) {
             case 0:
-                fragment = PlaceholderFragment.newInstance(position + 1);
+                fragment = new MyAccountFragment();
                 break;
             case 1:
                 fragment = new MyMap();
@@ -86,15 +88,15 @@ public class MyAccount extends ActionBarActivity
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+//        actionBar.setDisplayShowTitleEnabled(true);
+//        actionBar.setTitle(mTitle);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            restoreActionBar();
+//            restoreActionBar();
             return true;
         }
         return super.onCreateOptionsMenu(menu);
@@ -140,6 +142,7 @@ public class MyAccount extends ActionBarActivity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+            super.onCreateView(inflater, container, savedInstanceState);
             View rootView = inflater.inflate(R.layout.fragment_my_account, container, false);
             return rootView;
         }

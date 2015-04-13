@@ -70,7 +70,8 @@
             android:hint="@string/enter_password"
             android:inputType="textPassword"
             style="@style/editTextTheme"
-            android:textAppearance="@style/TextAppearance.AppCompat"/>
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:imeOptions="actionDone"/>
 
     </LinearLayout>
 

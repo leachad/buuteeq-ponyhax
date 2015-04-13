@@ -177,7 +177,7 @@ public class LoginActivity extends Activity {
                 ((EditText) findViewById(R.id.email_field)).setText("");
                 ((EditText) findViewById(R.id.password_field)).setText("");
                 (findViewById(R.id.email_field)).requestFocus();
-                Toast.makeText(getApplicationContext(), "User not found!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext().getApplicationContext(), "User not found!", Toast.LENGTH_SHORT).show();
             }
 
         }
