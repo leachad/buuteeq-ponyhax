@@ -26,7 +26,9 @@ public class RegisterActivity extends ActionBarActivity {
      */
     private Spinner mQuestionSpinner;
 
-    /** Private field to hold a reference to the current user gleaned from User input.*/
+    /**
+     * Private field to hold a reference to the current user gleaned from User input.
+     */
     private User myRegisteredUser;
 
     @Override

@@ -74,7 +74,7 @@ public class LoginActivity extends Activity {
         Toast.makeText(getApplicationContext(), "Database has " + mDbHelper.getNumEntries() + " entries", Toast.LENGTH_SHORT).show();
 
         if (!mPasswordField.getText().toString().trim().matches("") && !mEmailField.getText().toString().trim().matches("")
-                && mDbHelper.obtainUserID(mEmailField.getText().toString().trim(), mPasswordField.getText().toString().trim()) != 0){
+                && mDbHelper.obtainUserID(mEmailField.getText().toString().trim(), mPasswordField.getText().toString().trim()) != 0) {
 
 
             long userID = mDbHelper.obtainUserID(mEmailField.getText().toString().trim(), mPasswordField.getText().toString().trim());
