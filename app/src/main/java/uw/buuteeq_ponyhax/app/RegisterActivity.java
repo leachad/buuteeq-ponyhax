@@ -154,7 +154,7 @@ public class RegisterActivity extends ActionBarActivity {
     private boolean addEntryToDatabase() {
         UserStorageDatabaseHelper dBHelper = new UserStorageDatabaseHelper(getApplicationContext());
         long beforeAdd = dBHelper.getNumEntries();
-        dBHelper.insertUser(getNewUser());
+        long result = dBHelper.insertUser(getNewUser());
         long afterAdd = dBHelper.getNumEntries();
 
         return !(beforeAdd == afterAdd);

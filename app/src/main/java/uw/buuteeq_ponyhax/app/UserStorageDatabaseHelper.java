@@ -7,6 +7,7 @@ import android.database.CursorWrapper;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 /**
  * Utilization of the SQLiteOpenHelper to create a database for storing User Data for
@@ -68,6 +69,7 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
      * @param user is the user passed to the database.
      */
     public long insertUser(User user) {
+
         ContentValues cv = new ContentValues();
 
         if (isUnique(user)) {

@@ -42,7 +42,7 @@ public class MyAccountFragment extends Fragment {
         ((TextView) getActivity().findViewById(R.id.text_account_name)).setText("User ID: \n" + Long.toString(prefs.getLong(User.USER_ID, 0)));
         ((TextView) getActivity().findViewById(R.id.text_account_email)).setText("Email: \n" + prefs.getString(User.USER_EMAIL, "N/A"));
         ((TextView) getActivity().findViewById(R.id.text_account_numDataPoints)).setText("Data Points Logged: \n" + "N/A");
-        prefs.edit().clear().commit();
+//        prefs.edit().clear().commit();
 
     }
 }
