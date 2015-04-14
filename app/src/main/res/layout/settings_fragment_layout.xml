@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:gravity="center"
-            android:text="My Settings"
+            android:text="@string/action_settings"
             android:id="@+id/textView3"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
@@ -51,12 +51,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Pick a new Question from the Drop Down."
+                style="@style/editTextTheme"
+                android:text="@string/security_question"
                 android:id="@+id/textView2"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight="0.21"
-                android:textColor="#fffcf2ff" />
+                android:layout_weight="0.21"/>
 
             <Spinner
                 android:id="@+id/spinnerSecurityQuestions"

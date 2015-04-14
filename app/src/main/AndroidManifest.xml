@@ -58,10 +58,6 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />
-
-        <activity
-            android:name=".MyMap"
-            android:label="@string/title_activity_my_map"></activity>
         <activity
             android:name=".CreateNewPasswordActivity"
             android:label="@string/title_activity_create_new_password"

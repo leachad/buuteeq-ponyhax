@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:gravity="center"
-            android:text="My Account"
+            android:text="@string/title_activity_my_account"
             android:id="@+id/textView3"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
@@ -36,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:editable="false"
-                android:text="Name: \nEmmaWatson"
+                android:text="@string/userNamePrompt"
                 style="@style/editTextTheme"
                 android:layout_marginTop="10dp"
                 android:id="@+id/text_account_name" />
@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:editable="false"
-                android:text="Email: \nemma@hotharrypottergals.com"
+                android:text="@string/email"
                 style="@style/editTextTheme"
                 android:layout_marginTop="10dp"
                 android:id="@+id/text_account_email" />
@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:editable="false"
-                android:text="Data Points Recorded: 10"
+                android:text="@string/num_data_points"
                 style="@style/editTextTheme"
                 android:layout_marginTop="10dp"
                 android:id="@+id/text_account_numDataPoints" />
