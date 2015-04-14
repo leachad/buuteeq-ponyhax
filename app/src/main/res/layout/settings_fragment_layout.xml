@@ -12,6 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="20dp"
         android:orientation="vertical"
         tools:context="uw.buuteeq_ponyhax.app.MyAccount$PlaceholderFragment">
 
@@ -36,7 +37,7 @@
             style="@style/AppTheme">
 
             <Button
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/reset_password"
                 android:id="@+id/resetpass_from_settings"
@@ -44,18 +45,13 @@
                 android:layout_weight="0.21"
                 style="@style/buttonTheme" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="25dp"
-                android:layout_gravity="center_horizontal" />
-
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/editTextTheme"
                 android:text="@string/security_question"
-                android:id="@+id/ChangeSecurityDiscription"
-                android:layout_gravity="center_horizontal"
+                android:id="@+id/ChangeSecurityDescription"
+                android:layout_marginTop="30dp"
                 android:layout_weight="0.21" />
 
             <Spinner
@@ -76,11 +72,11 @@
                 android:id="@+id/newSecurityAnswer"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.21"
-                android:hint="Type in Your New Security Answer"
+                android:hint="@string/security_answer"
                 android:inputType="textImeMultiLine"
                 android:textColor="#ffffffff"
                 android:textColorHint="#ffffffff"
-                android:theme="@style/AppTheme" />
+                android:theme="@style/editTextTheme" />
 
         </LinearLayout>
 
