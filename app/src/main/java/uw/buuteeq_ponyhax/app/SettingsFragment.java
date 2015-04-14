@@ -37,9 +37,16 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        SharedPreferences prefs = getActivity().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
         /** Instantiante the security question spinner.*/
         mQuestionSpinner = (Spinner) getActivity().findViewById(R.id.spinnerSecurityQuestions);
+
+        User myRegisteredUser = new User();
+        /** String value to update the New User security question field is gleaned from the spinner.*/
+        myRegisteredUser.setSecurityQuestion(mQuestionSpinner.getSelectedItem().toString().trim());
+
+        prefs.edit().putString(User.USER_QUESTION, myRegisteredUser.getSecurityQuestion()).apply();
+
         getActivity().findViewById(R.id.resetpass_from_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,7 +54,5 @@ public class SettingsFragment extends Fragment {
                 startActivity(myIntent);
             }
             });
-
-
     }
 }
