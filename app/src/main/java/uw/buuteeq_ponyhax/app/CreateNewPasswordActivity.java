@@ -46,7 +46,7 @@ public class CreateNewPasswordActivity extends ActionBarActivity {
 
 
                     SharedPreferences resetPrefs = getSharedPreferences(User.PERM_PREFS, MODE_PRIVATE);
-                    resetPrefs.edit().putBoolean(User.USER_RESET, new Boolean(false)).commit();
+                    resetPrefs.edit().putBoolean(User.USER_RESET, false).commit();
 
                     Intent myIntent = new Intent(CreateNewPasswordActivity.this, MyAccount.class);
                     startActivity(myIntent);
