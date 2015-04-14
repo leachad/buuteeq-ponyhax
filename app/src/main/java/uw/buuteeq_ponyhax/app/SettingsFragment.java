@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import db.User;
 
@@ -53,6 +52,6 @@ public class SettingsFragment extends Fragment {
                 Intent myIntent = new Intent(getActivity(), CreateNewPasswordActivity.class);
                 startActivity(myIntent);
             }
-            });
+        });
     }
 }

@@ -68,7 +68,7 @@ public class MyAccount extends ActionBarActivity
                 break;
         }
 
-        if(choice) {
+        if (choice) {
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .commit();
