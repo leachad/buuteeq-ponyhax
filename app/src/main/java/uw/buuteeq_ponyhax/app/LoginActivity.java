@@ -124,7 +124,7 @@ public class LoginActivity extends Activity {
             if (checkUserCredentials()) {
 
                 SharedPreferences resetPrefs = getSharedPreferences(User.PERM_PREFS, MODE_PRIVATE);
-                boolean reset = resetPrefs.getBoolean(User.USER_RESET, true);
+                boolean reset = resetPrefs.getBoolean(User.USER_RESET, false);
                 Intent intent;
                 if (!reset) {
                     intent = new Intent(LoginActivity.this, MyAccount.class);
