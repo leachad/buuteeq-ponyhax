@@ -40,13 +40,13 @@ public class SettingsFragment extends Fragment {
 
         /** Instantiante the security question spinner.*/
         mQuestionSpinner = (Spinner) getActivity().findViewById(R.id.spinnerSecurityQuestions);
-        (getActivity().findViewById((R.id.resetpass_from_settings)).setOnClickListener(new View.OnClickListener() {
+        getActivity().findViewById(R.id.resetpass_from_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(SettingsFragment.this, CreateNewPasswordActivity.class);
+                Intent myIntent = new Intent(getActivity(), CreateNewPasswordActivity.class);
                 startActivity(myIntent);
             }
-        });
+            });
 
 
     }

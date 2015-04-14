@@ -48,6 +48,7 @@ public class MyAccount extends ActionBarActivity
         //Update fragment view on navigation selection
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = null;
+        boolean choice = true;
 
         switch (position) {
             case 0:
@@ -59,15 +60,19 @@ public class MyAccount extends ActionBarActivity
             case 3:
                 SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
                 prefs.edit().clear().commit();
+                choice = false;
+                finish();
                 break;
             case 4:
                 fragment = new SettingsFragment();
                 break;
         }
 
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit();
+        if(choice) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .commit();
+        }
     }
 
     /**
