@@ -50,8 +50,6 @@ public class SettingsFragment extends Fragment {
         /** String value to update the New User security question field is gleaned from the spinner.*/
         myRegisteredUser.setSecurityQuestion(mQuestionSpinner.getSelectedItem().toString().trim());
 
-
-
         getActivity().findViewById(R.id.resetpass_from_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
