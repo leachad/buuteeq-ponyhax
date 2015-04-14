@@ -57,13 +57,13 @@ public class MyAccount extends ActionBarActivity
             case 1:
                 fragment = new MyMap();
                 break;
-            case 3:
+            case 2:
                 SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
                 prefs.edit().clear().commit();
                 choice = false;
                 finish();
                 break;
-            case 4:
+            case 3:
                 fragment = new SettingsFragment();
                 break;
         }
