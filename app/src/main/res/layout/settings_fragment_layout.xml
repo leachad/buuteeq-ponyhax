@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 style="@style/editTextTheme"
                 android:text="@string/security_question"
-                android:id="@+id/textView2"
+                android:id="@+id/ChangeSecurityDiscription"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.21" />
 
@@ -77,7 +77,10 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.21"
                 android:hint="Type in Your New Security Answer"
-                android:textColor="#ffffffff" />
+                android:inputType="textImeMultiLine"
+                android:textColor="#ffffffff"
+                android:textColorHint="#ffffffff"
+                android:theme="@style/AppTheme" />
 
         </LinearLayout>
 
