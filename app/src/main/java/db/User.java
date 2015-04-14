@@ -15,6 +15,7 @@ public class User {
     public static final String USER_QUESTION = "secQuestion";
     public static final String USER_ANSWER = "secAnswer";
     public static final String USER_EMAIL = "userEmail";
+    public static final String USER_NAME = "userName";
 
 
     /**
