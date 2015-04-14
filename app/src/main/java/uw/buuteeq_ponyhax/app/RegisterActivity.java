@@ -20,6 +20,10 @@ import db.UserStorageDatabaseHelper;
 
 public class RegisterActivity extends ActionBarActivity {
 
+    private static final String SPINNER = "spinner";
+    private static final String PW_SUB = "passwordSubsequent";
+    private static final String ANS_SUB = "answerSubsequent";
+
     /**
      * Instance of an array to hold all of the EditText widgets on the new user screen.
      */
@@ -86,12 +90,12 @@ public class RegisterActivity extends ActionBarActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         if (!savedInstanceState.isEmpty()) {
             mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].setText(savedInstanceState.getString(User.USER_EMAIL, ""));
-            mNewUserFields[RegisterField.USER_NAME.indexValue].setText(savedInstanceState.getString("userName", ""));
+            mNewUserFields[RegisterField.USER_NAME.indexValue].setText(savedInstanceState.getString(User.USER_NAME, ""));
             mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].setText(savedInstanceState.getString(User.USER_PASSWORD, ""));
-            mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue].setText(savedInstanceState.getString(User.USER_PASSWORD + "2", ""));
+            mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue].setText(savedInstanceState.getString(PW_SUB, ""));
             mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].setText(savedInstanceState.getString(User.USER_ANSWER, ""));
-            mNewUserFields[RegisterField.SECURITY_ANSWER_SUBSEQUENT.indexValue].setText(savedInstanceState.getString(User.USER_ANSWER + "2", ""));
-            mQuestionSpinner.setSelection(savedInstanceState.getInt("Spinner", 0));
+            mNewUserFields[RegisterField.SECURITY_ANSWER_SUBSEQUENT.indexValue].setText(savedInstanceState.getString(ANS_SUB, ""));
+            mQuestionSpinner.setSelection(savedInstanceState.getInt(SPINNER, 0));
         }
         super.onRestoreInstanceState(savedInstanceState);
     }
@@ -99,12 +103,12 @@ public class RegisterActivity extends ActionBarActivity {
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         outState.putString(User.USER_EMAIL, mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getText().toString());
-        outState.putString("userName", mNewUserFields[RegisterField.USER_NAME.indexValue].getText().toString());
+        outState.putString(User.USER_NAME, mNewUserFields[RegisterField.USER_NAME.indexValue].getText().toString());
         outState.putString(User.USER_PASSWORD, mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getText().toString());
-        outState.putString(User.USER_PASSWORD + "2", mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue].getText().toString());
+        outState.putString(PW_SUB, mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue].getText().toString());
         outState.putString(User.USER_ANSWER, mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].getText().toString());
-        outState.putString(User.USER_ANSWER + "2", mNewUserFields[RegisterField.SECURITY_ANSWER_SUBSEQUENT.indexValue].getText().toString());
-        outState.putInt("Spinner", mQuestionSpinner.getSelectedItemPosition());
+        outState.putString(ANS_SUB, mNewUserFields[RegisterField.SECURITY_ANSWER_SUBSEQUENT.indexValue].getText().toString());
+        outState.putInt(SPINNER, mQuestionSpinner.getSelectedItemPosition());
         super.onSaveInstanceState(outState, outPersistentState);
     }
 
@@ -222,6 +226,9 @@ public class RegisterActivity extends ActionBarActivity {
         prefs.edit().putString(User.USER_EMAIL, myRegisteredUser.getEmail().trim()).apply();
         prefs.edit().putString(User.USER_QUESTION, myRegisteredUser.getSecurityQuestion()).apply();
         prefs.edit().putString(User.USER_ANSWER, myRegisteredUser.getSecurityAnswer()).apply();
+
+        SharedPreferences permPrefs = getSharedPreferences(User.PERM_PREFS, MODE_PRIVATE);
+        permPrefs.edit().putString(User.USER_NAME, myRegisteredUser.getUserName()).apply();
     }
 
 
