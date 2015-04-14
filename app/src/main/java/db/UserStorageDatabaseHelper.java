@@ -70,6 +70,7 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
     public long insertUser(User user) {
 
         ContentValues cv = new ContentValues();
+        long insertConfirm = 0;
 
         if (isUnique(user)) {
             cv.put(COLUMN_USERNAME, user.getUserName());
@@ -78,11 +79,10 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
             cv.put(COLUMN_SECURITY_QUESTION, user.getSecurityQuestion());
             cv.put(COLUMN_SECURITY_ANSWER, user.getSecurityAnswer());
             cv.put(COLUMN_ISSUED_RESET, user.getResetStatus());
-
-
+            insertConfirm = getWritableDatabase().insert(TABLE_USER, null, cv);
         }
 
-        return getWritableDatabase().insert(TABLE_USER, null, cv);
+        return insertConfirm;
     }
 
     /**

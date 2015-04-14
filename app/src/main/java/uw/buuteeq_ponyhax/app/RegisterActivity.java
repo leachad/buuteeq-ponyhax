@@ -162,6 +162,10 @@ public class RegisterActivity extends ActionBarActivity {
                 break;
             }
         }
+
+        if (mQuestionSpinner.getSelectedItem().toString().matches(mQuestionSpinner.getPrompt().toString()))
+            allEntered = false;
+
         return allEntered;
     }
 
@@ -260,6 +264,22 @@ public class RegisterActivity extends ActionBarActivity {
         Toast.makeText(getApplicationContext(), "That User already exists!", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Private helper method to reset the fields in the Register Activity.
+     */
+    private void resetFields() {
+        /** Reset the EditText widgets back to the original hints.*/
+        mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].setHint(mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getHint());
+        mNewUserFields[RegisterField.USER_NAME.indexValue].setHint(mNewUserFields[RegisterField.USER_NAME.indexValue].getHint());
+        mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].setHint(mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getHint());
+        mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue].setHint(mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue].getHint());
+        mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].setHint(mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].getHint());
+        mNewUserFields[RegisterField.SECURITY_ANSWER_SUBSEQUENT.indexValue].setHint(mNewUserFields[RegisterField.SECURITY_ANSWER_SUBSEQUENT.indexValue].getHint());
+
+        /** Reset the Security Question spinner.*/
+        mQuestionSpinner.setPrompt(mQuestionSpinner.getPrompt());
+    }
+
     public enum RegisterField {
         EMAIL_FIELD(0), USER_NAME(1), PASSWORD_INITIAL(2), PASSWORD_SUBSEQUENT(3),
         SECURITY_ANSWER_INITIAL(4), SECURITY_ANSWER_SUBSEQUENT(5);
@@ -294,6 +314,7 @@ public class RegisterActivity extends ActionBarActivity {
 
                 boolean unique = addEntryToDatabase();
                 if (!unique) {
+                    resetFields();
                     makeDuplicateEntryToast();
                 } else {
                     Toast.makeText(getApplicationContext(), "User Added to Database!", Toast.LENGTH_SHORT).show();
