@@ -58,10 +58,6 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.21"/>
 
-            <Space
-                android:layout_width="329dp"
-                android:layout_height="20dp" />
-
             <Spinner
                 android:id="@+id/spinnerSecurityQuestion_reset"
                 android:layout_width="match_parent"
@@ -73,6 +69,15 @@
                 android:layout_marginBottom="30dp"
                 android:prompt="@string/security_question"
                 android:background="#ffffffff" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/newSecurityAnswer"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.21"
+                android:hint="Type in Your New Security Answer"
+                android:textColor="#ffffffff" />
 
         </LinearLayout>
 
