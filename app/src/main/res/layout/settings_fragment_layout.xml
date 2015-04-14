@@ -25,7 +25,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             style="@style/editTextTheme"
-            android:textSize="30dp" />
+            android:textSize="20dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                 android:text="Email:  Your email will go here."
                 style="@style/editTextTheme"
                 android:layout_marginTop="10dp"
-                android:id="@+id/text_account_email" />
+                android:id="@+id/email_under_mySettings" />
 
             <TextView
                 style="@style/editTextTheme"
@@ -49,14 +49,14 @@
                 android:editable="false"
                 android:text="Type a new password that you want"
                 android:layout_marginTop="10dp"
-                android:id="@+id/textView2" />
+                android:id="@+id/new_pass_text" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:ems="10"
-                android:id="@+id/editText"
+                android:id="@+id/new_pass_feild_in_settings"
                 android:layout_gravity="center_horizontal" />
 
             <TextView
@@ -66,14 +66,14 @@
                 android:editable="false"
                 android:text="Type new password again:"
                 android:layout_marginTop="10dp"
-                android:id="@+id/textView4" />
+                android:id="@+id/my_settings_pass_again" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:ems="10"
-                android:id="@+id/editText2" />
+                android:id="@+id/new_pass_again_feild" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -82,12 +82,12 @@
                 android:text="Change your security Qestion:"
                 style="@style/editTextTheme"
                 android:layout_marginTop="10dp"
-                android:id="@+id/text_account_numDataPoints" />
+                android:id="@+id/label_for_change_question" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText3" />
+                android:id="@+id/feild_for_security_quesiton" />
 
             <TextView
                 style="@style/editTextTheme"
@@ -96,12 +96,12 @@
                 android:editable="false"
                 android:text="Change your answer to your security Qestion :"
                 android:layout_marginTop="10dp"
-                android:id="@+id/textView5" />
+                android:id="@+id/label_for_security_answer" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText4"
+                android:id="@+id/feild_for_answer_of_security_question"
                 android:layout_gravity="center_horizontal" />
 
 
