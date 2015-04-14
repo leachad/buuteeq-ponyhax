@@ -39,7 +39,7 @@ public class SettingsFragment extends Fragment {
         super.onResume();
         SharedPreferences prefs = getActivity().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
         /** Instantiante the security question spinner.*/
-        mQuestionSpinner = (Spinner) getActivity().findViewById(R.id.spinnerSecurityQuestions);
+        mQuestionSpinner = (Spinner) getActivity().findViewById(R.id.spinnerSecurityQuestion_reset);
 
         User myRegisteredUser = new User();
         /** String value to update the New User security question field is gleaned from the spinner.*/

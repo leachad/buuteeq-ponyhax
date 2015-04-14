@@ -32,7 +32,8 @@
             android:layout_height="match_parent"
             android:id="@+id/card_layout"
             android:orientation="vertical"
-            android:weightSum="1">
+            android:weightSum="1"
+            style="@style/AppTheme">
 
             <Button
                 android:layout_width="250dp"
@@ -57,8 +58,12 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.21"/>
 
+            <Space
+                android:layout_width="329dp"
+                android:layout_height="20dp" />
+
             <Spinner
-                android:id="@+id/spinnerSecurityQuestions"
+                android:id="@+id/spinnerSecurityQuestion_reset"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -66,7 +71,8 @@
                 android:spinnerMode="dropdown"
                 android:entries="@array/question_options"
                 android:layout_marginBottom="30dp"
-                android:prompt="@string/security_question" />
+                android:prompt="@string/security_question"
+                android:background="#ffffffff" />
 
         </LinearLayout>
 
