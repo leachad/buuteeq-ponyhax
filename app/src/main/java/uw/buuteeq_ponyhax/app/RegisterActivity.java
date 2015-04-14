@@ -3,6 +3,7 @@ package uw.buuteeq_ponyhax.app;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -79,6 +80,32 @@ public class RegisterActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        if (!savedInstanceState.isEmpty()) {
+            mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].setText(savedInstanceState.getString(User.USER_EMAIL, ""));
+            mNewUserFields[RegisterField.USER_NAME.indexValue].setText(savedInstanceState.getString("userName", ""));
+            mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].setText(savedInstanceState.getString(User.USER_PASSWORD, ""));
+            mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue].setText(savedInstanceState.getString(User.USER_PASSWORD + "2", ""));
+            mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].setText(savedInstanceState.getString(User.USER_ANSWER, ""));
+            mNewUserFields[RegisterField.SECURITY_ANSWER_SUBSEQUENT.indexValue].setText(savedInstanceState.getString(User.USER_ANSWER + "2", ""));
+            mQuestionSpinner.setSelection(savedInstanceState.getInt("Spinner", 0));
+        }
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        outState.putString(User.USER_EMAIL, mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getText().toString());
+        outState.putString("userName", mNewUserFields[RegisterField.USER_NAME.indexValue].getText().toString());
+        outState.putString(User.USER_PASSWORD, mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getText().toString());
+        outState.putString(User.USER_PASSWORD + "2", mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue].getText().toString());
+        outState.putString(User.USER_ANSWER, mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].getText().toString());
+        outState.putString(User.USER_ANSWER + "2", mNewUserFields[RegisterField.SECURITY_ANSWER_SUBSEQUENT.indexValue].getText().toString());
+        outState.putInt("Spinner", mQuestionSpinner.getSelectedItemPosition());
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     /**
