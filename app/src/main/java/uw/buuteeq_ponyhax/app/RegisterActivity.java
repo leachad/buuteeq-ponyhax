@@ -47,7 +47,7 @@ public class RegisterActivity extends ActionBarActivity {
         /** Instantiate the Array of Text Widgets.*/
         mNewUserFields = new EditText[RegisterField.getNumberIndices()];
 
-        /** Instantiante the security question spinner.*/
+        /** Instantiate the security question spinner.*/
         mQuestionSpinner = (Spinner) findViewById(R.id.spinnerSecurityQuestions);
 
         myRegisteredUser = null;
@@ -193,11 +193,13 @@ public class RegisterActivity extends ActionBarActivity {
      */
     private boolean addEntryToDatabase() {
         UserStorageDatabaseHelper dBHelper = new UserStorageDatabaseHelper(getApplicationContext());
-        long beforeAdd = dBHelper.getNumEntries();
-        long result = dBHelper.insertUser(getNewUser());
-        long afterAdd = dBHelper.getNumEntries();
+        long userAdded = dBHelper.insertUser(getNewUser());
+        boolean added = true;
+        if (userAdded == 0) {
+            added = false;
+        }
 
-        return !(beforeAdd == afterAdd);
+        return added;
     }
 
 

@@ -88,7 +88,7 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
     /**
      * Private helper method to determine if a User is unique within the database.
      *
-     * @param user
+     * @param user is the User being tested
      * @return isUnique
      */
     private boolean isUnique(User user) {
@@ -100,6 +100,7 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
                 break;
             }
         }
+        cursor.close();
         return isUnique;
     }
 
@@ -234,7 +235,8 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This method returns an instance of a UserCursor to the calling code.
+     * This method returns an instance of a UserCursor to the calling code. Does NOT ensure that
+     * the cursor is closed.
      *
      * @return userCursor
      */
