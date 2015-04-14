@@ -62,6 +62,8 @@
     <string name="title_activity_create_new_password">CreateNewPasswordActivity</string>
     <string name="title_activity_splash">SplashActivity</string>
 
+    <string name="change_security_question">Reset Security Question</string>
+
 
     <string name="agreement_statement">GeoTracker will require access to: \n\nInternet and Web Services\nNetwork State\nExternal Storage\nAccessing and Reading GPS services\nAccess to Location information</string>
 

@@ -1,12 +1,14 @@
 package uw.buuteeq_ponyhax.app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import db.User;
@@ -16,10 +18,12 @@ import db.User;
  * Created by eduard_prokhor on 4/13/15.
  */
 public class SettingsFragment extends Fragment {
+
+    private Spinner mQuestionSpinner;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -33,8 +37,23 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences prefs = getActivity().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-        ((TextView) getActivity().findViewById(R.id.text_account_name)).setText("User ID: \n" + Long.toString(prefs.getLong(User.USER_ID, 0)));
 
+        /** Instantiante the security question spinner.*/
+        mQuestionSpinner = (Spinner) findViewById(R.id.spinnerSecurityQuestions);
+//        (findViewById(R.id.resetpass_from_settings)).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent myIntent = new Intent(SettingsFragment.this, CreateNewPasswordActivity.class);
+//                startActivity(myIntent);
+//            }
+//        });
+//
+//        (findViewById(R.id.reset_qestion_button)).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent myIntent = new Intent(SettingsFragment.this, CreateNewPasswordActivity.class);
+//                startActivity(myIntent);
+//            }
+//        });
     }
 }

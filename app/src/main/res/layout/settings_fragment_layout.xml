@@ -31,79 +31,43 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/card_layout"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:weightSum="1">
 
-            <TextView
-                android:layout_width="match_parent"
+            <Button
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:editable="false"
-                android:text="Email:  Your email will go here."
-                style="@style/editTextTheme"
-                android:layout_marginTop="10dp"
-                android:id="@+id/email_under_mySettings" />
+                android:text="@string/reset_password"
+                android:id="@+id/resetpass_from_settings"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.21"
+                style="@style/buttonTheme"/>
 
-            <TextView
-                style="@style/editTextTheme"
+            <Space
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:editable="false"
-                android:text="Type a new password that you want"
-                android:layout_marginTop="10dp"
-                android:id="@+id/new_pass_text" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:ems="10"
-                android:id="@+id/new_pass_feild_in_settings"
+                android:layout_height="25dp"
                 android:layout_gravity="center_horizontal" />
 
             <TextView
-                style="@style/editTextTheme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:editable="false"
-                android:text="Type new password again:"
-                android:layout_marginTop="10dp"
-                android:id="@+id/my_settings_pass_again" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:ems="10"
-                android:id="@+id/new_pass_again_feild" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:editable="false"
-                android:text="Change your security Qestion:"
-                style="@style/editTextTheme"
-                android:layout_marginTop="10dp"
-                android:id="@+id/label_for_change_question" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/feild_for_security_quesiton" />
-
-            <TextView
-                style="@style/editTextTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:editable="false"
-                android:text="Change your answer to your security Qestion :"
-                android:layout_marginTop="10dp"
-                android:id="@+id/label_for_security_answer" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Pick a new Question from the Drop Down."
+                android:id="@+id/textView2"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.21"
+                android:textColor="#fffcf2ff" />
 
-            <EditText
+            <Spinner
+                android:id="@+id/spinnerSecurityQuestions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/feild_for_answer_of_security_question"
-                android:layout_gravity="center_horizontal" />
-
+                android:gravity="center"
+                android:textAlignment="center"
+                android:spinnerMode="dropdown"
+                android:entries="@array/question_options"
+                android:layout_marginBottom="30dp"
+                android:prompt="@string/security_question" />
 
         </LinearLayout>
 
