@@ -1,11 +1,11 @@
 <ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppTheme"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="20dp"
     android:layout_marginBottom="20dp"
-    style="@style/AppTheme"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_marginTop="20dp">
 
 
     <LinearLayout
@@ -21,22 +21,22 @@
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@mipmap/earth_icon"
-            android:background="@null" />
+            android:background="@null"
+            android:src="@mipmap/earth_icon" />
 
 
         <LinearLayout
+            style="@style/AppTheme"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            style="@style/AppTheme"
-            android:orientation="vertical"
-            android:alpha="100">
+            android:alpha="100"
+            android:orientation="vertical">
 
             <EditText
                 android:id="@+id/emailEdit"
+                style="@style/editTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/editTextTheme"
                 android:hint="@string/enter_email"
                 android:inputType="textEmailAddress"
 
@@ -44,24 +44,24 @@
 
             <EditText
                 android:id="@+id/userNameEdit"
+                style="@style/editTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/editTextTheme"
                 android:hint="@string/userNamePrompt" />
 
             <EditText
                 android:id="@+id/passwordEditInitial"
+                style="@style/editTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/editTextTheme"
                 android:hint="@string/password_prompt"
                 android:inputType="textPassword" />
 
             <EditText
                 android:id="@+id/passwordEditSubsequent"
+                style="@style/editTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/editTextTheme"
                 android:hint="@string/password_prompt_reenter"
                 android:inputType="textPassword" />
 
@@ -69,35 +69,35 @@
                 android:id="@+id/spinnerSecurityQuestions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:spinnerMode="dropdown"
-                android:entries="@array/question_options"
                 android:layout_marginBottom="30dp"
-                android:prompt="@string/security_question" />
+                android:entries="@array/question_options"
+                android:gravity="center"
+                android:prompt="@string/security_question"
+                android:spinnerMode="dropdown"
+                android:textAlignment="center" />
 
 
             <EditText
                 android:id="@+id/securityQuestionAnswerInitial"
+                style="@style/editTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/editTextTheme"
                 android:hint="@string/security_answer" />
 
             <EditText
                 android:id="@+id/securityQuestionAnswerSubsequent"
+                style="@style/editTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/editTextTheme"
-                android:imeOptions="actionGo"
-                android:hint="@string/security_answer_reenter" />
+                android:hint="@string/security_answer_reenter"
+                android:imeOptions="actionGo" />
 
             <Button
                 android:id="@+id/confirmNewUserButton"
+                style="@style/buttonTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/submit"
-                style="@style/buttonTheme" />
+                android:text="@string/submit" />
 
         </LinearLayout>
 

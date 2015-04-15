@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -197,6 +198,8 @@ public class RegisterActivity extends ActionBarActivity {
         boolean added = true;
         if (userAdded == 0) {
             added = false;
+        } else {
+            myRegisteredUser.setID(dBHelper.obtainUserID(myRegisteredUser.getEmail(), myRegisteredUser.getPassword()));
         }
 
         return added;

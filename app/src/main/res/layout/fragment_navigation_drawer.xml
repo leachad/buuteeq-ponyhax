@@ -1,11 +1,11 @@
 <ListView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/material_blue_grey_900"
     android:choiceMode="singleChoice"
     android:divider="@android:color/transparent"
     android:dividerHeight="0dp"
-    android:background="@color/material_blue_grey_900"
-    tools:context="uw.buuteeq_ponyhax.app.NavigationDrawerFragment"
     android:visibility="invisible"
-    style="@style/AppTheme" />
+    tools:context="uw.buuteeq_ponyhax.app.NavigationDrawerFragment" />

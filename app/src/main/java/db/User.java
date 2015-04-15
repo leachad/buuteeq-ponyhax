@@ -62,52 +62,52 @@ public class User {
         return myUserEmail;
     }
 
-    public String getUserName() {
-        return myUserName;
-    }
-
-    public String getPassword() {
-        return myPassword;
-    }
-
-    public String getSecurityQuestion() {
-        return mySecurityQuestion;
-    }
-
-    public String getSecurityAnswer() {
-        return mySecurityAnswer;
-    }
-
-    public int getResetStatus() {
-        return myResetStatus;
-    }
-
-    public void setID(final long theUserID) {
-        this.myUserID = theUserID;
-    }
-
     public void setEmail(final String theEmail) {
         this.myUserEmail = theEmail;
+    }
+
+    public String getUserName() {
+        return myUserName;
     }
 
     public void setUserName(final String theUserName) {
         this.myUserName = theUserName;
     }
 
+    public String getPassword() {
+        return myPassword;
+    }
+
     public void setPassword(final String thePassword) {
         this.myPassword = thePassword;
+    }
+
+    public String getSecurityQuestion() {
+        return mySecurityQuestion;
     }
 
     public void setSecurityQuestion(final String theSecurityQuestion) {
         this.mySecurityQuestion = theSecurityQuestion;
     }
 
+    public String getSecurityAnswer() {
+        return mySecurityAnswer;
+    }
+
     public void setSecurityAnswer(final String theSecurityAnswer) {
         this.mySecurityAnswer = theSecurityAnswer;
     }
 
+    public int getResetStatus() {
+        return myResetStatus;
+    }
+
     public void setResetStatus(final int theResetStatus) {
         this.myResetStatus = theResetStatus;
+    }
+
+    public void setID(final long theUserID) {
+        this.myUserID = theUserID;
     }
 
 }

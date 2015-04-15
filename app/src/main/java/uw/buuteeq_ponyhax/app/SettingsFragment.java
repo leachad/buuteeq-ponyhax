@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,7 +70,7 @@ public class SettingsFragment extends Fragment {
                 }
                 return false;
             }
-            });
+        });
 
     }
 }

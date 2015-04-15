@@ -2,7 +2,7 @@
     <!--
     E1:47:EB:94:82:ED:0F:6A:10:5C:8C:AD:18:F8:64:41:E8:7A:B3:99;uw.buuteeq_ponyhax.phase_one
     -->
-    <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
         AIzaSyA5-TtIMhgrq-SHru58dKQsU4lhCOaEAg0
     </string>
 </resources>

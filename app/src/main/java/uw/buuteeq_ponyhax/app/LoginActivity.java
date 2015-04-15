@@ -72,9 +72,13 @@ public class LoginActivity extends Activity {
         EditText mEmailField = (EditText) findViewById(R.id.email_field);
         UserStorageDatabaseHelper mDbHelper = new UserStorageDatabaseHelper(getApplicationContext());
 
-        /** If necessary to delete a localized database, comment in the line below.*/
-        //getApplicationContext().deleteDatabase(mDbHelper.getDatabaseName());
-        Toast.makeText(getApplicationContext(), "Database has " + mDbHelper.getNumEntries() + " entries", Toast.LENGTH_SHORT).show();
+        /**
+         * DEBUGGING: If necessary to delete a localized database, comment in the line below:
+         * getApplicationContext().deleteDatabase(mDbHelper.getDatabaseName());
+         *
+         * DEBUGGING: If you need to show the number of entries, comment in the line below:
+         * Toast.makeText(getApplicationContext(), "Database has " + mDbHelper.getNumEntries() + " entries", Toast.LENGTH_SHORT).show();
+         */
 
         if (!mPasswordField.getText().toString().trim().matches("") && !mEmailField.getText().toString().trim().matches("")
                 && mDbHelper.obtainUserID(mEmailField.getText().toString().trim(), mPasswordField.getText().toString().trim()) != 0) {
