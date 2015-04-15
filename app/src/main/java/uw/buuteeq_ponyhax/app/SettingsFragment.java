@@ -68,8 +68,8 @@ public class SettingsFragment extends Fragment {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     prefs.edit().putString(User.USER_QUESTION, myRegisteredUser.getSecurityQuestion()).apply();
                     prefs.edit().putString(User.USER_ANSWER, userinput.toString()).apply();
-                    dbHelper.modifySecurityQuestion(myRegisteredUser.getSecurityQuestion(), Long.parseLong(User.USER_ID));
-                    dbHelper.modifySecurityAnswer(userinput.toString(), Long.parseLong(User.USER_ID));
+                    //dbHelper.modifySecurityQuestion(myRegisteredUser.getSecurityQuestion(), Long.parseLong(User.USER_ID));
+                    //dbHelper.modifySecurityAnswer(userinput.toString(), Long.parseLong(User.USER_ID));
                     Toast.makeText(getActivity().getApplicationContext(),
                             "Your security Question and answer have been changed.", Toast.LENGTH_SHORT).show();
                 }
