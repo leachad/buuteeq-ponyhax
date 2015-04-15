@@ -16,6 +16,11 @@ public class Coordinate {
     private long myTimeStamp;
     private long myUserID;
 
+    /** Private field to hold the reference to a byte array (photo) should the user elect
+     * to store a photo of that particular location.
+     */
+    private byte[] myCoordinatePhoto;
+
     /**
      * Constructor of a coordinate object.
      *
@@ -30,5 +35,48 @@ public class Coordinate {
         myLatitude = theLatitude;
         myTimeStamp = theTimeStamp;
         myUserID = theUserID;
+        myCoordinatePhoto = null;
+    }
+
+
+    /**
+     * Overloaded constructor of a coordinate object that takes in a byte[] argument.
+     *
+     * @param theLongitude is the longitude of the coordinate
+     * @param theLatitude  is the latitude of the coordinate
+     * @param theTimeStamp is the time the point was recorded
+     * @param theUserID    is the unique user ID issued by the WebServices API
+     * @param theCoordinatePhoto is the byte array representing the photo that the user took
+     *                           at that specific location.
+     */
+
+    public Coordinate(final long theLongitude, final long theLatitude, final long theTimeStamp,
+                      final long theUserID, final byte[] theCoordinatePhoto) {
+        myLongitude = theLongitude;
+        myLatitude = theLatitude;
+        myTimeStamp = theTimeStamp;
+        myUserID = theUserID;
+        myCoordinatePhoto = theCoordinatePhoto;
+    }
+
+
+    public long getLongitude() {
+        return myLongitude;
+    }
+
+    public long getLatitude() {
+        return myLatitude;
+    }
+
+    public long getTimeStamp() {
+        return myTimeStamp;
+    }
+
+    public long getUserID() {
+        return myUserID;
+    }
+
+    public byte[] getCoordinatePhoto() {
+        return myCoordinatePhoto;
     }
 }
