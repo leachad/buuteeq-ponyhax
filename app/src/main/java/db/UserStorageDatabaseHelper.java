@@ -180,9 +180,8 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
      * **************************READ FROM THE DATABASE******************************
      */
 
-    public long obtainUserID(final String theEmail, final String thePassword) {
-        Cursor currentRow = getReadableDatabase().rawQuery("select * from " + TABLE_USER + " where " + COLUMN_EMAIL_ADDRESS + "='" + theEmail + "' and "
-                + COLUMN_PASSWORD + "='" + thePassword + "'", null);
+    public long obtainUserID(final String theEmail) {
+        Cursor currentRow = getReadableDatabase().rawQuery("select * from " + TABLE_USER + " where " + COLUMN_EMAIL_ADDRESS + "='" + theEmail + "'", null);
 
         long userID = 0;
         if (currentRow.moveToNext()) {

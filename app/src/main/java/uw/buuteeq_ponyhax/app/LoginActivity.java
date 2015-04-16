@@ -81,10 +81,10 @@ public class LoginActivity extends Activity {
          */
 
         if (!mPasswordField.getText().toString().trim().matches("") && !mEmailField.getText().toString().trim().matches("")
-                && mDbHelper.obtainUserID(mEmailField.getText().toString().toLowerCase().trim(), mPasswordField.getText().toString().trim()) != 0) {
+                && mDbHelper.obtainUserID(mEmailField.getText().toString().toLowerCase().trim()) != 0) {
 
 
-            long userID = mDbHelper.obtainUserID(mEmailField.getText().toString().toLowerCase().trim(), mPasswordField.getText().toString().trim());
+            long userID = mDbHelper.obtainUserID(mEmailField.getText().toString().toLowerCase().trim());
 
             if (mDbHelper.obtainUserEmail(userID).matches(mEmailField.getText().toString().toLowerCase().trim())
                     && mDbHelper.obtainUserPassword(userID).matches(mPasswordField.getText().toString().trim())) {

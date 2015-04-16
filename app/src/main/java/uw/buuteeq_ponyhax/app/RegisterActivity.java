@@ -199,7 +199,7 @@ public class RegisterActivity extends ActionBarActivity {
         if (userAdded == 0) {
             added = false;
         } else {
-            myRegisteredUser.setID(dBHelper.obtainUserID(myRegisteredUser.getEmail(), myRegisteredUser.getPassword()));
+            myRegisteredUser.setID(dBHelper.obtainUserID(myRegisteredUser.getEmail()));
         }
 
         return added;
