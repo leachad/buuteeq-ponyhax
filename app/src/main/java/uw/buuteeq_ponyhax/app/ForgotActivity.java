@@ -28,12 +28,13 @@ public class ForgotActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.forgot_page);
-
+        setTitle("");
         (findViewById(R.id.passResetCancelButton)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(ForgotActivity.this, LoginActivity.class);
-                startActivity(myIntent);
+//                Intent myIntent = new Intent(ForgotActivity.this, LoginActivity.class);
+//                startActivity(myIntent);
+                finish();
             }
         });
 
@@ -55,12 +56,13 @@ public class ForgotActivity extends ActionBarActivity {
                         while (cursor.moveToNext()) {
                             User temp = cursor.getUser();
 
-                            if (temp.getUserName().trim().matches(userinput.getText().toString().trim())) {
+                            if (temp.getEmail().trim().matches(userinput.getText().toString().trim())) {
                                 Log.d(ForgotActivity.this.getLocalClassName(), "Setting question");
                                 ((TextView) findViewById(R.id.resetSecurityQuestion)).setText(cursor.getSecurityQuestion());
                             }
                         }
                 }
+                cursor.close();
                 return false;
             }
         });
@@ -72,11 +74,13 @@ public class ForgotActivity extends ActionBarActivity {
             public void onClick(View v) {
                 EditText secAnswer = (EditText) findViewById(R.id.resetPassSecAnswer);
                 if (!secAnswer.getText().toString().trim().matches("")) {
-                    while (cursor2.moveToNext()) {
+                    boolean found = false;
+                    while (cursor2.moveToNext() && !found) {
                         User temp = cursor2.getUser();
-                        if (temp.getUserName().trim().matches(userinput.getText().toString().trim())
+                        if (temp.getEmail().trim().matches(userinput.getText().toString().toLowerCase().trim())
                                 && temp.getSecurityAnswer().trim().matches(secAnswer.getText().toString().trim())) {
-                            String usersEmail = temp.getEmail();
+                            found = true;
+                            String usersEmail = temp.getEmail().trim();
 
                             //make a random pass and send it to their email.
                             String testPass = Long.toHexString(Double.doubleToLongBits(Math.random()));
@@ -90,15 +94,19 @@ public class ForgotActivity extends ActionBarActivity {
                             Toast.makeText(getApplicationContext(),
                                     "Your new randomly generated pass was sent to your email", Toast.LENGTH_SHORT).show();
 
-
-                            SharedPreferences resetPrefs = getSharedPreferences(User.PERM_PREFS, MODE_PRIVATE);
+                            //create prefs from email so that it is independent from other email resets.
+                            SharedPreferences resetPrefs = getSharedPreferences(usersEmail, MODE_PRIVATE);
                             resetPrefs.edit().putBoolean(User.USER_RESET, true).commit();
 
                             finish();
 
                         }
                     }
+                    if (!found) {
+                        Toast.makeText(getApplicationContext(), "User not found or incorrect answer!", Toast.LENGTH_SHORT).show();
+                    }
                 }
+                cursor2.close();
             }
         });
     }

@@ -76,7 +76,8 @@
                 android:inputType="textImeMultiLine"
                 android:textColor="#ffffffff"
                 android:textColorHint="#ffffffff"
-                android:theme="@style/editTextTheme" />
+                android:theme="@style/editTextTheme"
+                android:imeOptions="actionDone"/>
 
         </LinearLayout>
 

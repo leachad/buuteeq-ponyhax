@@ -81,12 +81,12 @@ public class LoginActivity extends Activity {
          */
 
         if (!mPasswordField.getText().toString().trim().matches("") && !mEmailField.getText().toString().trim().matches("")
-                && mDbHelper.obtainUserID(mEmailField.getText().toString().trim(), mPasswordField.getText().toString().trim()) != 0) {
+                && mDbHelper.obtainUserID(mEmailField.getText().toString().toLowerCase().trim(), mPasswordField.getText().toString().trim()) != 0) {
 
 
-            long userID = mDbHelper.obtainUserID(mEmailField.getText().toString().trim(), mPasswordField.getText().toString().trim());
+            long userID = mDbHelper.obtainUserID(mEmailField.getText().toString().toLowerCase().trim(), mPasswordField.getText().toString().trim());
 
-            if (mDbHelper.obtainUserEmail(userID).matches(mEmailField.getText().toString().trim())
+            if (mDbHelper.obtainUserEmail(userID).matches(mEmailField.getText().toString().toLowerCase().trim())
                     && mDbHelper.obtainUserPassword(userID).matches(mPasswordField.getText().toString().trim())) {
                 toRet = true;
 
@@ -95,7 +95,7 @@ public class LoginActivity extends Activity {
 
                 prefs.edit().putLong(User.USER_ID, userID).apply();
                 prefs.edit().putInt(User.USER_PASSWORD, mPasswordField.getText().toString().trim().hashCode()).apply();
-                prefs.edit().putString(User.USER_EMAIL, mEmailField.getText().toString().trim()).apply();
+                prefs.edit().putString(User.USER_EMAIL, mEmailField.getText().toString().toLowerCase().trim()).apply();
                 prefs.edit().putString(User.USER_QUESTION, mDbHelper.obtainUserSecurityQuestion(userID)).apply();
                 prefs.edit().putString(User.USER_ANSWER, mDbHelper.obtainUserSecurityAnswer(userID)).apply();
 
@@ -127,14 +127,16 @@ public class LoginActivity extends Activity {
         public void onClick(View v) {
             if (checkUserCredentials()) {
 
-                SharedPreferences resetPrefs = getSharedPreferences(User.PERM_PREFS, MODE_PRIVATE);
+                String email = ((EditText) findViewById(R.id.email_field)).getText().toString().toLowerCase().trim();
+                SharedPreferences resetPrefs = getSharedPreferences(email, MODE_PRIVATE);
                 boolean reset = resetPrefs.getBoolean(User.USER_RESET, false);
                 Intent intent;
-                if (!reset) {
-                    intent = new Intent(LoginActivity.this, MyAccount.class);
+                if (reset) {
 
-                } else {
                     intent = new Intent(LoginActivity.this, CreateNewPasswordActivity.class);
+                    intent.putExtra(User.USER_EMAIL, email);
+                } else {
+                    intent = new Intent(LoginActivity.this, MyAccount.class);
                 }
                 startActivity(intent);
                 finish();

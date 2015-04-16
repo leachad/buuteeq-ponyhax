@@ -14,7 +14,7 @@ public class AgreementActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agreement);
-
+        setTitle("");
 
         Button agreeButton = (Button) findViewById(R.id.agreeButton);
         agreeButton.setOnClickListener(new View.OnClickListener() {

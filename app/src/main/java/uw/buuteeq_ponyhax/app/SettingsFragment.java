@@ -54,6 +54,7 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(getActivity(), CreateNewPasswordActivity.class);
+                myIntent.putExtra(User.USER_EMAIL, prefs.getString(User.USER_EMAIL, ""));
                 startActivity(myIntent);
             }
         });
@@ -66,8 +67,8 @@ public class SettingsFragment extends Fragment {
 
                 final UserStorageDatabaseHelper dbHelper = new UserStorageDatabaseHelper(getActivity().getApplicationContext());
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    prefs.edit().putString(User.USER_QUESTION, myRegisteredUser.getSecurityQuestion()).apply();
-                    prefs.edit().putString(User.USER_ANSWER, userinput.toString()).apply();
+                    prefs.edit().putString(User.USER_QUESTION, mQuestionSpinner.getSelectedItem().toString().trim()).apply();
+                    prefs.edit().putString(User.USER_ANSWER, userinput.toString().trim()).apply();
                     dbHelper.modifySecurityQuestion(myRegisteredUser.getSecurityQuestion(), myRegisteredUser.getUserID());
                     dbHelper.modifySecurityAnswer(userinput.toString(), myRegisteredUser.getUserID());
                     Toast.makeText(getActivity().getApplicationContext(),

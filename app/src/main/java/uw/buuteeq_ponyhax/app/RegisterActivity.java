@@ -44,7 +44,7 @@ public class RegisterActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        setTitle("");
         /** Instantiate the Array of Text Widgets.*/
         mNewUserFields = new EditText[RegisterField.getNumberIndices()];
 
@@ -215,7 +215,7 @@ public class RegisterActivity extends ActionBarActivity {
         myRegisteredUser = new User();
 
         /** String values to update the New User fields are gleaned from the EditText widgets.*/
-        myRegisteredUser.setEmail(mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getText().toString().trim());
+        myRegisteredUser.setEmail(mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getText().toString().toLowerCase().trim());
         myRegisteredUser.setUserName(mNewUserFields[RegisterField.USER_NAME.indexValue].getText().toString().trim());
         myRegisteredUser.setPassword(mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getText().toString().trim());
         myRegisteredUser.setSecurityAnswer(mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].getText().toString().trim());

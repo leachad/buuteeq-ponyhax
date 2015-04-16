@@ -28,6 +28,7 @@
     <string name="reset_password">Password Reset</string>
     <string name="reset_security_question">Security Question will appear after you type your username!</string>
     <string name="enter_security_answer">Enter Your Security Answer</string>
+    <string name="user_not_found">User not found</string>
     <string name="signature">Buuteeq-PonyHax Designs</string>
 
     <!--

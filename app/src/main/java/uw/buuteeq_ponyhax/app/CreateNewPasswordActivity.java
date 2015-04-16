@@ -1,5 +1,6 @@
 package uw.buuteeq_ponyhax.app;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,7 +12,7 @@ import android.widget.EditText;
 import db.User;
 import db.UserStorageDatabaseHelper;
 
-public class CreateNewPasswordActivity extends ActionBarActivity {
+public class CreateNewPasswordActivity extends Activity {
 
 
     private EditText mPassword;
@@ -44,13 +45,20 @@ public class CreateNewPasswordActivity extends ActionBarActivity {
                     helper = new UserStorageDatabaseHelper(getApplicationContext());
                     helper.modifyUserPassword(mPassword.getText().toString(), prefs.getLong(User.USER_ID, MODE_PRIVATE));
 
+                    String email = getIntent().getStringExtra(User.USER_EMAIL);
 
-                    SharedPreferences resetPrefs = getSharedPreferences(User.PERM_PREFS, MODE_PRIVATE);
-                    resetPrefs.edit().putBoolean(User.USER_RESET, false).commit();
+                    if (!email.equals("")) {
+                        SharedPreferences resetPrefs = getSharedPreferences(email, MODE_PRIVATE);
+                        resetPrefs.edit().putBoolean(User.USER_RESET, false).commit();
 
-                    Intent myIntent = new Intent(CreateNewPasswordActivity.this, MyAccount.class);
-                    startActivity(myIntent);
-                    finish();
+                        Intent myIntent = new Intent(CreateNewPasswordActivity.this, MyAccount.class);
+                        startActivity(myIntent);
+                        finish();
+                    } else {
+                        throw new IllegalArgumentException("Passed empty email value");
+                    }
+
+
 
                 }
 
