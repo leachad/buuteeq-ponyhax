@@ -77,7 +77,7 @@ public class ForgotActivity extends ActionBarActivity {
                     boolean found = false;
                     while (cursor2.moveToNext() && !found) {
                         User temp = cursor2.getUser();
-                        if (temp.getEmail().trim().matches(userinput.getText().toString().toLowerCase().trim())
+                        if (temp.getEmail().toLowerCase().trim().matches(userinput.getText().toString().toLowerCase().trim())
                                 && temp.getSecurityAnswer().trim().matches(secAnswer.getText().toString().trim())) {
                             found = true;
                             String usersEmail = temp.getEmail().trim();
