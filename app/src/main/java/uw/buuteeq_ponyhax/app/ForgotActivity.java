@@ -56,7 +56,7 @@ public class ForgotActivity extends ActionBarActivity {
                         while (cursor.moveToNext()) {
                             User temp = cursor.getUser();
 
-                            if (temp.getEmail().trim().matches(userinput.getText().toString().trim())) {
+                            if (temp.getEmail().trim().matches(userinput.getText().toString().toLowerCase().trim())) {
                                 Log.d(ForgotActivity.this.getLocalClassName(), "Setting question");
                                 ((TextView) findViewById(R.id.resetSecurityQuestion)).setText(cursor.getSecurityQuestion());
                             }
@@ -92,7 +92,7 @@ public class ForgotActivity extends ActionBarActivity {
                             //testing to send to my email.
                             email.sendEmail(usersEmail, testPass);
                             Toast.makeText(getApplicationContext(),
-                                    "Your new randomly generated pass was sent to your email", Toast.LENGTH_SHORT).show();
+                                    "Your new randomly generated password was sent to your email", Toast.LENGTH_SHORT).show();
 
                             //create prefs from email so that it is independent from other email resets.
                             SharedPreferences resetPrefs = getSharedPreferences(usersEmail, MODE_PRIVATE);
