@@ -52,19 +52,19 @@ public class MyAccount extends ActionBarActivity
 
         switch (position) {
             case 0:
-                fragment = new MyAccountFragment();
-                break;
-            case 1:
                 fragment = new MyMap();
                 break;
+            case 1:
+                fragment = new MyAccountFragment();
+                break;
             case 2:
+                fragment = new SettingsFragment();
+                break;
+            case 3:
                 SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
                 prefs.edit().clear().commit();
                 choice = false;
                 finish();
-                break;
-            case 3:
-                fragment = new SettingsFragment();
                 break;
         }
 
