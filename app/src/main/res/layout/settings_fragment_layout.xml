@@ -67,19 +67,19 @@
                 android:textAlignment="center" />
 
             <EditText
-                android:id="@+id/newSecurityAnswer"
+                android:id="@+id/securityQuestionAnswer"
+                style="@style/editTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.21"
                 android:hint="@string/security_answer"
                 android:inputType="text"
-                android:theme="@style/editTextTheme"
-                android:imeOptions="actionDone"/>
+
+                />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/submitNewSecurityAnswer"
                 android:text="@string/submit"/>
 
         </LinearLayout>
