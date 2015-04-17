@@ -46,9 +46,9 @@ public class SettingsFragment extends Fragment {
         /** Instantiante the security question spinner.*/
         mQuestionSpinner = (Spinner) getActivity().findViewById(R.id.spinnerSecurityQuestion_reset);
 
-        final User myRegisteredUser = new User();
+//        final User myRegisteredUser = new User();
         /** String value to update the New User security question field is gleaned from the spinner.*/
-        myRegisteredUser.setSecurityQuestion(mQuestionSpinner.getSelectedItem().toString().trim());
+//        myRegisteredUser.setSecurityQuestion(mQuestionSpinner.getSelectedItem().toString().trim());
 
         getActivity().findViewById(R.id.resetpass_from_settings).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,8 +69,8 @@ public class SettingsFragment extends Fragment {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     prefs.edit().putString(User.USER_QUESTION, mQuestionSpinner.getSelectedItem().toString().trim()).apply();
                     prefs.edit().putString(User.USER_ANSWER, userinput.toString().trim()).apply();
-                    dbHelper.modifySecurityQuestion(myRegisteredUser.getSecurityQuestion(), myRegisteredUser.getUserID());
-                    dbHelper.modifySecurityAnswer(userinput.toString(), myRegisteredUser.getUserID());
+                    dbHelper.modifySecurityQuestion(mQuestionSpinner.getSelectedItem().toString().trim(), prefs.getLong(User.USER_ID, 0));
+                    dbHelper.modifySecurityAnswer(userinput.toString(), prefs.getLong(User.USER_ID, 0));
                     Toast.makeText(getActivity().getApplicationContext(),
                             "Your security Question and answer have been changed.", Toast.LENGTH_SHORT).show();
                 }

@@ -43,6 +43,7 @@ public class ForgotActivity extends ActionBarActivity {
         mSecurityAnswerField = (EditText) findViewById(R.id.resetPassSecAnswer);
         mSecurityAnswerField.setEnabled(false); //disabled until user types correct email address
         mDbHelper = new UserStorageDatabaseHelper(getApplicationContext());
+        mUserID = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE).getLong(User.USER_ID, 0);
         isCurrentUser = false;
 
 
@@ -96,9 +97,9 @@ public class ForgotActivity extends ActionBarActivity {
 
                 //testing to send to my email.
                 mEmailSend.sendEmail(userEmail, testPass);
-                TextView newPassword = (TextView) findViewById(R.id.passwordResetField);
-                newPassword.append(testPass);
-                Log.d("TEST PASSWORD: ", testPass);
+//                TextView newPassword = (TextView) findViewById(R.id.passwordResetField);
+//                newPassword.append(testPass);
+//                Log.d("TEST PASSWORD: ", testPass);
 
                 Toast.makeText(getApplicationContext(),
                         "Your new randomly generated password was sent to your email", Toast.LENGTH_SHORT).show();

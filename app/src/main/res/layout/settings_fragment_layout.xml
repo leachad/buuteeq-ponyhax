@@ -74,8 +74,6 @@
                 android:layout_weight="0.21"
                 android:hint="@string/security_answer"
                 android:inputType="textImeMultiLine"
-                android:textColor="#ffffffff"
-                android:textColorHint="#ffffffff"
                 android:theme="@style/editTextTheme"
                 android:imeOptions="actionDone"/>
 

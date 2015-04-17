@@ -99,6 +99,7 @@
                 android:gravity="center"
                 android:prompt="@string/security_question"
                 android:spinnerMode="dropdown"
+                android:background="@color/material_blue_grey_950"
                 android:textAlignment="center" />
 
 

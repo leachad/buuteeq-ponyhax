@@ -25,6 +25,7 @@
                 style="@style/editTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
                 android:gravity="center"
                 android:text="@string/reset_password"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -64,11 +65,11 @@
                 android:inputType="textImeMultiLine"
                 android:textSize="20sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/passwordResetField"
-                android:text="@string/new_password"/>
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/passwordResetField"-->
+                <!--android:text="@string/new_password"/>-->
         </LinearLayout>
 
         <LinearLayout
