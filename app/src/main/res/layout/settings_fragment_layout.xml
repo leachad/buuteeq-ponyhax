@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        style="@style/AppTheme"
         android:padding="20dp"
         tools:context="uw.buuteeq_ponyhax.app.MyAccount$PlaceholderFragment">
 
@@ -34,6 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:paddingTop="40dp"
             android:weightSum="1">
 
             <Button
