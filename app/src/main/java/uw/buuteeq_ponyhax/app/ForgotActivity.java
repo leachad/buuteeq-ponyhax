@@ -96,7 +96,7 @@ public class ForgotActivity extends ActionBarActivity {
                 mEmailSend.sendEmail(userEmail, testPass);
 //                TextView newPassword = (TextView) findViewById(R.id.passwordResetField);
 //                newPassword.append(testPass);
-                Log.d("TEST PASSWORD: ", testPass);
+                Log.d("E-mail debugging", userEmail + " " + testPass);
 
                 Toast.makeText(getApplicationContext(),
                         "Your new randomly generated password was sent to your email", Toast.LENGTH_SHORT).show();
