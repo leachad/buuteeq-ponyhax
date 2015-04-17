@@ -3,10 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/AppTheme"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="20dp"
-    android:layout_marginTop="20dp">
-
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,13 +13,41 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context="uw.buuteeq_ponyhax.app.RegisterActivity">
+        tools:context="uw.buuteeq_ponyhax.app.RegisterActivity"
+        android:layout_marginTop="20dp">
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@null"
-            android:src="@mipmap/earth_icon" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="bottom|start"
+            style="@style/AppTheme"
+            android:layout_marginBottom="20dp"
+            android:weightSum="1"
+            >
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@null"
+                android:src="@mipmap/earth_icon"
+                android:layout_weight=".15"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="-10dp"
+                style="@style/editTextTheme"
+                android:textSize="25dp"
+                android:text="Registration"
+                android:layout_weight=".85"/>
+
+            </LinearLayout>
+
+
+
 
 
         <LinearLayout
