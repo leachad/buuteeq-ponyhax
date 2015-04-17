@@ -19,7 +19,7 @@ import java.util.List;
  * Created by Huy on 4/8/2015.
  */
 public class EmailSend {
-    private static final String EMAIL_LINK = "http://androidclass.net76.net/email.php";
+    private static final String EMAIL_LINK = "http://androidclass.uphero.com/email.php";
     private String email;
     private String password;
 
@@ -46,13 +46,6 @@ public class EmailSend {
                 httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair));
             } catch (UnsupportedEncodingException e) {
                 // log exception
-                e.printStackTrace();
-            }
-
-            try {
-                HttpResponse response = httpClient.execute(httpPost);
-                String result = EntityUtils.toString(response.getEntity());
-            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;

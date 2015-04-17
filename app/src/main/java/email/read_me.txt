@@ -8,7 +8,7 @@ Login Username: xjxore@grandmamail.com
 Login Password: xjxore@grandmamail.com
 
 Email Script (POST-ONLY):
-http://androidclass.net76.net/email.php
+http://androidclass.uphero.com/email.php
 
 How to use this API?
 EmailSend email = new EmailSend();
