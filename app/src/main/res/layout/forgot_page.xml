@@ -63,6 +63,12 @@
                 android:hint="@string/enter_security_answer"
                 android:inputType="textImeMultiLine"
                 android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/passwordResetField"
+                android:text="@string/new_password"/>
         </LinearLayout>
 
         <LinearLayout

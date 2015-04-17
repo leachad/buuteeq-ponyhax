@@ -30,6 +30,7 @@
     <string name="enter_security_answer">Enter Your Security Answer</string>
     <string name="user_not_found">User not found</string>
     <string name="signature">Buuteeq-PonyHax Designs</string>
+    <string name="new_password">NEW PASSWORD: </string>
 
     <!--
     List of questions for Spinner (Drop-down box) in the
