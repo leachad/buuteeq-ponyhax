@@ -43,7 +43,6 @@ public class ForgotActivity extends ActionBarActivity {
         mSecurityAnswerField = (EditText) findViewById(R.id.resetPassSecAnswer);
         mSecurityAnswerField.setEnabled(false); //disabled until user types correct email address
         mDbHelper = new UserStorageDatabaseHelper(getApplicationContext());
-        mUserID = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE).getLong(User.USER_ID, 0);
         isCurrentUser = false;
 
 
