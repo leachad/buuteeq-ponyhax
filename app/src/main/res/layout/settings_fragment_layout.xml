@@ -73,9 +73,14 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.21"
                 android:hint="@string/security_answer"
-                android:inputType="textImeMultiLine"
+                android:inputType="text"
                 android:theme="@style/editTextTheme"
                 android:imeOptions="actionDone"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/submit"/>
 
         </LinearLayout>
 

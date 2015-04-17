@@ -43,9 +43,9 @@ public class SettingsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         final SharedPreferences prefs = getActivity().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-        /** Instantiante the security question spinner.*/
-        mQuestionSpinner = (Spinner) getActivity().findViewById(R.id.spinnerSecurityQuestion_reset);
 
+        /** Instantiate the security question spinner.*/
+        mQuestionSpinner = (Spinner) getActivity().findViewById(R.id.spinnerSecurityQuestion_reset);
 //        final User myRegisteredUser = new User();
         /** String value to update the New User security question field is gleaned from the spinner.*/
 //        myRegisteredUser.setSecurityQuestion(mQuestionSpinner.getSelectedItem().toString().trim());
@@ -59,18 +59,18 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        final EditText userinput = (EditText) getActivity().findViewById(R.id.newSecurityAnswer);
+        final EditText userInput = (EditText) getActivity().findViewById(R.id.newSecurityAnswer);
 
-        userinput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        userInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-
                 final UserStorageDatabaseHelper dbHelper = new UserStorageDatabaseHelper(getActivity().getApplicationContext());
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     prefs.edit().putString(User.USER_QUESTION, mQuestionSpinner.getSelectedItem().toString().trim()).apply();
-                    prefs.edit().putString(User.USER_ANSWER, userinput.toString().trim()).apply();
+                    prefs.edit().putString(User.USER_ANSWER, userInput.toString().trim()).apply();
+                    Toast.makeText(getActivity().getApplicationContext(), "USER ID IS " + prefs.getLong(User.USER_ID, 0), Toast.LENGTH_SHORT).show();
                     dbHelper.modifySecurityQuestion(mQuestionSpinner.getSelectedItem().toString().trim(), prefs.getLong(User.USER_ID, 0));
-                    dbHelper.modifySecurityAnswer(userinput.toString(), prefs.getLong(User.USER_ID, 0));
+                    dbHelper.modifySecurityAnswer(userInput.toString(), prefs.getLong(User.USER_ID, 0));
                     Toast.makeText(getActivity().getApplicationContext(),
                             "Your security Question and answer have been changed.", Toast.LENGTH_SHORT).show();
                 }

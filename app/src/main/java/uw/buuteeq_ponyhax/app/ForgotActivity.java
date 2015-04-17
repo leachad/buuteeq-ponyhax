@@ -69,12 +69,10 @@ public class ForgotActivity extends ActionBarActivity {
     }
 
     private boolean checkTextEntered() {
-        if (mSecurityAnswerField.getText().toString().matches("") && mEmailEntryField.getText().toString().matches("")
-            || !mSecurityAnswerField.getText().toString().matches("") && mEmailEntryField.getText().toString().matches("")
-            || mSecurityAnswerField.getText().toString().matches("") && !mEmailEntryField.getText().toString().matches("")) {
-            return false;
-        } else {
+        if (!mSecurityAnswerField.getText().toString().matches("") && !mEmailEntryField.getText().toString().matches("")) {
             return true;
+        } else {
+            return false;
         }
     }
 
@@ -98,7 +96,7 @@ public class ForgotActivity extends ActionBarActivity {
                 mEmailSend.sendEmail(userEmail, testPass);
 //                TextView newPassword = (TextView) findViewById(R.id.passwordResetField);
 //                newPassword.append(testPass);
-//                Log.d("TEST PASSWORD: ", testPass);
+                Log.d("TEST PASSWORD: ", testPass);
 
                 Toast.makeText(getApplicationContext(),
                         "Your new randomly generated password was sent to your email", Toast.LENGTH_SHORT).show();
