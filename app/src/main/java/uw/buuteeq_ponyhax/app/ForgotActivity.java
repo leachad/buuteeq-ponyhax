@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 4.17.15 -- Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
+ */
+
 package uw.buuteeq_ponyhax.app;
 
 import android.content.SharedPreferences;
@@ -17,8 +21,12 @@ import email.EmailSend;
 
 /**
  * Created by eduard_prokhor on 4/4/15.
- *
  * Edited by leach on 4/16/15
+ * <p/>
+ * Forgot activity allows the user to generate a new password that will be sent to their
+ * email address for signing back in. Utilizes the EmailSend class developed by Huy that
+ * routes the email through a hosted site with the php file that kicks the auto-generated
+ * password back to the users registered email account.
  */
 public class ForgotActivity extends ActionBarActivity {
 
@@ -46,8 +54,6 @@ public class ForgotActivity extends ActionBarActivity {
         isCurrentUser = false;
 
 
-
-
         registerListeners();
     }
 
@@ -69,13 +75,15 @@ public class ForgotActivity extends ActionBarActivity {
     }
 
     private boolean checkTextEntered() {
-        if (!mSecurityAnswerField.getText().toString().matches("") && !mEmailEntryField.getText().toString().matches("")) {
-            return true;
-        } else {
-            return false;
-        }
+        return (!mSecurityAnswerField.getText().toString().matches("") && !mEmailEntryField.getText().toString().matches(""));
     }
 
+    /**
+     * Private class to implement a SubmitListener
+     *
+     * @author leachad
+     * @version 4.16.15
+     */
     private class SubmitListener implements View.OnClickListener {
 
         @Override
@@ -94,8 +102,6 @@ public class ForgotActivity extends ActionBarActivity {
 
                 //testing to send to my email.
                 mEmailSend.sendEmail(userEmail, testPass);
-//                TextView newPassword = (TextView) findViewById(R.id.passwordResetField);
-//                newPassword.append(testPass);
                 Log.d("E-mail debugging", userEmail + " " + testPass);
 
                 Toast.makeText(getApplicationContext(),
@@ -115,6 +121,12 @@ public class ForgotActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Private class to implement a DisplayQuestionListener
+     *
+     * @author leachad
+     * @version 4.16.15
+     */
     private class DisplayQuestionListener implements TextView.OnEditorActionListener {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

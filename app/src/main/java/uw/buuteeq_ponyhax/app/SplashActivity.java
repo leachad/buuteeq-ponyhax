@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 4.17.15 -- Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
+ */
+
 package uw.buuteeq_ponyhax.app;
 
 import android.app.Activity;
@@ -7,6 +11,10 @@ import android.os.Bundle;
 
 import db.User;
 
+/**
+ * SplashActivity to display a timed "entry" to the application. Displays the globe, application
+ * title, and info about the authors of the application.
+ */
 public class SplashActivity extends Activity {
 
 

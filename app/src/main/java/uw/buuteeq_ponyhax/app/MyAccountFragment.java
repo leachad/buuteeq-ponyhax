@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 4.17.15 -- Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
+ */
+
 package uw.buuteeq_ponyhax.app;
 
 import android.content.Context;
@@ -13,13 +17,11 @@ import db.User;
 
 /**
  * Created by BrentYoung on 4/12/15.
+ * <p/>
+ * MyAccountFragment allows for flexibility of UI when navigating through submenus with
+ * the navigation drawer.
  */
 public class MyAccountFragment extends Fragment {
-
-
-    TextView mNameField;
-    TextView mEmailField;
-    TextView mDataPointsField;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,9 +32,7 @@ public class MyAccountFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View v = inflater.inflate(R.layout.fragment_my_account, container, false);
-
-        return v;
+        return inflater.inflate(R.layout.fragment_my_account, container, false);
     }
 
     @Override
@@ -42,7 +42,6 @@ public class MyAccountFragment extends Fragment {
         ((TextView) getActivity().findViewById(R.id.text_account_name)).setText("User ID: \n" + Long.toString(prefs.getLong(User.USER_ID, 0)));
         ((TextView) getActivity().findViewById(R.id.text_account_email)).setText("Email: \n" + prefs.getString(User.USER_EMAIL, "N/A"));
         ((TextView) getActivity().findViewById(R.id.text_account_numDataPoints)).setText("Data Points Logged: \n" + "N/A");
-//        prefs.edit().clear().commit();
 
     }
 }

@@ -1,11 +1,16 @@
+<!--
+  ~ Copyright (c) 4.17.15 - Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
+  -->
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/AppTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp">
 
-    <LinearLayout android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:orientation="vertical"
@@ -14,7 +19,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_gravity="top"
             android:layout_weight="0.94"
             android:orientation="vertical"
@@ -37,7 +42,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight="0.10"
                 android:ems="10"
                 android:hint="@string/enter_email"
                 android:inputType="textImeMultiLine"
@@ -49,8 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight="0.10"
-                android:text="@string/reset_security_question"
+                android:text="@string/auto_fill_security_question"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="20sp" />
 
@@ -60,16 +63,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight=".10"
                 android:hint="@string/enter_security_answer"
                 android:inputType="textImeMultiLine"
                 android:textSize="20sp" />
 
             <!--<TextView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/passwordResetField"-->
-                <!--android:text="@string/new_password"/>-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/passwordResetField"-->
+            <!--android:text="@string/new_password"/>-->
         </LinearLayout>
 
         <LinearLayout
@@ -90,7 +92,7 @@
                 android:text="@string/cancel" />
 
             <Space
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="101.97" />
 

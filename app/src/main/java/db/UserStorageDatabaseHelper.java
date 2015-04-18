@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 4.17.15 -- Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
+ */
+
 package db;
 
 import android.content.ContentValues;
@@ -15,13 +19,20 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
 
+    /**
+     * Database information used on upgrade or downgrade.
+     */
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "user_storage.db";
 
     /**
-     * Name and Column of the "key" table for accessing Users.
+     * Name of the table containing fields of data relevant to each registered user.
      */
     private static final String TABLE_USER = "user";
+
+    /**
+     * Column headings of the user table used to retrieve pertinent data.
+     */
     private static final String COLUMN_USER_ID = "user_id";
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_EMAIL_ADDRESS = "email_address";
@@ -31,10 +42,24 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ISSUED_RESET = "issued_reset";
 
 
+    /**
+     * Constructor of a SQLiteOpenHelper that access Users stored
+     * in the local database.
+     *
+     * @param context is the current application context gathered from
+     *                the calling code that instantiated the database
+     *                helper.
+     */
     public UserStorageDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /**
+     * Tables relevant to this database are when the database is first created.
+     * Generates a table based on the column headers provided in the field declarations.
+     *
+     * @param db is the database passed as a parameter to this helper class.
+     */
     public void onCreate(SQLiteDatabase db) {
         /** Create the User Table.*/
         db.execSQL("create table user (" + "user_id integer primary key autoincrement, " +
@@ -44,10 +69,26 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * Should the calling code care to readjust the format of the database, onUpgrade insures
+     * that data within the database stays consistent.
+     *
+     * @param db         is the database passed as a parameter to build this helper class
+     * @param oldVersion is the older version of the database
+     * @param newVersion is the newer version of the database
+     */
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Understand what the onUpgrade() means, does, how it should be implemented
     }
 
+    /**
+     * Should the calling code care to readjust the format of the database, onDowngrade insures
+     * that data within the database stays consistent.
+     *
+     * @param db         is the database passed as a parameter to build this helper class
+     * @param oldVersion is the older version of the database
+     * @param newVersion is the newer version of the database
+     */
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }
@@ -241,7 +282,9 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
      */
     public UserCursor queryUsers() {
         Cursor wrapped = getReadableDatabase().query(TABLE_USER, null, null, null, null, null, COLUMN_USER_ID + " asc");
-        return new UserCursor(wrapped);
+        UserCursor users = new UserCursor(wrapped);
+        wrapped.close();
+        return users;
     }
 
     /**

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 4.17.15 -- Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
+ */
+
 package uw.buuteeq_ponyhax.app;
 
 import android.app.Activity;
@@ -57,7 +61,12 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
+    /**
+     * Do nothing constructor to avoid default
+     * no-arg instantiation.
+     */
     public NavigationDrawerFragment() {
+        //do nothing
     }
 
     @Override
@@ -199,6 +208,12 @@ public class NavigationDrawerFragment extends Fragment {
         }
     }
 
+    /**
+     * Overrides the onAttach method that regulates behavior based upon
+     * a certain activity.
+     *
+     * @param activity is the current activity "holding" the navigation drawer.
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -209,18 +224,33 @@ public class NavigationDrawerFragment extends Fragment {
         }
     }
 
+    /**
+     * Overrides onDetach method and resets the NavigationDrawerCallbacks instance to null.
+     */
     @Override
     public void onDetach() {
         super.onDetach();
         mCallbacks = null;
     }
 
+    /**
+     * Overrides the onSaveInstanceState method and adds to the Bundle the current selected
+     * position on the NavigationDrawer.
+     *
+     * @param outState is the current Bundle
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
     }
 
+    /**
+     * Overrides the onConfigurationChanged method and updates the navigation drawer toggle
+     * to the new configuration.
+     *
+     * @param newConfig is the new configuration
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -228,6 +258,13 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    /**
+     * Overrides the onCreateOptionsMenu and ensures that if the drawer is open the global
+     * application actions are displayed in the action bar.
+     *
+     * @param menu     is the current menu item
+     * @param inflater is the current menu inflater
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // If the drawer is open, show the global app actions in the action bar. See also
@@ -239,6 +276,13 @@ public class NavigationDrawerFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    /**
+     * Overrides onOptionsItemSelected method and determines behavior based on which
+     * item in the navigation drawer is selected.
+     *
+     * @param item is the menu item selected
+     * @return boolean to the calling code
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)) {

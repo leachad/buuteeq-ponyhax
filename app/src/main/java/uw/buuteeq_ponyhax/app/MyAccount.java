@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 4.17.15 -- Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
+ */
+
 package uw.buuteeq_ponyhax.app;
 
 import android.content.Context;
@@ -17,11 +21,6 @@ public class MyAccount extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
-
-    /**
      * Used to store the last screen title.
      */
     private CharSequence mTitle;
@@ -31,7 +30,7 @@ public class MyAccount extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
+        NavigationDrawerFragment mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
@@ -62,7 +61,7 @@ public class MyAccount extends ActionBarActivity
                 break;
             case 3:
                 SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-                prefs.edit().clear().commit();
+                prefs.edit().clear().apply();
                 choice = false;
                 finish();
                 break;
@@ -97,6 +96,9 @@ public class MyAccount extends ActionBarActivity
         }
     }
 
+    /**
+     * Public method to restore the state of the action bar.
+     */
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
 //        actionBar.setDisplayShowTitleEnabled(true);

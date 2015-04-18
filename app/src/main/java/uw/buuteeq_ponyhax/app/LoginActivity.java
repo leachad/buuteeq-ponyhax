@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 4.17.15 -- Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
+ */
+
 package uw.buuteeq_ponyhax.app;
 
 import android.app.Activity;
@@ -12,6 +16,14 @@ import android.widget.Toast;
 import db.User;
 import db.UserStorageDatabaseHelper;
 
+/**
+ * This class propagates the LoginActivity and all the necessary widgets and conditions to check a
+ * variety of conditions. The User may not exist, they may have mistyped fields. The User may be
+ * returning from the application after requesting a new random password and needs to be redirected
+ * to the reset password portion of the application. LoginActivity, upon correct entry and user is
+ * located within database, sets the prefs to the necessary data fields that the user needs to
+ * traverse the application.
+ */
 public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,8 +31,6 @@ public class LoginActivity extends Activity {
 
         /** Set the first page view with activity_login.xml. */
         setContentView(R.layout.activity_login);
-
-        //START ADDING LISTENERS
 
         /** Registers the custom login listener with the Login Button.*/
         (findViewById(R.id.login_button)).setOnClickListener(new LoginListener());
@@ -41,7 +51,6 @@ public class LoginActivity extends Activity {
             }
         });
 
-
         (findViewById(R.id.password_field)).setOnKeyListener(new View.OnKeyListener() {
 
 
@@ -56,7 +65,6 @@ public class LoginActivity extends Activity {
             }
         });
 
-        //END ADDING LISTENERS
     }
 
 
@@ -110,7 +118,7 @@ public class LoginActivity extends Activity {
     /**
      * Private class to implement a LoginListener
      *
-     * @author Andrew
+     * @author leachad
      * @version 4.4.15
      */
     private class LoginListener implements View.OnClickListener {

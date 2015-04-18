@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 4.17.15 -- Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
+ */
+
 package uw.buuteeq_ponyhax.app;
 
 import android.os.Bundle;
@@ -14,6 +18,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * MapFragment used to ease the transition between NavigationDrawer submenus
+ */
 public class MyMap extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -22,8 +29,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.activity_my_map, container, false);
-        return rootView;
+        return inflater.inflate(R.layout.activity_my_map, container, false);
     }
 
     @Override

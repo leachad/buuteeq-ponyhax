@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 4.17.15 -- Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
+ */
+
 package db;
 
 import android.content.ContentValues;
@@ -14,7 +18,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "coordinate_storage.db";
-
     public static final String TABLE_NAME = "coordinate";
     public static final String COLUMN_ROW_ID = "row_id";
     public static final String COLUMN_LONGITUDE = "longitude";
@@ -129,7 +132,6 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
                 return new Coordinate(longitude, latitude, time_stamp, user_id, photo);
             }
         }
-
 
 
     }

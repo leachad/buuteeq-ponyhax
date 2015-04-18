@@ -1,3 +1,7 @@
+<!--
+  ~ Copyright (c) 4.17.15 - Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
+  -->
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/AppTheme"
@@ -10,10 +14,10 @@
 
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
         style="@style/AppTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:padding="20dp"
         tools:context="uw.buuteeq_ponyhax.app.MyAccount$PlaceholderFragment">
 
@@ -22,12 +26,10 @@
             style="@style/editTextTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
             android:gravity="center"
             android:text="@string/action_settings"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
 
         <LinearLayout
             android:id="@+id/card_layout"
@@ -65,8 +67,7 @@
                 android:entries="@array/question_options"
                 android:gravity="center"
                 android:prompt="@string/security_question"
-                android:spinnerMode="dropdown"
-                android:textAlignment="center" />
+                android:spinnerMode="dropdown" />
 
             <EditText
                 android:id="@+id/securityQuestionAnswer"
@@ -79,10 +80,10 @@
                 />
 
             <Button
+                android:id="@+id/submitNewSecurityAnswer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/submitNewSecurityAnswer"
-                android:text="@string/submit"/>
+                android:text="@string/submit" />
 
         </LinearLayout>
 

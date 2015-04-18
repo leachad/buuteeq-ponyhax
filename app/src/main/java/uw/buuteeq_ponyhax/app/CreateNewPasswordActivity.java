@@ -1,23 +1,29 @@
+/*
+ * Copyright (c) 4.17.15 -- Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
+ */
+
 package uw.buuteeq_ponyhax.app;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import db.User;
 import db.UserStorageDatabaseHelper;
 
+/**
+ * CreateNewPasswordActivity is utilized in a couple different areas. Mainly it is called when
+ * User requests a password reset. It also "sits" in the Navigation drawer so that if a user is
+ * logged in they can change their password while in the system.
+ */
 public class CreateNewPasswordActivity extends Activity {
 
 
     private EditText mPassword;
     private EditText mPassConfirm;
-    private Button mSubmitButton;
     private UserStorageDatabaseHelper helper;
 
     @Override
@@ -28,10 +34,7 @@ public class CreateNewPasswordActivity extends Activity {
 
         mPassword = (EditText) findViewById(R.id.password_first);
         mPassConfirm = (EditText) findViewById(R.id.password_second);
-        mSubmitButton = (Button) findViewById(R.id.newPasswordSubmit);
-
-
-        mSubmitButton.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.newPasswordSubmit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -39,7 +42,7 @@ public class CreateNewPasswordActivity extends Activity {
 
                     //This should be done either way to ensure that our local copy of the user is up to date.
                     SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
-                    prefs.edit().putInt(User.USER_PASSWORD, mPassword.getText().hashCode()).commit();
+                    prefs.edit().putInt(User.USER_PASSWORD, mPassword.getText().hashCode()).apply();
 
                     //attempt to update the database with the new user password
                     helper = new UserStorageDatabaseHelper(getApplicationContext());
@@ -49,7 +52,7 @@ public class CreateNewPasswordActivity extends Activity {
 
                     if (!email.equals("")) {
                         SharedPreferences resetPrefs = getSharedPreferences(email, MODE_PRIVATE);
-                        resetPrefs.edit().putBoolean(User.USER_RESET, false).commit();
+                        resetPrefs.edit().putBoolean(User.USER_RESET, false).apply();
 
                         Intent myIntent = new Intent(CreateNewPasswordActivity.this, MyAccount.class);
                         startActivity(myIntent);
@@ -59,7 +62,6 @@ public class CreateNewPasswordActivity extends Activity {
                     }
 
 
-
                 }
 
             }
@@ -67,27 +69,4 @@ public class CreateNewPasswordActivity extends Activity {
 
 
     }
-
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_create_new_password, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 }

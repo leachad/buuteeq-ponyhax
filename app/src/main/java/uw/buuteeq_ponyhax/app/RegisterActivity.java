@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 4.17.15 -- Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
+ */
+
 package uw.buuteeq_ponyhax.app;
 
 import android.content.Intent;
@@ -5,7 +9,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -87,6 +90,13 @@ public class RegisterActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Overrides the onRestoreInstanceState and returns to the respective fields their unique user
+     * entered values that were grabbed when orientation of the application was changed.
+     *
+     * @param savedInstanceState is the Bundle with saved values to be returned to the current application
+     *                           context.
+     */
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         if (!savedInstanceState.isEmpty()) {
@@ -101,6 +111,13 @@ public class RegisterActivity extends ActionBarActivity {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
+    /**
+     * Overrides the onRestoreInstanceState and returns to the respective fields their unique user
+     * entered values that were grabbed when orientation of the application was changed.
+     *
+     * @param outState           is the Bundle that the transient user-entered variables need to be saved to.
+     * @param outPersistentState is the bundle that persists throughout the application orientation change.
+     */
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         outState.putString(User.USER_EMAIL, mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getText().toString());
@@ -157,13 +174,14 @@ public class RegisterActivity extends ActionBarActivity {
      */
     private boolean allFieldsEntered() {
         boolean allEntered = true;
+        //Checks all EditText widgets
         for (EditText text : mNewUserFields) {
             if (text.getText().toString().trim().matches("")) {
                 allEntered = false;
                 break;
             }
         }
-
+        //Checks to make sure that the user selected a question from the Spinner
         if (mQuestionSpinner.getSelectedItem().toString().matches(mQuestionSpinner.getPrompt().toString()))
             allEntered = false;
 
@@ -190,7 +208,6 @@ public class RegisterActivity extends ActionBarActivity {
 
     /**
      * Private helper method to add an entry to the database.
-     * TODO Determine if we need an entry id for the table.
      */
     private boolean addEntryToDatabase() {
         UserStorageDatabaseHelper dBHelper = new UserStorageDatabaseHelper(getApplicationContext());
@@ -227,6 +244,9 @@ public class RegisterActivity extends ActionBarActivity {
         return myRegisteredUser;
     }
 
+    /**
+     * Sets the UserPrefs based on the Registration information of the user that was created.
+     */
     private void setPrefs() {
         SharedPreferences prefs = getApplicationContext().getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
 
@@ -285,6 +305,10 @@ public class RegisterActivity extends ActionBarActivity {
         mQuestionSpinner.setPrompt(mQuestionSpinner.getPrompt());
     }
 
+    /**
+     * Enum to help determine positions of integral EditText widgets within a larger array of widgets. Helps reduce code redundancy and
+     * improves readability.
+     */
     public enum RegisterField {
         EMAIL_FIELD(0), USER_NAME(1), PASSWORD_INITIAL(2), PASSWORD_SUBSEQUENT(3),
         SECURITY_ANSWER_INITIAL(4), SECURITY_ANSWER_SUBSEQUENT(5);
@@ -306,11 +330,15 @@ public class RegisterActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * @author leachad
+     * @version 4.4.15
+     *          <p/>
+     *          Class that implements an OnClickListener. Moves all the hefty logic required for checking every
+     *          aspect of a user into a separate inner class. Ensures that all fields are entered, passwords agree,
+     *          security answers agree and that the user has indeed picked a security question.
+     */
     public class ConfirmUserListener implements View.OnClickListener {
-
-        public ConfirmUserListener() {
-            //useful if we need to instantiate specific fields
-        }
 
         @Override
         public void onClick(View v) {
@@ -322,12 +350,11 @@ public class RegisterActivity extends ActionBarActivity {
                     resetFields();
                     makeDuplicateEntryToast();
                 } else {
-                    Toast.makeText(getApplicationContext(), "User Added to Database!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "User Account Created!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegisterActivity.this, MyAccount.class);
                     startActivity(intent);
                     setPrefs();
                     finish();
-                    //TODO Use the webservice to send out an automated email to finish registration?
                 }
 
             } else if (!passwordsAgree()) {

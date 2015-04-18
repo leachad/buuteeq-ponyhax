@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 4.17.15 -- Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
+ */
+
 package uw.buuteeq_ponyhax.app;
 
 import android.content.Context;
@@ -5,15 +9,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import db.User;
@@ -26,7 +27,9 @@ import db.UserStorageDatabaseHelper;
  */
 public class SettingsFragment extends Fragment {
 
-    /** Fields needed by the whole class.*/
+    /**
+     * Fields needed by the whole class.
+     */
     private Spinner mQuestionSpinner;
     private EditText mNewSecurityAnswer;
     private Button mSubmitButton;
@@ -66,7 +69,6 @@ public class SettingsFragment extends Fragment {
                 startActivity(myIntent);
             }
         });
-
 
 
     }

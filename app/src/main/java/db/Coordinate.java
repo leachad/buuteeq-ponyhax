@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 4.17.15 -- Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
+ */
+
 package db;
 
 /**
@@ -16,7 +20,8 @@ public class Coordinate {
     private long myTimeStamp;
     private long myUserID;
 
-    /** Private field to hold the reference to a byte array (photo) should the user elect
+    /**
+     * Private field to hold the reference to a byte array (photo) should the user elect
      * to store a photo of that particular location.
      */
     private byte[] myCoordinatePhoto;
@@ -42,10 +47,10 @@ public class Coordinate {
     /**
      * Overloaded constructor of a coordinate object that takes in a byte[] argument.
      *
-     * @param theLongitude is the longitude of the coordinate
-     * @param theLatitude  is the latitude of the coordinate
-     * @param theTimeStamp is the time the point was recorded
-     * @param theUserID    is the unique user ID issued by the WebServices API
+     * @param theLongitude       is the longitude of the coordinate
+     * @param theLatitude        is the latitude of the coordinate
+     * @param theTimeStamp       is the time the point was recorded
+     * @param theUserID          is the unique user ID issued by the WebServices API
      * @param theCoordinatePhoto is the byte array representing the photo that the user took
      *                           at that specific location.
      */
