@@ -97,8 +97,8 @@
     <orderEntry type="library" exported="" name="support-annotations-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-gcm-7.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-wearable-7.0.0" level="project" />
-    <orderEntry type="library" exported="" name="play-services-wallet-7.0.0" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-22.0.0" level="project" />
+    <orderEntry type="library" exported="" name="play-services-wallet-7.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-cast-7.0.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-maps-7.0.0" level="project" />

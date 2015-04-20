@@ -24,6 +24,7 @@ import db.UserStorageDatabaseHelper;
 
 public class RegisterActivity extends ActionBarActivity {
 
+    private static final int PASSWORD_LENGTH = 5;
     private static final String SPINNER = "spinner";
     private static final String PW_SUB = "passwordSubsequent";
     private static final String ANS_SUB = "answerSubsequent";
@@ -157,6 +158,17 @@ public class RegisterActivity extends ActionBarActivity {
     }
 
     /**
+     * Private helper method to check if the password is long enough
+     *
+     * @return the state of the passwords length
+     */
+    private boolean passwordIsCorrectLength() {
+        if (passwordsAgree())
+            return mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getText().toString().trim().length() > PASSWORD_LENGTH;
+        return false;
+    }
+
+    /**
      * Private helper method to check if the passwords enter agree.
      *
      * @return the state of the passwords equivalence
@@ -266,6 +278,13 @@ public class RegisterActivity extends ActionBarActivity {
      */
     private void makeBadPasswordToast() {
         Toast.makeText(getApplicationContext(), "Passwords do not match!", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Private helper method to make a short password toast. Passwords are not long enough
+     */
+    private void makeShortPasswordToast() {
+        Toast.makeText(getApplicationContext(), "Password is not long enough", Toast.LENGTH_SHORT).show();
     }
 
     /**
