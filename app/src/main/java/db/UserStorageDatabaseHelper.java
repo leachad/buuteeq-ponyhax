@@ -141,7 +141,6 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
                 break;
             }
         }
-        cursor.close();
         return isUnique;
     }
 
@@ -228,7 +227,6 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         if (currentRow.moveToNext()) {
             userID = currentRow.getLong(currentRow.getColumnIndex(COLUMN_USER_ID));
         }
-        currentRow.close();
         return userID;
     }
 
@@ -238,7 +236,6 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         if (currentRow.moveToNext()) {
             userEmail = currentRow.getString(currentRow.getColumnIndex(COLUMN_EMAIL_ADDRESS));
         }
-        currentRow.close();
         return userEmail;
     }
 
@@ -248,7 +245,6 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         if (currentRow.moveToNext()) {
             userPassword = currentRow.getString(currentRow.getColumnIndex(COLUMN_PASSWORD));
         }
-        currentRow.close();
         return userPassword;
     }
 
@@ -259,7 +255,6 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         if (currentRow.moveToNext()) {
             userSecurityQuestion = currentRow.getString(currentRow.getColumnIndex(COLUMN_SECURITY_QUESTION));
         }
-        currentRow.close();
         return userSecurityQuestion;
     }
 
@@ -270,7 +265,6 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         if (currentRow.moveToNext()) {
             userSecurityAnswer = currentRow.getString(currentRow.getColumnIndex(COLUMN_SECURITY_ANSWER));
         }
-        currentRow.close();
         return userSecurityAnswer;
     }
 
@@ -282,9 +276,7 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
      */
     public UserCursor queryUsers() {
         Cursor wrapped = getReadableDatabase().query(TABLE_USER, null, null, null, null, null, COLUMN_USER_ID + " asc");
-        UserCursor users = new UserCursor(wrapped);
-        wrapped.close();
-        return users;
+        return new UserCursor(wrapped);
     }
 
     /**

@@ -33,6 +33,7 @@ public class SettingsFragment extends Fragment {
     private Spinner mQuestionSpinner;
     private EditText mNewSecurityAnswer;
     private Button mSubmitButton;
+    private Button mCancelButton;
     private SharedPreferences mSharedPreferences;
     private UserStorageDatabaseHelper mDbHelper;
 
@@ -51,15 +52,28 @@ public class SettingsFragment extends Fragment {
         return inflater.inflate(R.layout.settings_fragment_layout, container, false);
     }
 
+    private boolean fieldsEmpty() {
+        return mQuestionSpinner.getSelectedItem().toString().matches(mQuestionSpinner.getPrompt().toString())
+                || mNewSecurityAnswer.getText().toString().matches("");
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         mQuestionSpinner = (Spinner) getActivity().findViewById(R.id.spinnerSecurityQuestion_reset);
         mNewSecurityAnswer = (EditText) getActivity().findViewById(R.id.securityQuestionAnswer);
         mSubmitButton = (Button) getActivity().findViewById(R.id.submitNewSecurityAnswer);
+        mCancelButton = (Button) getActivity().findViewById(R.id.cancelSettingsFragment);
         mDbHelper = new UserStorageDatabaseHelper(getActivity().getApplicationContext());
         mSharedPreferences = getActivity().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
         mSubmitButton.setOnClickListener(new SubmitListener());
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), MyAccount.class));
+                getActivity().finish();
+            }
+        });
 
         getActivity().findViewById(R.id.resetpass_from_settings).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +81,7 @@ public class SettingsFragment extends Fragment {
                 Intent myIntent = new Intent(getActivity(), CreateNewPasswordActivity.class);
                 myIntent.putExtra(User.USER_EMAIL, mSharedPreferences.getString(User.USER_EMAIL, ""));
                 startActivity(myIntent);
+                getActivity().finish();
             }
         });
 
@@ -76,13 +91,21 @@ public class SettingsFragment extends Fragment {
     private class SubmitListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            mSharedPreferences.edit().putString(User.USER_QUESTION, mQuestionSpinner.getSelectedItem().toString().trim()).apply();
-            mSharedPreferences.edit().putString(User.USER_ANSWER, mNewSecurityAnswer.toString().trim()).apply();
-            Toast.makeText(getActivity().getApplicationContext(), "USER ID IS " + mSharedPreferences.getLong(User.USER_ID, 0), Toast.LENGTH_SHORT).show();
-            mDbHelper.modifySecurityQuestion(mQuestionSpinner.getSelectedItem().toString().trim(), mSharedPreferences.getLong(User.USER_ID, 0));
-            mDbHelper.modifySecurityAnswer(mNewSecurityAnswer.getText().toString(), mSharedPreferences.getLong(User.USER_ID, 0));
-            Toast.makeText(getActivity().getApplicationContext(),
-                    "Your security Question and answer have been changed.", Toast.LENGTH_SHORT).show();
+            if (fieldsEmpty()) {
+                Toast.makeText(getActivity(), "Please make sure all fields are entered", Toast.LENGTH_SHORT).show();
+            } else {
+                mSharedPreferences.edit().putString(User.USER_QUESTION, mQuestionSpinner.getSelectedItem().toString().trim()).apply();
+                mSharedPreferences.edit().putString(User.USER_ANSWER, mNewSecurityAnswer.toString().trim()).apply();
+                mDbHelper.modifySecurityQuestion(mQuestionSpinner.getSelectedItem().toString().trim(), mSharedPreferences.getLong(User.USER_ID, 0));
+                mDbHelper.modifySecurityAnswer(mNewSecurityAnswer.getText().toString(), mSharedPreferences.getLong(User.USER_ID, 0));
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "Your security Question and answer have been changed.", Toast.LENGTH_SHORT).show();
+                Intent myIntent = new Intent(getActivity(), MyAccount.class);
+                myIntent.putExtra(User.USER_QUESTION, mSharedPreferences.getString(User.USER_QUESTION, ""));
+                myIntent.putExtra(User.USER_ANSWER, mSharedPreferences.getString(User.USER_ANSWER, ""));
+                startActivity(myIntent);
+                getActivity().finish();
+            }
         }
     }
 

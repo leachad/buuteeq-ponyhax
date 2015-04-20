@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import db.User;
 import db.UserStorageDatabaseHelper;
@@ -53,7 +54,7 @@ public class CreateNewPasswordActivity extends Activity {
                     if (!email.equals("")) {
                         SharedPreferences resetPrefs = getSharedPreferences(email, MODE_PRIVATE);
                         resetPrefs.edit().putBoolean(User.USER_RESET, false).apply();
-
+                        Toast.makeText(getApplicationContext(), "Password Reset!", Toast.LENGTH_SHORT).show();
                         Intent myIntent = new Intent(CreateNewPasswordActivity.this, MyAccount.class);
                         startActivity(myIntent);
                         finish();
@@ -65,6 +66,14 @@ public class CreateNewPasswordActivity extends Activity {
                 }
 
             }
+        });
+
+        findViewById(R.id.newPasswordCancel).setOnClickListener(new View.OnClickListener(){
+           @Override
+            public void onClick(View v) {
+               startActivity(new Intent(CreateNewPasswordActivity.this, MyAccount.class));
+               finish();
+           }
         });
 
 
