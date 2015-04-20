@@ -362,7 +362,7 @@ public class RegisterActivity extends ActionBarActivity {
         @Override
         public void onClick(View v) {
             //First, need to confirm that all appropriate initial, subsequent fields match
-            if (passwordsAgree() && securityAnswersAgree() && allFieldsEntered()) {
+            if (passwordsAgree() && securityAnswersAgree() && allFieldsEntered() && passwordIsCorrectLength()) {
 
                 boolean unique = addEntryToDatabase();
                 if (!unique) {
@@ -388,7 +388,11 @@ public class RegisterActivity extends ActionBarActivity {
                 makeBadFieldEntryToast();
                 int resumeCursor = getFirstOccurrenceEmptyField();
                 mNewUserFields[resumeCursor].requestFocus();
-            }
+            } else if(!passwordIsCorrectLength()) {
+		makeShortPasswordToast();
+		mNewuserFields[RegisterField.PASSWORD_INITIAL.indexValue].setText("");
+		mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue].setText("");
+		mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].requestFocus();
         }
     }
 }
