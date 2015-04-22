@@ -87,6 +87,7 @@ public class LoginActivity extends Activity {
          * DEBUGGING: If you need to show the number of entries, comment in the line below:
          * Toast.makeText(getApplicationContext(), "Database has " + mDbHelper.getNumEntries() + " entries", Toast.LENGTH_SHORT).show();
          */
+
         if (!mPasswordField.getText().toString().trim().matches("") && !mEmailField.getText().toString().trim().matches("")
                 && mDbHelper.obtainUserID(mEmailField.getText().toString().toLowerCase().trim()) != 0) {
 
