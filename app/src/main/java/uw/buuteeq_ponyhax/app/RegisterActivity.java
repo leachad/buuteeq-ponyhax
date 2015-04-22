@@ -381,19 +381,21 @@ public class RegisterActivity extends ActionBarActivity {
                 makeBadPasswordToast();
                 mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].setText("");
                 mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue].setText("");
+                mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].requestFocus();
             } else if (!securityAnswersAgree()) {
                 makeBadSecurityAnswerToast();
                 mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].setText("");
                 mNewUserFields[RegisterField.SECURITY_ANSWER_SUBSEQUENT.indexValue].setText("");
+                mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].requestFocus();
             } else if (!allFieldsEntered()) {
                 makeBadFieldEntryToast();
-                int resumeCursor = getFirstOccurrenceEmptyField();
-                mNewUserFields[resumeCursor].requestFocus();
-            } else if(!passwordIsCorrectLength()) {
-		makeShortPasswordToast();
-		mNewuserFields[RegisterField.PASSWORD_INITIAL.indexValue].setText("");
-		mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue].setText("");
-		mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].requestFocus();
+                mNewUserFields[getFirstOccurrenceEmptyField()].requestFocus();
+            } else if (!passwordIsCorrectLength()) {
+                makeShortPasswordToast();
+                mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].setText("");
+                mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue].setText("");
+                mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].requestFocus();
+            }
         }
     }
 }
