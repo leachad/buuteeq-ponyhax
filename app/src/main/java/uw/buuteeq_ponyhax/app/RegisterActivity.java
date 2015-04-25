@@ -103,7 +103,6 @@ public class RegisterActivity extends ActionBarActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         if (!savedInstanceState.isEmpty()) {
             mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].setText(savedInstanceState.getString(User.USER_EMAIL, ""));
-            mNewUserFields[RegisterField.USER_NAME.indexValue].setText(savedInstanceState.getString(User.USER_NAME, ""));
             mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].setText(savedInstanceState.getString(User.USER_PASSWORD, ""));
             mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue].setText(savedInstanceState.getString(PW_SUB, ""));
             mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].setText(savedInstanceState.getString(User.USER_ANSWER, ""));
@@ -123,7 +122,6 @@ public class RegisterActivity extends ActionBarActivity {
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         outState.putString(User.USER_EMAIL, mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getText().toString());
-        outState.putString(User.USER_NAME, mNewUserFields[RegisterField.USER_NAME.indexValue].getText().toString());
         outState.putString(User.USER_PASSWORD, mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getText().toString());
         outState.putString(PW_SUB, mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue].getText().toString());
         outState.putString(User.USER_ANSWER, mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].getText().toString());
@@ -140,7 +138,6 @@ public class RegisterActivity extends ActionBarActivity {
      */
     private void loadEditTextWidgets() {
         mNewUserFields[RegisterField.EMAIL_FIELD.indexValue] = (EditText) findViewById(R.id.emailEdit);
-        mNewUserFields[RegisterField.USER_NAME.indexValue] = (EditText) findViewById(R.id.userNameEdit);
         mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue] = (EditText) findViewById(R.id.passwordEditInitial);
         mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue] = (EditText) findViewById(R.id.passwordEditSubsequent);
         mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue] = (EditText) findViewById(R.id.securityQuestionAnswerInitial);
@@ -248,7 +245,6 @@ public class RegisterActivity extends ActionBarActivity {
 
         /** String values to update the New User fields are gleaned from the EditText widgets.*/
         myRegisteredUser.setEmail(mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getText().toString().toLowerCase().trim());
-        myRegisteredUser.setUserName(mNewUserFields[RegisterField.USER_NAME.indexValue].getText().toString().trim());
         myRegisteredUser.setPassword(mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getText().toString().trim());
         myRegisteredUser.setSecurityAnswer(mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].getText().toString().trim());
         myRegisteredUser.setResetStatus(0);
@@ -317,7 +313,6 @@ public class RegisterActivity extends ActionBarActivity {
     private void resetFields() {
         /** Reset the EditText widgets back to the original hints.*/
         mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].setHint(mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].getHint());
-        mNewUserFields[RegisterField.USER_NAME.indexValue].setHint(mNewUserFields[RegisterField.USER_NAME.indexValue].getHint());
         mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].setHint(mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getHint());
         mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue].setHint(mNewUserFields[RegisterField.PASSWORD_SUBSEQUENT.indexValue].getHint());
         mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].setHint(mNewUserFields[RegisterField.SECURITY_ANSWER_INITIAL.indexValue].getHint());
@@ -332,8 +327,8 @@ public class RegisterActivity extends ActionBarActivity {
      * improves readability.
      */
     public enum RegisterField {
-        EMAIL_FIELD(0), USER_NAME(1), PASSWORD_INITIAL(2), PASSWORD_SUBSEQUENT(3),
-        SECURITY_ANSWER_INITIAL(4), SECURITY_ANSWER_SUBSEQUENT(5);
+        EMAIL_FIELD(0), PASSWORD_INITIAL(1), PASSWORD_SUBSEQUENT(2),
+        SECURITY_ANSWER_INITIAL(3), SECURITY_ANSWER_SUBSEQUENT(4);
 
         public int indexValue;
 
