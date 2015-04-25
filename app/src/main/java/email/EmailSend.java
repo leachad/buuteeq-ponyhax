@@ -26,7 +26,7 @@ import webservices.WebDriver;
  * EmailSend and it's commensurate php file hosted on an outside server were developed by Huy on 4/8/2015.
  */
 public class EmailSend {
-    private static final String EMAIL_LINK = "http://androidclass.uphero.com/email.php";
+    private static final String EMAIL_LINK = "http://cssgate.insttech.washington.edu/~eprokhor/emailreset.php";
     private String email;
     private String password;
 
