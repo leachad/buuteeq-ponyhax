@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import db.User;
 import db.UserStorageDatabaseHelper;
+import webservices.WebDriver;
 
 
 public class RegisterActivity extends ActionBarActivity {
@@ -230,6 +231,7 @@ public class RegisterActivity extends ActionBarActivity {
             added = false;
         } else {
             myRegisteredUser.setID(dBHelper.obtainUserID(myRegisteredUser.getEmail()));
+            new WebDriver().addUser(myRegisteredUser); //TODO Fully test this implementation of web services
         }
 
         return added;

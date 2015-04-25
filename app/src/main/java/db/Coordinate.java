@@ -18,7 +18,10 @@ public class Coordinate {
     private long myLongitude;
     private long myLatitude;
     private long myTimeStamp;
+    private long mySpeed;
+    private long myHeading;
     private long myUserID;
+
 
     /**
      * Private field to hold the reference to a byte array (photo) should the user elect
@@ -32,13 +35,17 @@ public class Coordinate {
      * @param theLongitude is the longitude of the coordinate
      * @param theLatitude  is the latitude of the coordinate
      * @param theTimeStamp is the time the point was recorded
+     * @param theSpeed     is the current speed of the user
+     * @param theHeading   is the current direction the user is moving
      * @param theUserID    is the unique user ID issued by the WebServices API
      */
 
-    public Coordinate(final long theLongitude, final long theLatitude, final long theTimeStamp, final long theUserID) {
+    public Coordinate(final long theLongitude, final long theLatitude, final long theTimeStamp, final long theSpeed, final long theHeading, final long theUserID) {
         myLongitude = theLongitude;
         myLatitude = theLatitude;
         myTimeStamp = theTimeStamp;
+        mySpeed = theSpeed;
+        myHeading = theHeading;
         myUserID = theUserID;
         myCoordinatePhoto = null;
     }
@@ -51,15 +58,19 @@ public class Coordinate {
      * @param theLatitude        is the latitude of the coordinate
      * @param theTimeStamp       is the time the point was recorded
      * @param theUserID          is the unique user ID issued by the WebServices API
+     * @param theSpeed           is the current speed of the user
+     * @param theHeading         is the current direction the user is moving
      * @param theCoordinatePhoto is the byte array representing the photo that the user took
      *                           at that specific location.
      */
 
     public Coordinate(final long theLongitude, final long theLatitude, final long theTimeStamp,
-                      final long theUserID, final byte[] theCoordinatePhoto) {
+                      final long theSpeed, final long theHeading, final long theUserID, final byte[] theCoordinatePhoto) {
         myLongitude = theLongitude;
         myLatitude = theLatitude;
         myTimeStamp = theTimeStamp;
+        mySpeed = theSpeed;
+        myHeading = theHeading;
         myUserID = theUserID;
         myCoordinatePhoto = theCoordinatePhoto;
     }
@@ -79,6 +90,14 @@ public class Coordinate {
 
     public long getUserID() {
         return myUserID;
+    }
+
+    public long getUserSpeed() {
+        return mySpeed;
+    }
+
+    public long getHeading() {
+        return myHeading;
     }
 
     public byte[] getCoordinatePhoto() {

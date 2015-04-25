@@ -34,7 +34,6 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
      * Column headings of the user table used to retrieve pertinent data.
      */
     private static final String COLUMN_USER_ID = "user_id";
-    private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_EMAIL_ADDRESS = "email_address";
     private static final String COLUMN_PASSWORD = "password";
     private static final String COLUMN_SECURITY_QUESTION = "security_question";
@@ -63,7 +62,7 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         /** Create the User Table.*/
         db.execSQL("create table user (" + "user_id integer primary key autoincrement, " +
-                "username varchar(100), email_address varchar(100), " +
+                "email_address varchar(100), " +
                 "password varchar(100), security_question varchar(100), " +
                 "security_answer varchar(100), issued_reset integer )");
 
@@ -114,7 +113,6 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         long insertConfirm = 0;
 
         if (isUnique(user)) {
-            cv.put(COLUMN_USERNAME, user.getUserName());
             cv.put(COLUMN_EMAIL_ADDRESS, user.getEmail());
             cv.put(COLUMN_PASSWORD, user.getPassword());
             cv.put(COLUMN_SECURITY_QUESTION, user.getSecurityQuestion());
@@ -159,20 +157,6 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
     }
 
-    /**
-     * Publicly accessible method to modify the username of a given User.
-     * Does NOT check for null values.
-     *
-     * @param theNewUsername is the new username as changed by the user
-     * @param theUserRowID   is the row id for the current user
-     * @return updateConfirmation
-     */
-    public long modifyUsername(final String theNewUsername, final long theUserRowID) {
-        ContentValues cv = new ContentValues();
-        cv.put(COLUMN_USERNAME, theNewUsername);
-        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
-
-    }
 
     /**
      * Publicly accessible method to modify the email address of a given User.
@@ -300,7 +284,6 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
             if (isBeforeFirst() || isAfterLast())
                 return null;
             user.setID(getLong(getColumnIndex(COLUMN_USER_ID)));
-            user.setUserName(getString(getColumnIndex(COLUMN_USERNAME)));
             user.setEmail(getString(getColumnIndex(COLUMN_EMAIL_ADDRESS)));
             user.setPassword(getString(getColumnIndex(COLUMN_PASSWORD)));
             user.setSecurityQuestion(getString(getColumnIndex(COLUMN_SECURITY_QUESTION)));
