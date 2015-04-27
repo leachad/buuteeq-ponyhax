@@ -10,12 +10,48 @@
     android:layout_height="match_parent"
     tools:context="uw.buuteeq_ponyhax.app.MyAccount">
 
+
+
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
-    <FrameLayout
-        android:id="@+id/container"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight=".05"
+            android:weightSum="1.0"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/startButton"
+                android:layout_weight=".5"
+                style="@style/buttonTheme"
+                android:text="@string/startButtonText"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/stopButton"
+                android:layout_weight=".5"
+                style="@style/buttonTheme"
+                android:text="@string/stopButtonText"/>
+
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight=".95"/>
+
+    </LinearLayout>
 
     <!-- android:layout_gravity="start" tells DrawerLayout to treat
          this as a sliding drawer on the left side for left-to-right

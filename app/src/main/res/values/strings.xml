@@ -53,6 +53,8 @@
     <!--
     Navigation Drawer Resources
     -->
+    <string name="startButtonText">Start</string>
+    <string name="stopButtonText">Stop</string>
 
     <string name="title_section1">My Map</string>
     <string name="title_section2">Overview</string>
