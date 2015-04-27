@@ -32,13 +32,13 @@ import db.User;
 public class WebDriver {
 
     /** Private field to hold a reference to the add user php file domain.*/
-    private static final String ADD_USER_ADDRESS = "http://cssgate.insttech.washington.edu/~_450team8/add_user.php";
+    private static final String ADD_USER_ADDRESS = "http://cssgate.insttech.washington.edu/~_450team8/adduser.php";
 
     /** Private field to hold a reference to the add coordinate php file domain.*/
     private static final String ADD_COORDINATE_ADDRESS = "http://cssgate.insttech.washington.edu/~_450team8/add_coordinate.php";
 
     /** Private field to hold a reference to the add coordinate php file domain.*/
-    private static final String LOGIN_USER_ADDRESS = "http://cssgate.insttech.washington.edu/~_450team8/login_user.php";
+    private static final String LOGIN_USER_ADDRESS = "http://cssgate.insttech.washington.edu/~_450team8/login.php";
 
     /** Private field to hold a reference to the add coordinate php file domain.*/
     private static final String GET_USER_COORDINATES_ADDRESS = "http://cssgate.insttech.washington.edu/~_450team8/get_user_coordinates.php";
