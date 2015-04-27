@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.concurrent.ExecutionException;
+
 import db.User;
 import db.UserStorageDatabaseHelper;
 import webservices.WebDriver;
@@ -227,9 +229,22 @@ public class RegisterActivity extends ActionBarActivity {
         if (userAdded == 0) {
             added = false;
         } else {
-            myRegisteredUser.setID(dBHelper.obtainUserID(myRegisteredUser.getEmail()));
-            new WebDriver().addUser(myRegisteredUser); //TODO Fully test this implementation of web services
+            //This adds a user to the database, which checks if the email has not already been
+            //added, sends an email verification to the user
+            String result = null;
+            try {
+                result = new WebDriver().addUser(myRegisteredUser);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (!result.matches("success"))
+                added = false;
+
         }
+            //TODO Fully test this implementation of web services
+
 
         return added;
     }

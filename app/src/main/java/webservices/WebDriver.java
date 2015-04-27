@@ -9,13 +9,17 @@ import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,16 +36,16 @@ import db.User;
 public class WebDriver {
 
     /** Private field to hold a reference to the add user php file domain.*/
-    private static final String ADD_USER_ADDRESS = "http://cssgate.insttech.washington.edu/~_450team8/add_user.php";
+    private static final String ADD_USER_ADDRESS = "http://450.atwebpages.com/adduser.php";
 
     /** Private field to hold a reference to the add coordinate php file domain.*/
-    private static final String ADD_COORDINATE_ADDRESS = "http://cssgate.insttech.washington.edu/~_450team8/add_coordinate.php";
+    private static final String ADD_COORDINATE_ADDRESS = "http://450.atwebpages.com/";
 
     /** Private field to hold a reference to the add coordinate php file domain.*/
-    private static final String LOGIN_USER_ADDRESS = "http://cssgate.insttech.washington.edu/~_450team8/login_user.php";
+    private static final String LOGIN_USER_ADDRESS = "http://450.atwebpages.com/login.php";
 
     /** Private field to hold a reference to the add coordinate php file domain.*/
-    private static final String GET_USER_COORDINATES_ADDRESS = "http://cssgate.insttech.washington.edu/~_450team8/get_user_coordinates.php";
+    private static final String GET_USER_COORDINATES_ADDRESS = "http://450.atwebpages.com/";
 
     /** Private fields to hold variable strings needed to properly add a user via the url.*/
     private static final String URL_EMAIL = "email";
@@ -57,9 +61,17 @@ public class WebDriver {
     private static final String URL_SOURCE = "user_id";
     private static final String URL_TIMESTAMP = "timestamp";
 
+    /** Private fields to hold references to JSON keys.*/
+    private static final String KEY_RESULT = "result";
+    private static final String KEY_USERID = "userid";
+    private static final String VAL_SUCCESS = "success";
+    private static final String VAL_FAIL = "fail";
+
     /** Private fields to hold the parameter variables before background tasks are executed.*/
     private User myUser;
     private List<Coordinate> myCoordinateList;
+    private String myEmailAddress;
+    private String myPassword;
 
     /**
      * Constructor of a WebDriver class.
@@ -67,12 +79,14 @@ public class WebDriver {
     public WebDriver() {
         myUser = null;
         myCoordinateList = null;
+        myEmailAddress = null;
+        myPassword = null;
     }
 
     /** POST OPERATIONS.*/
-    public void addUser(User theUser) {
+    public String addUser(User theUser) throws ExecutionException, InterruptedException {
         myUser = theUser;
-        new AddUser().execute();
+        return new AddUser().execute().get();
     }
 
     public void addCoordinates(List<Coordinate> theCoordinateList) {
@@ -81,7 +95,9 @@ public class WebDriver {
     }
 
     /** GET OPERATIONS.*/
-    public String checkUserCredentials(final String theEmail, final String thePassword) throws ExecutionException, InterruptedException {
+    public long checkUserCredentials(final String theEmail, final String thePassword) throws ExecutionException, InterruptedException {
+        myEmailAddress = theEmail;
+        myPassword = thePassword;
         return new UserLogin().execute().get();
     }
 
@@ -122,10 +138,10 @@ public class WebDriver {
      * Private method to create a user login request
      * @return encodedEntity
      */
-    private List<NameValuePair> getUserLoginRequest(String theEmailAddress, String thePassword) {
+    private List<NameValuePair> getUserLoginRequest() {
         List<NameValuePair> encodedEntity = new ArrayList<>();
-        encodedEntity.add(new BasicNameValuePair(URL_EMAIL, theEmailAddress));
-        encodedEntity.add(new BasicNameValuePair(URL_PASSWORD, Integer.toString(thePassword.hashCode())));
+        encodedEntity.add(new BasicNameValuePair(URL_EMAIL, myEmailAddress));
+        encodedEntity.add(new BasicNameValuePair(URL_PASSWORD, myPassword));
         return encodedEntity;
     }
 
@@ -137,6 +153,20 @@ public class WebDriver {
         List<NameValuePair> encodedEntity = new ArrayList<>();
         encodedEntity.add(new BasicNameValuePair(URL_SOURCE, Integer.toString(theUserID)));
         return encodedEntity;
+    }
+
+    /**
+     * Private method to return a JSON object to the requesting inner class.
+     * @return theJSON
+     */
+    private JSONObject getJSONObject(String theResult) {
+        JSONObject json = new JSONObject();
+        try {
+            json = new JSONObject(theResult);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
     }
 
 
@@ -157,14 +187,17 @@ public class WebDriver {
                 e.printStackTrace();
             }
 
-            String result = "failed";
+            String result = VAL_FAIL;
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
+                if (getJSONObject(result).get(KEY_RESULT).toString().matches(VAL_SUCCESS)) {
+                    result = VAL_SUCCESS;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Log.e("AddUser result", result);
+            Log.d("AddUser result", result);
             return result;
         }
     }
@@ -179,19 +212,19 @@ public class WebDriver {
         /**
          * Private helper method to execute a series of coordinate posts and
          * gets.
-         * @param httpClient
-         * @param httpPost
+         * @param httpClient is the default client web service
+         * @param httpPost is the http post URL
          * @return result
          */
         private String executePost(HttpClient httpClient, HttpPost httpPost) {
-            String result = "failed";
+            String result = VAL_FAIL;
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Log.e("AddCoordinates result", result);
+            Log.d("AddCoordinates result", result);
             return result;
         }
 
@@ -216,28 +249,34 @@ public class WebDriver {
      * @author leachad
      * @version 4.25.15
      */
-    private class UserLogin extends AsyncTask<String, Integer, String> {
+    private class UserLogin extends AsyncTask<Void, Integer, Long> {
 
-        protected String doInBackground(String[] theCredentials) {
+        protected Long doInBackground(Void... userLogin) {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(LOGIN_USER_ADDRESS);
+            HttpPost httpPost = new HttpPost(LOGIN_USER_ADDRESS + "?" + URL_EMAIL + "=" + myEmailAddress
+                                        + "&" + URL_PASSWORD + "=" + myPassword);
 
-            try {
-                httpPost.setEntity(new UrlEncodedFormEntity(getUserLoginRequest(theCredentials[0], theCredentials[1])));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            Log.d("http string", httpPost.getURI().toString());
 
-            String result = "failed";
+            String result = VAL_FAIL;
+            long userID = 0;
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
-            } catch (Exception e) {
+                if (getJSONObject(result).getString(KEY_RESULT).matches(VAL_SUCCESS)) {
+                    userID = getJSONObject(result).getLong(KEY_USERID);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Log.e("UserLogin result", result);
-            return result;
+            Log.d("UserLogin result", result);
+            return userID;
         }
+
+
     }
 
     /**
@@ -245,7 +284,7 @@ public class WebDriver {
      * @author leachad
      * @version 4.25.15
      */
-    private class GetUserCoordinates extends AsyncTask<Void, Integer, List<Coordinate>> {
+    public class GetUserCoordinates extends AsyncTask<Void, Integer, List<Coordinate>> {
 
         protected List<Coordinate> doInBackground(Void... getUserCoordinates) {
             HttpClient httpClient = new DefaultHttpClient();
@@ -269,7 +308,7 @@ public class WebDriver {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Log.e("CoordinateUpdate result", result);
+            Log.d("CoordinateUpdate result", result);
             return null;
         }
     }
