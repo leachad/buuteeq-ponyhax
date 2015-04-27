@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,17 +19,41 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import webservices.MyLocationManager;
+
 /**
  * MapFragment used to ease the transition between NavigationDrawer submenus
  */
 public class MyMap extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private MyLocationManager mLocationManager;
+    private Button mStartButton;
+    private Button mStopButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        //START location manager setup
+        mLocationManager = MyLocationManager.getInstance(getActivity());
+        mStartButton = (Button) view.findViewById(R.id.startButton);
+        mStartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLocationManager.startLocationUpdates();
+            }
+        });
+        mStartButton = (Button) view.findViewById(R.id.stopButton);
+        mStopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLocationManager.stopLocationUpdates();
+            }
+        });
+        //END location manager setup
+
         return inflater.inflate(R.layout.activity_my_map, container, false);
     }
 
