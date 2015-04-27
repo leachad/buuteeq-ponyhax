@@ -7,7 +7,10 @@ package webservices;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Criteria;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 /**
  * Created by BrentYoung on 4/27/15.
@@ -16,14 +19,43 @@ public class MyLocationManager {
 
     public static final String ACTION_LOCATION = "com.buuteeq-ponyhax.android.geotracker.ACTION_LOCATION";
 
+    private static final int DATA_ONLY_DISTANCE = 10;
+    private static final int CONNECTED_WIFI_DISTANCE = 1;
+
+    private static final int DATA_ONLY_RATE = 10;
+    private static final int CONNECTED_WIFI_RATE = 20;
+
     private static MyLocationManager ourInstance;
-    private Context mAppContext;
+    private static Context mAppContext;
     private LocationManager mLocationManager;
 
+    private static int minTime;
+    private static int minDistance;
+
+    //For Wifi checks
+    private static ConnectivityManager connManager = (ConnectivityManager) mAppContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+    private static NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+    /**
+     * Returns an instance of this singleton to the caller.
+     * @param context the application context
+     * @return the single instance of this class
+     */
     public static MyLocationManager getInstance(Context context) {
         if (ourInstance == null) {
             ourInstance = new MyLocationManager(context.getApplicationContext());
         }
+
+        //set polling state using constants
+        //WIFI based
+        if (mWifi.isConnected()) {
+            minTime = CONNECTED_WIFI_RATE;
+            minDistance = CONNECTED_WIFI_DISTANCE;
+        } else {
+            minTime = DATA_ONLY_RATE;
+            minDistance = DATA_ONLY_DISTANCE;
+        }
+
         return ourInstance;
     }
 
@@ -43,7 +75,8 @@ public class MyLocationManager {
 
         //start updates from location manager
         PendingIntent pi = getLocationPendingIntent(true);
-        mLocationManager.requestLocationUpdates(provider, 0, 0, pi);
+        mLocationManager.requestLocationUpdates(provider, minTime, minDistance, pi);
+
 
     }
 
