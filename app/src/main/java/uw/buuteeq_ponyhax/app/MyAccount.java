@@ -9,15 +9,12 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,8 +25,8 @@ import java.util.Date;
 
 import db.CoordinateStorageDatabaseHelper;
 import db.User;
-import webservices.MyLocationManager;
-import webservices.MyLocationReceiver;
+import location_services.MyLocationManager;
+import location_services.MyLocationReceiver;
 
 public class MyAccount extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {

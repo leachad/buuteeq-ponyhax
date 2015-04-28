@@ -2,7 +2,7 @@
  * Copyright (c) 4.17.15 -- Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
  */
 
-package webservices;
+package location_services;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
