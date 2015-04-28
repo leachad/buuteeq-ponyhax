@@ -39,8 +39,6 @@ public class MyAccount extends ActionBarActivity
     private Button mStartButton;
     private Button mStopButton;
     private Location mLastLocation;
-    private CoordinateStorageDatabaseHelper coordHelper;
-
     //SETUP RECEIVER WITH INNER CLASS
     private BroadcastReceiver mLocationReceiver = new MyLocationReceiver() {
 
@@ -64,6 +62,7 @@ public class MyAccount extends ActionBarActivity
         }
 
     };
+    private CoordinateStorageDatabaseHelper coordHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

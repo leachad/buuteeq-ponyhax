@@ -34,13 +34,11 @@ public class MyMap extends Fragment implements OnMapReadyCallback {
         super.onCreateView(inflater, container, savedInstanceState);
 
 
-
         //start location updates when the activity first starts up
-       // MyLocationManager.getInstance(getActivity()).startLocationUpdates();
+        MyLocationManager.getInstance(getActivity()).startLocationUpdates();
 
         return inflater.inflate(R.layout.activity_my_map, container, false);
     }
-
 
 
     @Override

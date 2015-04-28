@@ -20,8 +20,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import webservices.WebDriver;
-
 /**
  * EmailSend and it's commensurate php file hosted on an outside server were developed by Huy on 4/8/2015.
  */

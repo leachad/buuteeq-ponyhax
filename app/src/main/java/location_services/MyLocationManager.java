@@ -26,17 +26,21 @@ public class MyLocationManager {
 
     private static MyLocationManager ourInstance;
     private static Context mAppContext;
-    private LocationManager mLocationManager;
-
     private static int minTime;
     private static int minDistance;
-
     //For Wifi checks
     private static ConnectivityManager connManager = (ConnectivityManager) mAppContext.getSystemService(Context.CONNECTIVITY_SERVICE);
     private static NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+    private LocationManager mLocationManager;
+
+    private MyLocationManager(Context appContext) {
+        mAppContext = appContext;
+        mLocationManager = (LocationManager) mAppContext.getSystemService(Context.LOCATION_SERVICE);
+    }
 
     /**
      * Returns an instance of this singleton to the caller.
+     *
      * @param context the application context
      * @return the single instance of this class
      */
@@ -56,11 +60,6 @@ public class MyLocationManager {
         }
 
         return ourInstance;
-    }
-
-    private MyLocationManager(Context appContext) {
-        mAppContext = appContext;
-        mLocationManager = (LocationManager)mAppContext.getSystemService(Context.LOCATION_SERVICE);
     }
 
     private PendingIntent getLocationPendingIntent(boolean shouldCreate) {

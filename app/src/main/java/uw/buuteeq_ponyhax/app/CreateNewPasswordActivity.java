@@ -68,12 +68,12 @@ public class CreateNewPasswordActivity extends Activity {
             }
         });
 
-        findViewById(R.id.newPasswordCancel).setOnClickListener(new View.OnClickListener(){
-           @Override
+        findViewById(R.id.newPasswordCancel).setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
-               startActivity(new Intent(CreateNewPasswordActivity.this, MyAccount.class));
-               finish();
-           }
+                startActivity(new Intent(CreateNewPasswordActivity.this, MyAccount.class));
+                finish();
+            }
         });
 
 

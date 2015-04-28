@@ -15,12 +15,12 @@ public class Coordinate {
     /**
      * Private fields to hold reference to the fields of the Coordinate object.
      */
-    private long myLongitude;
-    private long myLatitude;
+    private double myLongitude;
+    private double myLatitude;
     private long myTimeStamp;
-    private long mySpeed;
-    private long myHeading;
-    private long myUserID;
+    private double mySpeed;
+    private double myHeading;
+    private String myUserID;
 
 
     /**
@@ -40,7 +40,7 @@ public class Coordinate {
      * @param theUserID    is the unique user ID issued by the WebServices API
      */
 
-    public Coordinate(final long theLongitude, final long theLatitude, final long theTimeStamp, final long theSpeed, final long theHeading, final long theUserID) {
+    public Coordinate(final double theLongitude, final double theLatitude, final long theTimeStamp, final double theSpeed, final double theHeading, final String theUserID) {
         myLongitude = theLongitude;
         myLatitude = theLatitude;
         myTimeStamp = theTimeStamp;
@@ -64,8 +64,8 @@ public class Coordinate {
      *                           at that specific location.
      */
 
-    public Coordinate(final long theLongitude, final long theLatitude, final long theTimeStamp,
-                      final long theSpeed, final long theHeading, final long theUserID, final byte[] theCoordinatePhoto) {
+    public Coordinate(final double theLongitude, final double theLatitude, final long theTimeStamp,
+                      final double theSpeed, final double theHeading, final String theUserID, final byte[] theCoordinatePhoto) {
         myLongitude = theLongitude;
         myLatitude = theLatitude;
         myTimeStamp = theTimeStamp;
@@ -76,11 +76,11 @@ public class Coordinate {
     }
 
 
-    public long getLongitude() {
+    public double getLongitude() {
         return myLongitude;
     }
 
-    public long getLatitude() {
+    public double getLatitude() {
         return myLatitude;
     }
 
@@ -88,15 +88,15 @@ public class Coordinate {
         return myTimeStamp;
     }
 
-    public long getUserID() {
+    public String getUserID() {
         return myUserID;
     }
 
-    public long getUserSpeed() {
+    public double getUserSpeed() {
         return mySpeed;
     }
 
-    public long getHeading() {
+    public double getHeading() {
         return myHeading;
     }
 

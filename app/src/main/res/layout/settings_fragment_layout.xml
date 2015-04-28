@@ -83,15 +83,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <Button
                     android:id="@+id/cancelSettingsFragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/cancel"/>
+                    android:text="@string/cancel" />
+
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="101.97" />
+
                 <Button
                     android:id="@+id/submitNewSecurityAnswer"
                     android:layout_width="wrap_content"

@@ -8,17 +8,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.concurrent.ExecutionException;
-
 import db.User;
 import db.UserStorageDatabaseHelper;
-import webservices.WebDriver;
 
 /**
  * This class propagates the LoginActivity and all the necessary widgets and conditions to check a
@@ -29,7 +25,9 @@ import webservices.WebDriver;
  * traverse the application.
  */
 public class LoginActivity extends Activity {
-    /** Private static field to hold an error message.*/
+    /**
+     * Private static field to hold an error message.
+     */
     private static final String MISSING_USER = "User does not exist in database";
 
     @Override
@@ -115,14 +113,9 @@ public class LoginActivity extends Activity {
                 makeMissingUserToast();
             } else {
                 toRet = true;
-                //setup shared preferences
                 SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
-
                 prefs.edit().putString(User.USER_ID, userID).apply();
-                prefs.edit().putInt(User.USER_PASSWORD, mPasswordField.getText().toString().trim().hashCode()).apply();
-                prefs.edit().putString(User.USER_EMAIL, mEmailField.getText().toString().toLowerCase().trim()).apply();
-                prefs.edit().putString(User.USER_QUESTION, mDbHelper.obtainUserSecurityQuestion(userID)).apply();
-                prefs.edit().putString(User.USER_ANSWER, mDbHelper.obtainUserSecurityAnswer(userID)).apply();
+
             }
         }
         return toRet;

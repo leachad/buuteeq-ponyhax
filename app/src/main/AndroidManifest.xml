@@ -70,10 +70,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="uw.buuteeq_ponyhax.app.LoginActivity" />
         </activity>
-        <receiver android:name="location_services.MyLocationReceiver"
+        <receiver
+            android:name="location_services.MyLocationReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.LOCALE_CHANGED"/>
+                <action android:name="android.intent.action.LOCALE_CHANGED" />
             </intent-filter>
 
         </receiver>

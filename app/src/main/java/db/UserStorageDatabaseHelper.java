@@ -121,7 +121,7 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         if (isUnique(user)) {
             try {
                 String result = new WebDriver().addUser(user);
-                if (result.matches(JSON.VAL_SUCCESS.getText()))
+                if (result.matches(JSON.VAL_SUCCESS))
                     insertConfirm = true;
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
@@ -328,10 +328,5 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
             user.setResetStatus(getInt(getColumnIndex(COLUMN_ISSUED_RESET)));
             return user;
         }
-
-        public String getSecurityQuestion() {
-            return getString(getColumnIndex(COLUMN_SECURITY_QUESTION));
-        }
-
     }
 }

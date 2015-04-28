@@ -18,11 +18,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.util.concurrent.ExecutionException;
-
 import db.User;
 import db.UserStorageDatabaseHelper;
-import webservices.WebDriver;
 
 
 public class RegisterActivity extends ActionBarActivity {
@@ -163,7 +160,7 @@ public class RegisterActivity extends ActionBarActivity {
      * @return the state of the passwords length
      */
     private boolean passwordIsCorrectLength() {
-	boolean toRet = false;
+        boolean toRet = false;
         if (passwordsAgree())
             toRet = mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].getText().toString().trim().length() > PASSWORD_LENGTH;
         return toRet;

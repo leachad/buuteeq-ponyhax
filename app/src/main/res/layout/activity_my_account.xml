@@ -11,7 +11,6 @@
     tools:context="uw.buuteeq_ponyhax.app.MyAccount">
 
 
-
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
     <LinearLayout
@@ -24,23 +23,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight=".05"
-            android:weightSum="1.0"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="1.0">
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
                 android:id="@+id/startButton"
-                android:layout_weight=".5"
                 style="@style/buttonTheme"
-                android:text="@string/startButtonText"/>
-            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/stopButton"
                 android:layout_weight=".5"
+                android:text="@string/startButtonText" />
+
+            <Button
+                android:id="@+id/stopButton"
                 style="@style/buttonTheme"
-                android:text="@string/stopButtonText"/>
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:text="@string/stopButtonText" />
 
 
         </LinearLayout>
@@ -49,7 +49,7 @@
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight=".95"/>
+            android:layout_weight=".95" />
 
     </LinearLayout>
 
