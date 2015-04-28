@@ -11,6 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+
+import java.util.concurrent.ExecutionException;
+
+import webservices.WebDriver;
 
 /**
  * Class that propagates to the screen what the user is accepting by downloading our
@@ -23,6 +28,12 @@ public class AgreementActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agreement);
         setTitle("");
+        TextView agreement = (TextView) findViewById(R.id.userAgreementView);
+        try {
+            agreement.setText(WebDriver.getUserAgreement());
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
 
         Button agreeButton = (Button) findViewById(R.id.agreeButton);
         agreeButton.setOnClickListener(new View.OnClickListener() {

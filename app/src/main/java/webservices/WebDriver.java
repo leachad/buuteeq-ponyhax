@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -28,54 +29,62 @@ import db.User;
  */
 public class WebDriver {
 
+    /** Sets the Default domain of the application.*/
+    private static final String DEFAULT_DOMAIN = "http://450.atwebpages.com/";
+
+    /** Ensure that the domain is set before application executes.*/
+    private static JsonBuilder requestBuilder = new JsonBuilder(DEFAULT_DOMAIN);
     /**
      * Private fields to hold the parameter variables before background tasks are executed.
      */
-    private User myUser;
-    private List<Coordinate> myCoordinateList;
-    private String myEmailAddress;
-    private String myPassword;
-    private long myStartTime;
-    private long myEndTime;
+    private static User myUser;
+    private static List<Coordinate> myCoordinateList;
+    private static String myEmailAddress;
+    private static String myPassword;
+    private static long myStartTime;
+    private static long myEndTime;
+
+
 
     /**
-     * Constructor of a WebDriver class.
+     * Public method to set the variable domain to determine where the php files and
+     * the databases will be
      */
-    public WebDriver() {
-        myUser = null;
-        myCoordinateList = null;
-        myEmailAddress = null;
-        myPassword = null;
-        myEndTime = 0;
-        myStartTime = 0;
+    public static void setDomain(final String theDomain) {
+        requestBuilder = new JsonBuilder(theDomain);
     }
-
     /**
      * POST OPERATIONS.
      */
-    public String addUser(User theUser) throws ExecutionException, InterruptedException {
+    public static String addUser(User theUser) throws ExecutionException, InterruptedException {
         myUser = theUser;
         return new AddUser().execute().get();
     }
 
-    public void addCoordinates(List<Coordinate> theCoordinateList) {
+    public static void addCoordinates(List<Coordinate> theCoordinateList) {
         myCoordinateList = theCoordinateList;
         new AddCoordinates().execute();
     }
 
+    //TODO Write a similar static method in here that will sit nicely inside a webview
+
     /**
      * GET OPERATIONS.
      */
-    public String checkUserCredentials(final String theEmail, final String thePassword) throws ExecutionException, InterruptedException {
+    public static String checkUserCredentials(final String theEmail, final String thePassword) throws ExecutionException, InterruptedException {
         myEmailAddress = theEmail;
         myPassword = thePassword;
         return new UserLogin().execute().get();
     }
 
-    public List<Coordinate> getLoggedCoordinates(final long theStartTime, final long theEndTime) throws ExecutionException, InterruptedException {
+    public static List<Coordinate> getLoggedCoordinates(final long theStartTime, final long theEndTime) throws ExecutionException, InterruptedException {
         myStartTime = theStartTime;
         myEndTime = theEndTime;
         return new GetUserCoordinates().execute().get();
+    }
+
+    public static String getUserAgreement() throws ExecutionException, InterruptedException {
+        return new GetUserAgreement().execute().get();
     }
 
 
@@ -85,18 +94,18 @@ public class WebDriver {
      * @author leachad
      * @version 4.25.15
      */
-    private class AddUser extends AsyncTask<Void, Integer, String> {
+    private static class AddUser extends AsyncTask<Void, Integer, String> {
 
         protected String doInBackground(Void... addUser) {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(PHP.getAddUserRequest(myUser));
+            HttpPost httpPost = new HttpPost(requestBuilder.getAddUserRequest(myUser));
 
-            String result = JSON.VAL_FAIL;
+            String result = requestBuilder.VAL_FAIL;
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
-                if (JSON.jSONResultIsSuccess(result)) {
-                    result = JSON.VAL_SUCCESS;
+                if (requestBuilder.jSONResultIsSuccess(result)) {
+                    result = requestBuilder.VAL_SUCCESS;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -111,7 +120,7 @@ public class WebDriver {
      * @author leachad
      * @version 4.25.15
      */
-    private class AddCoordinates extends AsyncTask<Void, Integer, String> {
+    private static class AddCoordinates extends AsyncTask<Void, Integer, String> {
 
         /**
          * Private helper method to execute a series of coordinate posts and
@@ -122,7 +131,7 @@ public class WebDriver {
          * @return result
          */
         private String executePost(HttpClient httpClient, HttpPost httpPost) {
-            String result = JSON.VAL_FAIL;
+            String result = requestBuilder.VAL_FAIL;
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
@@ -138,7 +147,7 @@ public class WebDriver {
             String result = "";
             for (Coordinate coordinate : myCoordinateList) {
                 HttpClient httpClient = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost(PHP.getAddCoordinateRequest(coordinate, myUser.getUserID()));
+                HttpPost httpPost = new HttpPost(requestBuilder.getAddCoordinateRequest(coordinate, myUser.getUserID()));
                 result = executePost(httpClient, httpPost);
             }
             return result;
@@ -151,21 +160,21 @@ public class WebDriver {
      * @author leachad
      * @version 4.25.15
      */
-    private class UserLogin extends AsyncTask<Void, Integer, String> {
+    private static class UserLogin extends AsyncTask<Void, Integer, String> {
 
         protected String doInBackground(Void... userLogin) {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(PHP.getUserLoginRequest(myUser));
+            HttpPost httpPost = new HttpPost(requestBuilder.getUserLoginRequest(myUser));
 
             Log.d("http string", httpPost.getURI().toString());
 
-            String result = JSON.VAL_FAIL;
+            String result = requestBuilder.VAL_FAIL;
             String userID = null;
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
-                if (JSON.jSONResultIsSuccess(result))
-                    userID = JSON.jSONUserID(result);
+                if (requestBuilder.jSONResultIsSuccess(result))
+                    userID = requestBuilder.jSONUserID(result);
 
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
@@ -183,19 +192,19 @@ public class WebDriver {
      * @author leachad
      * @version 4.25.15
      */
-    public class GetUserCoordinates extends AsyncTask<Void, Integer, List<Coordinate>> {
+    public static class GetUserCoordinates extends AsyncTask<Void, Integer, List<Coordinate>> {
 
         protected List<Coordinate> doInBackground(Void... getUserCoordinates) {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(PHP.getUserCoordinateRequest(myUser.getUserID(), myStartTime, myEndTime));
+            HttpPost httpPost = new HttpPost(requestBuilder.getUserCoordinateRequest(myUser.getUserID(), myStartTime, myEndTime));
 
-            String result = JSON.VAL_FAIL;
+            String result = requestBuilder.VAL_FAIL;
             List<Coordinate> loggedPoints = null;
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
-                if (JSON.jSONResultIsSuccess(result))
-                    loggedPoints = JSON.jSONLoggedPoints(result);
+                if (requestBuilder.jSONResultIsSuccess(result))
+                    loggedPoints = requestBuilder.jSONLoggedPoints(result);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -203,5 +212,34 @@ public class WebDriver {
             Log.d("CoordinateUpdate result", result);
             return loggedPoints;
         }
+    }
+
+
+    /**
+     * Public static class that runs an AsyncTask to grab the User Agreement
+     * on the server and returns a String to the user.
+     */
+    public static class GetUserAgreement extends AsyncTask<Void, Integer, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost httpPost = new HttpPost(requestBuilder.getUserCoordinateRequest(myUser.getUserID(), myStartTime, myEndTime));
+            String result = requestBuilder.VAL_FAIL;
+            String agreement = null;
+
+            try {
+                HttpResponse response = httpClient.execute(httpPost);
+                result = EntityUtils.toString(response.getEntity());
+                if (requestBuilder.jSONResultIsSuccess(result))
+                    agreement = requestBuilder.jSONUserAgreement(result);
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+
+            return agreement;
+        }
+
+
     }
 }

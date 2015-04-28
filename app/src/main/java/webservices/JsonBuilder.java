@@ -20,13 +20,14 @@ import db.Coordinate;
  * Created by Andrew on 4/28/2015.
  * Enums used to maintain global scope for JSON evaluations.
  */
-public final class JSON extends PHP {
+public final class JsonBuilder extends PhpBuilder {
     public static final String KEY_POINTS = "points";
+    public static final String KEY_AGREEMENT = "agreement";
     public static final String KEY_RESULT = "result";
     public static final String VAL_SUCCESS = "success";
     public static final String VAL_FAIL = "fail";
 
-    public JSON(final String theCurrentDomain) {
+    public JsonBuilder(final String theCurrentDomain) {
         super(theCurrentDomain);
     }
 
@@ -36,10 +37,10 @@ public final class JSON extends PHP {
      *
      * @return theJSON
      */
-    public static boolean jSONResultIsSuccess(String theResult) throws JSONException {
+    public boolean jSONResultIsSuccess(String theResult) throws JSONException {
         JSONObject json = new JSONObject(theResult);
         boolean isSuccess = false;
-        if (json.getString(JSON.KEY_RESULT).matches(JSON.VAL_SUCCESS)) {
+        if (json.getString(KEY_RESULT).matches(VAL_SUCCESS)) {
             isSuccess = true;
         }
 
@@ -50,7 +51,7 @@ public final class JSON extends PHP {
      * Private method to return the Users unique ID after successfully logging
      * in to the server.
      */
-    public static String jSONUserID(String theResult) throws JSONException {
+    public String jSONUserID(String theResult) throws JSONException {
         JSONObject json = new JSONObject(theResult);
         String userID = null;
         if (json.getString(KEY_RESULT).matches(VAL_SUCCESS))
@@ -59,15 +60,27 @@ public final class JSON extends PHP {
     }
 
     /**
+     * Public method to return the User agreement to the calling code.
+     * @return theUserAgreement
+     */
+    public String jSONUserAgreement(String theResult) throws JSONException {
+        JSONObject json = new JSONObject(theResult);
+        String userAgreement = null;
+        if (json.getString(KEY_RESULT).matches(VAL_SUCCESS))
+            userAgreement = json.getString(KEY_AGREEMENT);
+        return userAgreement;
+    }
+
+    /**
      * Private method to return the points gleaned from querying the database.
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static List<Coordinate> jSONLoggedPoints(String theResult) throws JSONException {
+    public List<Coordinate> jSONLoggedPoints(String theResult) throws JSONException {
         JSONObject json = new JSONObject(theResult);
         List<Coordinate> loggedPoints = null;
-        if (json.getString(JSON.KEY_RESULT).matches(VAL_SUCCESS)) {
+        if (json.getString(KEY_RESULT).matches(VAL_SUCCESS)) {
             loggedPoints = new ArrayList<>();
-            JSONArray points = new JSONArray(json.getJSONArray(JSON.KEY_POINTS));
+            JSONArray points = new JSONArray(json.getJSONArray(KEY_POINTS));
             for (int i = 0; i < points.length(); i++) {
                 JSONObject point = (JSONObject) points.get(i);
                 loggedPoints.add(new Coordinate(point.getDouble(URL_LATITUDE), point.getDouble(URL_LONGITUDE),

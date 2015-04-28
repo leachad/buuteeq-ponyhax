@@ -15,7 +15,7 @@ import android.util.Log;
 
 import java.util.concurrent.ExecutionException;
 
-import webservices.JSON;
+import webservices.JsonBuilder;
 import webservices.WebDriver;
 
 /**
@@ -120,8 +120,8 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
 
         if (isUnique(user)) {
             try {
-                String result = new WebDriver().addUser(user);
-                if (result.matches(JSON.VAL_SUCCESS))
+                String result = WebDriver.addUser(user);
+                if (result.matches(JsonBuilder.VAL_SUCCESS))
                     insertConfirm = true;
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
@@ -134,7 +134,7 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
     public String retrieveUniqueUserID(final String theEmailAddress, final String thePassword) {
         String userID = null;
         try {
-            userID = new WebDriver().checkUserCredentials(theEmailAddress, thePassword);
+            userID = WebDriver.checkUserCredentials(theEmailAddress, thePassword);
             // TODO Add the user to the local database with correct security question and answer
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();

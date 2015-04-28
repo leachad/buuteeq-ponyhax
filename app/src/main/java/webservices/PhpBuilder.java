@@ -11,7 +11,7 @@ import db.User;
  * Created by leachad on 4/28/15.
  * Enumerated constants used to created PHP posts.
  */
-public class PHP {
+public class PhpBuilder {
 
     /**
      * Private field to hold a reference to the add user php file domain.
@@ -22,6 +22,21 @@ public class PHP {
      * Private field to hold a reference to the add coordinate php file domain.
      */
     public static final String ADD_COORDINATE_FILE = "addLog.php";
+
+    /**
+     * Private field to hold a reference to the add coordinate php file domain.
+     */
+    private static final String LOGIN_USER_FILE = "login.php";
+
+    /**
+     * Private field to hold a reference to the add coordinate php file domain.
+     */
+    private static final String GET_USER_COORDINATES_FILE = "view.php";
+
+    /**
+     * Private field to hold a reference to the user agreement php file domain.
+     */
+    private static final String USER_AGREEMENT_FILE = "agreement.php";
     /**
      * Private fields to hold variable strings needed to properly add a coordinate via the url.
      */
@@ -35,14 +50,7 @@ public class PHP {
     public static final String URL_START = "start";
     public static final String URL_END = "end";
     public static final String URL_USER_ID = "userid";
-    /**
-     * Private field to hold a reference to the add coordinate php file domain.
-     */
-    private static final String LOGIN_USER_FILE = "login.php";
-    /**
-     * Private field to hold a reference to the add coordinate php file domain.
-     */
-    private static final String GET_USER_COORDINATES_FILE = "view.php";
+
     /**
      * Private fields to hold variable strings needed to properly add a user via the url.
      */
@@ -50,6 +58,7 @@ public class PHP {
     private static final String URL_PASSWORD = "password";
     private static final String URL_SEC_QUESTION = "question";
     private static final String URL_SEC_ANSWER = "answer";
+
     private static final String START_ARGS = "?";
     private static final String APPEND_ARGS = "&";
     private static final String ASSIGN_ARGS = "=";
@@ -60,60 +69,60 @@ public class PHP {
     private static String myCurrentHostDomain;
 
 
-    public PHP(final String theCurrentDomain) {
+    public PhpBuilder(final String theCurrentDomain) {
         myCurrentHostDomain = theCurrentDomain;
 
     }
 
-    private static String getEmailKeyValue(final String theEmailAddress) {
+    private String getEmailKeyValue(final String theEmailAddress) {
         return URL_EMAIL + ASSIGN_ARGS + theEmailAddress;
     }
 
-    private static String getPasswordKeyValue(final String thePassword) {
+    private String getPasswordKeyValue(final String thePassword) {
         return URL_PASSWORD + ASSIGN_ARGS + thePassword;
     }
 
-    private static String getQuestionKeyValue(final String theQuestion) {
+    private String getQuestionKeyValue(final String theQuestion) {
         return URL_SEC_QUESTION + ASSIGN_ARGS + theQuestion;
     }
 
-    private static String getAnswerKeyValue(final String theAnswer) {
+    private String getAnswerKeyValue(final String theAnswer) {
         return URL_SEC_ANSWER + ASSIGN_ARGS + theAnswer;
     }
 
-    private static String getSourceKeyValue(final String theUserID) {
+    private String getSourceKeyValue(final String theUserID) {
         return URL_SOURCE + ASSIGN_ARGS + theUserID;
     }
 
-    private static String getUIDKeyValue(final String theUserID) {
+    private String getUIDKeyValue(final String theUserID) {
         return URL_UID + ASSIGN_ARGS + theUserID;
     }
 
-    private static String getLatKeyValue(final Coordinate theCurrentCoordinate) {
+    private String getLatKeyValue(final Coordinate theCurrentCoordinate) {
         return URL_LATITUDE + ASSIGN_ARGS + theCurrentCoordinate.getLatitude();
     }
 
-    private static String getLongKeyValue(final Coordinate theCurrentCoordinate) {
+    private String getLongKeyValue(final Coordinate theCurrentCoordinate) {
         return URL_LONGITUDE + ASSIGN_ARGS + theCurrentCoordinate.getLongitude();
     }
 
-    private static String getSpeedKeyValue(final Coordinate theCurrentCoordinate) {
+    private String getSpeedKeyValue(final Coordinate theCurrentCoordinate) {
         return URL_SPEED + ASSIGN_ARGS + theCurrentCoordinate.getUserSpeed();
     }
 
-    private static String getHeadingKeyValue(final Coordinate theCurrentCoordinate) {
+    private String getHeadingKeyValue(final Coordinate theCurrentCoordinate) {
         return URL_HEADING + ASSIGN_ARGS + theCurrentCoordinate.getHeading();
     }
 
-    private static String getTimeKeyValue(final Coordinate theCurrentCoordinate) {
+    private String getTimeKeyValue(final Coordinate theCurrentCoordinate) {
         return URL_TIMESTAMP + ASSIGN_ARGS + theCurrentCoordinate.getTimeStamp();
     }
 
-    private static String getStartKeyValue(final long theStart) {
+    private String getStartKeyValue(final long theStart) {
         return URL_START + ASSIGN_ARGS + theStart;
     }
 
-    private static String getEndKeyValue(final long theEnd) {
+    private String getEndKeyValue(final long theEnd) {
         return URL_END + ASSIGN_ARGS + theEnd;
     }
 
@@ -122,10 +131,10 @@ public class PHP {
      *
      * @return encodedEntity
      */
-    public static String getAddUserRequest(final User theUser) {
+    public String getAddUserRequest(final User theUser) {
         return myCurrentHostDomain + ADD_USER_FILE + START_ARGS + getEmailKeyValue(theUser.getEmail()) + APPEND_ARGS
                 + getPasswordKeyValue(theUser.getEmail()) + APPEND_ARGS + getQuestionKeyValue(theUser.getSecurityQuestion())
-                + PHP.APPEND_ARGS + getAnswerKeyValue(theUser.getSecurityQuestion());
+                + PhpBuilder.APPEND_ARGS + getAnswerKeyValue(theUser.getSecurityQuestion());
     }
 
     /**
@@ -133,7 +142,7 @@ public class PHP {
      *
      * @return encodedEntity
      */
-    public static String getAddCoordinateRequest(final Coordinate thisCoordinate, final String theUserID) {
+    public String getAddCoordinateRequest(final Coordinate thisCoordinate, final String theUserID) {
         return myCurrentHostDomain + ADD_COORDINATE_FILE + START_ARGS + getLatKeyValue(thisCoordinate) + APPEND_ARGS
                 + getLongKeyValue(thisCoordinate) + APPEND_ARGS + getSpeedKeyValue(thisCoordinate)
                 + APPEND_ARGS + getHeadingKeyValue(thisCoordinate) + APPEND_ARGS
@@ -145,19 +154,28 @@ public class PHP {
      *
      * @return encodedEntity
      */
-    public static String getUserLoginRequest(final User theUser) {
+    public String getUserLoginRequest(final User theUser) {
         return myCurrentHostDomain + LOGIN_USER_FILE + START_ARGS + getEmailKeyValue(theUser.getEmail())
                 + APPEND_ARGS + getPasswordKeyValue(theUser.getPassword());
     }
 
     /**
-     * Private method to grant a user access to their logged coordinates
+     * Public method to grant a user access to their logged coordinates
      *
-     * @return encodedEntity
+     * @return coordinateRequest
      */
-    public static String getUserCoordinateRequest(final String theUserID, final long theStart, final long theEnd) {
+    public String getUserCoordinateRequest(final String theUserID, final long theStart, final long theEnd) {
         return myCurrentHostDomain + GET_USER_COORDINATES_FILE + START_ARGS + getUIDKeyValue(theUserID) + APPEND_ARGS
                 + getStartKeyValue(theStart) + APPEND_ARGS + getEndKeyValue(theEnd);
+    }
+
+    /**
+     * Public method to grant a user access to the user agreement
+     *
+     * @return agreementRequest
+     */
+    public String getUserAgreementRequest() {
+        return myCurrentHostDomain + USER_AGREEMENT_FILE;
     }
 
 
