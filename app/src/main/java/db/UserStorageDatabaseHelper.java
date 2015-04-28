@@ -11,6 +11,12 @@ import android.database.CursorWrapper;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.util.concurrent.ExecutionException;
+
+import webservices.JSON;
+import webservices.WebDriver;
 
 /**
  * Utilization of the SQLiteOpenHelper to create a database for storing User Data for
@@ -61,7 +67,7 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
      */
     public void onCreate(SQLiteDatabase db) {
         /** Create the User Table.*/
-        db.execSQL("create table user (" + "user_id integer primary key autoincrement, " +
+        db.execSQL("create table user (" + "user_id varchar(100), " +
                 "email_address varchar(100), " +
                 "password varchar(100), security_question varchar(100), " +
                 "security_answer varchar(100), issued_reset integer )");
@@ -107,18 +113,49 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
      *
      * @param user is the user passed to the database.
      */
-    public long insertUser(User user) {
+    public boolean insertUser(User user) {
 
         ContentValues cv = new ContentValues();
-        long insertConfirm = 0;
+        boolean insertConfirm = false;
 
         if (isUnique(user)) {
+            try {
+                String result = new WebDriver().addUser(user);
+                if (result.matches(JSON.VAL_SUCCESS.getText()))
+                    insertConfirm = true;
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return insertConfirm;
+    }
+
+    public String retrieveUniqueUserID(final String theEmailAddress, final String thePassword) {
+        String userID = null;
+        try {
+            userID = new WebDriver().checkUserCredentials(theEmailAddress, thePassword);
+            // TODO Add the user to the local database with correct security question and answer
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        Log.d("USERID: ", userID);
+        return userID;
+    }
+
+    public boolean addUserToLocalDatabase(User user) {
+        ContentValues cv = new ContentValues();
+        boolean insertConfirm = false;
+
+        if (isUnique(user)) {
+            cv.put(COLUMN_USER_ID, user.getUserID());
             cv.put(COLUMN_EMAIL_ADDRESS, user.getEmail());
             cv.put(COLUMN_PASSWORD, user.getPassword());
             cv.put(COLUMN_SECURITY_QUESTION, user.getSecurityQuestion());
             cv.put(COLUMN_SECURITY_ANSWER, user.getSecurityAnswer());
             cv.put(COLUMN_ISSUED_RESET, user.getResetStatus());
-            insertConfirm = getWritableDatabase().insert(TABLE_USER, null, cv);
+            getWritableDatabase().insert(TABLE_USER, null, cv);
+            insertConfirm = true;
         }
 
         return insertConfirm;
@@ -151,10 +188,10 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
      * @param theUserRowID   is the row id for the current user
      * @return updateConfirmation
      */
-    public long modifyUserPassword(final String theNewPassword, final long theUserRowID) {
+    public long modifyUserPassword(final String theNewPassword, final String theUserRowID) {
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_PASSWORD, theNewPassword);
-        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
+        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + theUserRowID), null);
     }
 
 
@@ -166,10 +203,10 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
      * @param theUserRowID       is the row id for the current user
      * @return updateConfirmation
      */
-    public long modifyEmailAddress(final String theNewEmailAddress, final long theUserRowID) {
+    public long modifyEmailAddress(final String theNewEmailAddress, final String theUserRowID) {
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_EMAIL_ADDRESS, theNewEmailAddress);
-        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
+        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + theUserRowID), null);
     }
 
     /**
@@ -180,10 +217,10 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
      * @param theUserRowID           is the row id for the current user
      * @return updateConfirmation
      */
-    public long modifySecurityQuestion(final String theNewSecurityQuestion, final long theUserRowID) {
+    public long modifySecurityQuestion(final String theNewSecurityQuestion, final String theUserRowID) {
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_SECURITY_QUESTION, theNewSecurityQuestion);
-        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
+        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + theUserRowID), null);
     }
 
     /**
@@ -194,28 +231,28 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
      * @param theUserRowID         is the row id for the current user
      * @return updateConfirmation
      */
-    public long modifySecurityAnswer(final String theNewSecurityAnswer, final long theUserRowID) {
+    public long modifySecurityAnswer(final String theNewSecurityAnswer, final String theUserRowID) {
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_SECURITY_ANSWER, theNewSecurityAnswer);
-        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + Long.toString(theUserRowID)), null);
+        return getWritableDatabase().update(TABLE_USER, cv, (COLUMN_USER_ID + " " + "= " + theUserRowID), null);
     }
 
     /**
      * **************************READ FROM THE DATABASE******************************
      */
 
-    public long obtainUserID(final String theEmail) {
+    public String obtainUserID(final String theEmail) {
         Cursor currentRow = getReadableDatabase().rawQuery("select * from " + TABLE_USER + " where " + COLUMN_EMAIL_ADDRESS + "='" + theEmail + "'", null);
 
-        long userID = 0;
+        String userID = null;
         if (currentRow.moveToNext()) {
-            userID = currentRow.getLong(currentRow.getColumnIndex(COLUMN_USER_ID));
+            userID = currentRow.getString(currentRow.getColumnIndex(COLUMN_USER_ID));
         }
         return userID;
     }
 
-    public String obtainUserEmail(final long theUserID) {
-        Cursor currentRow = getReadableDatabase().rawQuery("select * from " + TABLE_USER + " where " + COLUMN_USER_ID + "='" + Long.toString(theUserID) + "'", null);
+    public String obtainUserEmail(final String theUserID) {
+        Cursor currentRow = getReadableDatabase().rawQuery("select * from " + TABLE_USER + " where " + COLUMN_USER_ID + "='" + theUserID + "'", null);
         String userEmail = null;
         if (currentRow.moveToNext()) {
             userEmail = currentRow.getString(currentRow.getColumnIndex(COLUMN_EMAIL_ADDRESS));
@@ -223,8 +260,8 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         return userEmail;
     }
 
-    public String obtainUserPassword(final long theUserID) {
-        Cursor currentRow = getReadableDatabase().rawQuery("select * from " + TABLE_USER + " where " + COLUMN_USER_ID + "='" + Long.toString(theUserID) + "'", null);
+    public String obtainUserPassword(final String theUserID) {
+        Cursor currentRow = getReadableDatabase().rawQuery("select * from " + TABLE_USER + " where " + COLUMN_USER_ID + "='" + theUserID + "'", null);
         String userPassword = null;
         if (currentRow.moveToNext()) {
             userPassword = currentRow.getString(currentRow.getColumnIndex(COLUMN_PASSWORD));
@@ -233,8 +270,8 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public String obtainUserSecurityQuestion(final long theUserID) {
-        Cursor currentRow = getReadableDatabase().rawQuery("select * from " + TABLE_USER + " where " + COLUMN_USER_ID + "='" + Long.toString(theUserID) + "'", null);
+    public String obtainUserSecurityQuestion(final String theUserID) {
+        Cursor currentRow = getReadableDatabase().rawQuery("select * from " + TABLE_USER + " where " + COLUMN_USER_ID + "='" + theUserID + "'", null);
         String userSecurityQuestion = null;
         if (currentRow.moveToNext()) {
             userSecurityQuestion = currentRow.getString(currentRow.getColumnIndex(COLUMN_SECURITY_QUESTION));
@@ -243,8 +280,8 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public String obtainUserSecurityAnswer(final long theUserID) {
-        Cursor currentRow = getReadableDatabase().rawQuery("select * from " + TABLE_USER + " where " + COLUMN_USER_ID + "='" + Long.toString(theUserID) + "'", null);
+    public String obtainUserSecurityAnswer(final String theUserID) {
+        Cursor currentRow = getReadableDatabase().rawQuery("select * from " + TABLE_USER + " where " + COLUMN_USER_ID + "='" + theUserID + "'", null);
         String userSecurityAnswer = null;
         if (currentRow.moveToNext()) {
             userSecurityAnswer = currentRow.getString(currentRow.getColumnIndex(COLUMN_SECURITY_ANSWER));
@@ -283,7 +320,7 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
             User user = new User();
             if (isBeforeFirst() || isAfterLast())
                 return null;
-            user.setID(getLong(getColumnIndex(COLUMN_USER_ID)));
+            user.setID(getString(getColumnIndex(COLUMN_USER_ID)));
             user.setEmail(getString(getColumnIndex(COLUMN_EMAIL_ADDRESS)));
             user.setPassword(getString(getColumnIndex(COLUMN_PASSWORD)));
             user.setSecurityQuestion(getString(getColumnIndex(COLUMN_SECURITY_QUESTION)));

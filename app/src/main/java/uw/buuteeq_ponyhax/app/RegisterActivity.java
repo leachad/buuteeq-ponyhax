@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.concurrent.ExecutionException;
+
 import db.User;
 import db.UserStorageDatabaseHelper;
 import webservices.WebDriver;
@@ -218,20 +220,11 @@ public class RegisterActivity extends ActionBarActivity {
     }
 
     /**
-     * Private helper method to add an entry to the database.
+     * Private helper method to issue a web request to the add user api implemented by the
+     * professor. Does not add user to the database in this method if true.
      */
     private boolean addEntryToDatabase() {
-        UserStorageDatabaseHelper dBHelper = new UserStorageDatabaseHelper(getApplicationContext());
-        long userAdded = dBHelper.insertUser(getNewUser());
-        boolean added = true;
-        if (userAdded == 0) {
-            added = false;
-        } else {
-            myRegisteredUser.setID(dBHelper.obtainUserID(myRegisteredUser.getEmail()));
-            new WebDriver().addUser(myRegisteredUser); //TODO Fully test this implementation of web services
-        }
-
-        return added;
+        return new UserStorageDatabaseHelper(getApplicationContext()).insertUser(getNewUser());
     }
 
 
@@ -261,7 +254,7 @@ public class RegisterActivity extends ActionBarActivity {
     private void setPrefs() {
         SharedPreferences prefs = getApplicationContext().getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
 
-        prefs.edit().putLong(User.USER_ID, myRegisteredUser.getUserID()).apply();
+        prefs.edit().putString(User.USER_ID, myRegisteredUser.getUserID()).apply();
         prefs.edit().putInt(User.USER_PASSWORD, myRegisteredUser.getPassword().trim().hashCode()).apply();
         prefs.edit().putString(User.USER_EMAIL, myRegisteredUser.getEmail().trim()).apply();
         prefs.edit().putString(User.USER_QUESTION, myRegisteredUser.getSecurityQuestion()).apply();
@@ -361,16 +354,14 @@ public class RegisterActivity extends ActionBarActivity {
         public void onClick(View v) {
             //First, need to confirm that all appropriate initial, subsequent fields match
             if (passwordsAgree() && securityAnswersAgree() && allFieldsEntered() && passwordIsCorrectLength()) {
-
                 boolean unique = addEntryToDatabase();
                 if (!unique) {
                     resetFields();
                     makeDuplicateEntryToast();
                 } else {
-                    Toast.makeText(getApplicationContext(), "User Account Created!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(RegisterActivity.this, MyAccount.class);
+                    Toast.makeText(getApplicationContext(), "User Account Created! \n Check email inbox to complete registration", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                     startActivity(intent);
-                    setPrefs();
                     finish();
                 }
 

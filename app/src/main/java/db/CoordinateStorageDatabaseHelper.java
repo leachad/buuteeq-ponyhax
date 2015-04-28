@@ -126,11 +126,12 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
             long user_id = getLong(getColumnIndex(COLUMN_USER_ID));
             byte[] photo = getBlob(getColumnIndex(COLUMN_PHOTO));
 
-            if (photo == null) {
-                return new Coordinate(longitude, latitude, time_stamp, user_id);
-            } else {
-                return new Coordinate(longitude, latitude, time_stamp, user_id, photo);
-            }
+//            if (photo == null) {
+//                return new Coordinate(longitude, latitude, time_stamp, user_id);
+//            } else {
+//                return new Coordinate(longitude, latitude, time_stamp, user_id, photo);
+//            }
+            return null;
         }
 
 

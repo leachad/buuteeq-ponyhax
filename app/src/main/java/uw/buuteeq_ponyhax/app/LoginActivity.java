@@ -8,13 +8,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.concurrent.ExecutionException;
+
 import db.User;
 import db.UserStorageDatabaseHelper;
+import webservices.WebDriver;
 
 /**
  * This class propagates the LoginActivity and all the necessary widgets and conditions to check a
@@ -25,6 +29,9 @@ import db.UserStorageDatabaseHelper;
  * traverse the application.
  */
 public class LoginActivity extends Activity {
+    /** Private static field to hold an error message.*/
+    private static final String MISSING_USER = "User does not exist in database";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +74,20 @@ public class LoginActivity extends Activity {
 
     }
 
+    /**
+     * Private method to show a Missing User Toast.
+     */
+    private void makeMissingUserToast() {
+        Toast.makeText(getApplicationContext(), MISSING_USER, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Private method to set the Shared Preferences.
+     */
+    private void setPrefs() {
+
+    }
+
 
     /**
      * Private helper method that will aid the LoginListener in determining
@@ -88,26 +109,20 @@ public class LoginActivity extends Activity {
          * Toast.makeText(getApplicationContext(), "Database has " + mDbHelper.getNumEntries() + " entries", Toast.LENGTH_SHORT).show();
          */
 
-        if (!mPasswordField.getText().toString().trim().matches("") && !mEmailField.getText().toString().trim().matches("")
-                && mDbHelper.obtainUserID(mEmailField.getText().toString().toLowerCase().trim()) != 0) {
-
-
-            long userID = mDbHelper.obtainUserID(mEmailField.getText().toString().toLowerCase().trim());
-
-            if (mDbHelper.obtainUserEmail(userID).matches(mEmailField.getText().toString().toLowerCase().trim())
-                    && mDbHelper.obtainUserPassword(userID).matches(mPasswordField.getText().toString().trim())) {
+        if (!mPasswordField.getText().toString().trim().matches("") && !mEmailField.getText().toString().trim().matches("")) {
+            String userID = mDbHelper.retrieveUniqueUserID(mEmailField.getText().toString().trim(), mPasswordField.getText().toString().trim());
+            if (userID == null) {
+                makeMissingUserToast();
+            } else {
                 toRet = true;
-
                 //setup shared preferences
                 SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
 
-                prefs.edit().putLong(User.USER_ID, userID).apply();
+                prefs.edit().putString(User.USER_ID, userID).apply();
                 prefs.edit().putInt(User.USER_PASSWORD, mPasswordField.getText().toString().trim().hashCode()).apply();
                 prefs.edit().putString(User.USER_EMAIL, mEmailField.getText().toString().toLowerCase().trim()).apply();
                 prefs.edit().putString(User.USER_QUESTION, mDbHelper.obtainUserSecurityQuestion(userID)).apply();
                 prefs.edit().putString(User.USER_ANSWER, mDbHelper.obtainUserSecurityAnswer(userID)).apply();
-
-
             }
         }
         return toRet;
@@ -140,7 +155,6 @@ public class LoginActivity extends Activity {
                 boolean reset = resetPrefs.getBoolean(User.USER_RESET, false);
                 Intent intent;
                 if (reset) {
-
                     intent = new Intent(LoginActivity.this, CreateNewPasswordActivity.class);
                     intent.putExtra(User.USER_EMAIL, email);
                 } else {
@@ -152,7 +166,8 @@ public class LoginActivity extends Activity {
                 ((EditText) findViewById(R.id.email_field)).setText("");
                 ((EditText) findViewById(R.id.password_field)).setText("");
                 (findViewById(R.id.email_field)).requestFocus();
-                Toast.makeText(v.getContext().getApplicationContext(), "User not found!", Toast.LENGTH_SHORT).show();
+                makeMissingUserToast();
+
             }
 
         }

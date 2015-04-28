@@ -37,7 +37,7 @@ public class ForgotActivity extends ActionBarActivity {
     EditText mEmailEntryField;
     EditText mSecurityAnswerField;
     UserStorageDatabaseHelper mDbHelper;
-    long mUserID;
+    String mUserID;
     boolean isCurrentUser = false;
 
     @Override
@@ -96,7 +96,7 @@ public class ForgotActivity extends ActionBarActivity {
 
                 //make a random pass and send it to their email.
                 String testPass = Long.toHexString(Double.doubleToLongBits(Math.random()));
-
+                testPass = testPass.substring(0,4);
                 //update the database with the new pass of the user
                 mDbHelper.modifyUserPassword(testPass, mUserID);
 

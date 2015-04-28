@@ -47,7 +47,7 @@ public class CreateNewPasswordActivity extends Activity {
 
                     //attempt to update the database with the new user password
                     helper = new UserStorageDatabaseHelper(getApplicationContext());
-                    helper.modifyUserPassword(mPassword.getText().toString(), prefs.getLong(User.USER_ID, MODE_PRIVATE));
+                    helper.modifyUserPassword(mPassword.getText().toString(), prefs.getString(User.USER_ID, ""));
 
                     String email = getIntent().getStringExtra(User.USER_EMAIL);
 

@@ -96,8 +96,8 @@ public class SettingsFragment extends Fragment {
             } else {
                 mSharedPreferences.edit().putString(User.USER_QUESTION, mQuestionSpinner.getSelectedItem().toString().trim()).apply();
                 mSharedPreferences.edit().putString(User.USER_ANSWER, mNewSecurityAnswer.toString().trim()).apply();
-                mDbHelper.modifySecurityQuestion(mQuestionSpinner.getSelectedItem().toString().trim(), mSharedPreferences.getLong(User.USER_ID, 0));
-                mDbHelper.modifySecurityAnswer(mNewSecurityAnswer.getText().toString(), mSharedPreferences.getLong(User.USER_ID, 0));
+                mDbHelper.modifySecurityQuestion(mQuestionSpinner.getSelectedItem().toString().trim(), mSharedPreferences.getString(User.USER_ID, ""));
+                mDbHelper.modifySecurityAnswer(mNewSecurityAnswer.getText().toString(), mSharedPreferences.getString(User.USER_ID, ""));
                 Toast.makeText(getActivity().getApplicationContext(),
                         "Your security Question and answer have been changed.", Toast.LENGTH_SHORT).show();
                 Intent myIntent = new Intent(getActivity(), MyAccount.class);

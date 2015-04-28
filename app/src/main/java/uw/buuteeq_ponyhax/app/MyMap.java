@@ -18,6 +18,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import location_services.MyLocationManager;
+
 /**
  * MapFragment used to ease the transition between NavigationDrawer submenus
  */
@@ -28,9 +30,18 @@ public class MyMap extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         super.onCreateView(inflater, container, savedInstanceState);
+
+
+
+        //start location updates when the activity first starts up
+       // MyLocationManager.getInstance(getActivity()).startLocationUpdates();
+
         return inflater.inflate(R.layout.activity_my_map, container, false);
     }
+
+
 
     @Override
     public void onResume() {

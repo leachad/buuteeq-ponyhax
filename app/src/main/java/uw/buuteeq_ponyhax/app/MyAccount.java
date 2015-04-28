@@ -4,8 +4,11 @@
 
 package uw.buuteeq_ponyhax.app;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,8 +17,16 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
+import java.util.Date;
+
+import db.CoordinateStorageDatabaseHelper;
 import db.User;
+import location_services.MyLocationManager;
+import location_services.MyLocationReceiver;
 
 public class MyAccount extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -24,6 +35,35 @@ public class MyAccount extends ActionBarActivity
      * Used to store the last screen title.
      */
     private CharSequence mTitle;
+
+    private Button mStartButton;
+    private Button mStopButton;
+    private Location mLastLocation;
+    private CoordinateStorageDatabaseHelper coordHelper;
+
+    //SETUP RECEIVER WITH INNER CLASS
+    private BroadcastReceiver mLocationReceiver = new MyLocationReceiver() {
+
+        @Override
+        protected void onLocationReceived(Context context, Location location) {
+            Date polledDate = new Date(); //grabs date stamp
+            mLastLocation = location;
+            if (mLastLocation != null) { //This may or may not be a good condition
+//                updateUI();
+                //add to database here and update UI appropriately
+            }
+
+            //After everything -- reset LocationManager to reset data polling rate
+            MyLocationManager.getInstance(getApplicationContext()); //This could be the cause of an infinite loop if it polls right away..a slow yet battery sucking infinite loop
+        }
+
+        @Override
+        protected void onProviderEnabledChanged(boolean enabled) {
+            int toastText = enabled ? R.string.gps_enabled : R.string.gps_disabled;
+            Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_LONG).show(); //toast to show enabled
+        }
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +79,34 @@ public class MyAccount extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
+        //START location manager setup
+        mStartButton = (Button) findViewById(R.id.startButton);
+        mStartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyLocationManager.getInstance(getApplicationContext()).startLocationUpdates();
+                enabledStopButton();
+            }
+        });
+        mStopButton = (Button) findViewById(R.id.stopButton);
+        mStopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyLocationManager.getInstance(getApplicationContext()).stopLocationUpdates();
+                enableStartButton();
+            }
+        });
+        //END location manager setup
+
+        registerReceiver(mLocationReceiver, new IntentFilter(MyLocationManager.ACTION_LOCATION));
+        enabledStopButton();
         setTitle("");
+    }
+
+    @Override
+    public void onDestroy() {
+        unregisterReceiver(mLocationReceiver);
+        super.onDestroy();
     }
 
     @Override
@@ -125,6 +192,16 @@ public class MyAccount extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void enableStartButton() {
+        mStartButton.setEnabled(true);
+        mStopButton.setEnabled(false);
+    }
+
+    private void enabledStopButton() {
+        mStopButton.setEnabled(true);
+        mStartButton.setEnabled(false);
     }
 
 }
