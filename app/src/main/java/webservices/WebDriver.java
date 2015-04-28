@@ -9,7 +9,6 @@ import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -159,14 +158,26 @@ public class WebDriver {
      * Private method to return a JSON object to the requesting inner class.
      * @return theJSON
      */
-    private JSONObject getJSONObject(String theResult) {
-        JSONObject json = new JSONObject();
-        try {
-            json = new JSONObject(theResult);
-        } catch (JSONException e) {
-            e.printStackTrace();
+    private boolean jSONResultIsSuccess(String theResult) throws JSONException {
+        JSONObject json = new JSONObject(theResult);
+        boolean isSuccess = false;
+        if (((String)json.get(KEY_RESULT)).matches(VAL_SUCCESS)) {
+            isSuccess = true;
         }
-        return json;
+
+        return isSuccess;
+    }
+
+    /**
+     * Private method to return the Users unique ID after successfully logging
+     * in to the server.
+     */
+    private long jSONUserID(String theResult) throws JSONException {
+        JSONObject json = new JSONObject(theResult);
+        long userID = 0;
+        if (((String)json.get(KEY_RESULT)).matches(VAL_SUCCESS))
+            userID = json.getLong(KEY_USERID);
+        return userID;
     }
 
 
@@ -191,7 +202,7 @@ public class WebDriver {
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
-                if (getJSONObject(result).get(KEY_RESULT).toString().matches(VAL_SUCCESS)) {
+                if (jSONResultIsSuccess(result)) {
                     result = VAL_SUCCESS;
                 }
             } catch (Exception e) {
@@ -263,9 +274,8 @@ public class WebDriver {
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
-                if (getJSONObject(result).getString(KEY_RESULT).matches(VAL_SUCCESS)) {
-                    userID = getJSONObject(result).getLong(KEY_USERID);
-                }
+                if (jSONResultIsSuccess(result))
+                    userID = jSONUserID(result);
 
             } catch (IOException e) {
                 e.printStackTrace();

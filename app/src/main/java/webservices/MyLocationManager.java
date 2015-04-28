@@ -17,7 +17,7 @@ import android.net.NetworkInfo;
  */
 public class MyLocationManager {
 
-    public static final String ACTION_LOCATION = "com.buuteeq-ponyhax.android.geotracker.ACTION_LOCATION";
+    public static final String ACTION_LOCATION = "android.intent.action.LOCALE_CHANGED";
 
     private static final int DATA_ONLY_DISTANCE = 10;
     private static final int CONNECTED_WIFI_DISTANCE = 1;

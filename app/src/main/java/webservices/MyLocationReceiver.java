@@ -11,6 +11,7 @@ import android.location.Location;
 
 /**
  * Created by BrentYoung on 4/27/15.
+ * Edited by Andrew Leach on 4/27/15
  */
 public class MyLocationReceiver extends BroadcastReceiver {
 

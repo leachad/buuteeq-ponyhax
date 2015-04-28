@@ -73,7 +73,7 @@
         <receiver android:name="webservices.MyLocationReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.buuteeq-ponyhax.android.geotracker.ACTION_LOCATION"/>
+                <action android:name="android.intent.action.LOCALE_CHANGED"/>
             </intent-filter>
 
         </receiver>
