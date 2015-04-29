@@ -83,11 +83,11 @@ public class PhpBuilder {
     }
 
     private String getQuestionKeyValue(final String theQuestion) {
-        return URL_SEC_QUESTION + ASSIGN_ARGS + theQuestion;
+        return URL_SEC_QUESTION + ASSIGN_ARGS + theQuestion.replaceAll(" ", "%20");
     }
 
     private String getAnswerKeyValue(final String theAnswer) {
-        return URL_SEC_ANSWER + ASSIGN_ARGS + theAnswer;
+        return URL_SEC_ANSWER + ASSIGN_ARGS + theAnswer.replaceAll(" ", "%20");
     }
 
     private String getSourceKeyValue(final String theUserID) {
@@ -134,7 +134,7 @@ public class PhpBuilder {
     public String getAddUserRequest(final User theUser) {
         return myCurrentHostDomain + ADD_USER_FILE + START_ARGS + getEmailKeyValue(theUser.getEmail()) + APPEND_ARGS
                 + getPasswordKeyValue(theUser.getEmail()) + APPEND_ARGS + getQuestionKeyValue(theUser.getSecurityQuestion())
-                + PhpBuilder.APPEND_ARGS + getAnswerKeyValue(theUser.getSecurityQuestion());
+                + PhpBuilder.APPEND_ARGS + getAnswerKeyValue(theUser.getSecurityAnswer());
     }
 
     /**

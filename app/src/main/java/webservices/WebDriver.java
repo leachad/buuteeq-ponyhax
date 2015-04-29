@@ -99,13 +99,13 @@ public class WebDriver {
         protected String doInBackground(Void... addUser) {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(requestBuilder.getAddUserRequest(myUser));
-
-            String result = requestBuilder.VAL_FAIL;
+            Log.d("http Adduser", httpPost.getURI().toString());
+            String result = JsonBuilder.VAL_FAIL;
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
                 if (requestBuilder.jSONResultIsSuccess(result)) {
-                    result = requestBuilder.VAL_SUCCESS;
+                    result = JsonBuilder.VAL_SUCCESS;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -131,7 +131,7 @@ public class WebDriver {
          * @return result
          */
         private String executePost(HttpClient httpClient, HttpPost httpPost) {
-            String result = requestBuilder.VAL_FAIL;
+            String result = JsonBuilder.VAL_FAIL;
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
@@ -168,7 +168,7 @@ public class WebDriver {
 
             Log.d("http string", httpPost.getURI().toString());
 
-            String result = requestBuilder.VAL_FAIL;
+            String result = JsonBuilder.VAL_FAIL;
             String userID = null;
             try {
                 HttpResponse response = httpClient.execute(httpPost);
@@ -192,13 +192,13 @@ public class WebDriver {
      * @author leachad
      * @version 4.25.15
      */
-    public static class GetUserCoordinates extends AsyncTask<Void, Integer, List<Coordinate>> {
+    private static class GetUserCoordinates extends AsyncTask<Void, Integer, List<Coordinate>> {
 
         protected List<Coordinate> doInBackground(Void... getUserCoordinates) {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(requestBuilder.getUserCoordinateRequest(myUser.getUserID(), myStartTime, myEndTime));
 
-            String result = requestBuilder.VAL_FAIL;
+            String result = JsonBuilder.VAL_FAIL;
             List<Coordinate> loggedPoints = null;
             try {
                 HttpResponse response = httpClient.execute(httpPost);
@@ -219,25 +219,24 @@ public class WebDriver {
      * Public static class that runs an AsyncTask to grab the User Agreement
      * on the server and returns a String to the user.
      */
-    public static class GetUserAgreement extends AsyncTask<Void, Integer, String> {
+    private static class GetUserAgreement extends AsyncTask<Void, Integer, String> {
 
         @Override
         protected String doInBackground(Void... params) {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(requestBuilder.getUserCoordinateRequest(myUser.getUserID(), myStartTime, myEndTime));
-            String result = requestBuilder.VAL_FAIL;
-            String agreement = null;
+            HttpPost httpPost = new HttpPost(requestBuilder.getUserAgreementRequest());
+            String result = JsonBuilder.VAL_FAIL;
 
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
                 if (requestBuilder.jSONResultIsSuccess(result))
-                    agreement = requestBuilder.jSONUserAgreement(result);
+                    result = requestBuilder.jSONUserAgreement(result);
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
-
-            return agreement;
+            Log.d("AGREEMENT RET: ", result);
+            return result;
         }
 
 
