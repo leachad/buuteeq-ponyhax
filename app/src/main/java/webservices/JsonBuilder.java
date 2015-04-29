@@ -69,6 +69,7 @@ public final class JsonBuilder extends PhpBuilder {
         String userAgreement = null;
         if (json.getString(KEY_RESULT).matches(VAL_SUCCESS))
             userAgreement = json.getString(KEY_AGREEMENT);
+            System.out.println(userAgreement);
         return userAgreement;
     }
 

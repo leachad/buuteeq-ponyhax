@@ -58,7 +58,7 @@
 
             <EditText
                 android:id="@+id/emailEdit"
-                style="@style/editTextTheme"
+                style="@style/restrictedTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/enter_email"
@@ -68,7 +68,7 @@
 
             <EditText
                 android:id="@+id/passwordEditInitial"
-                style="@style/editTextTheme"
+                style="@style/restrictedTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password_prompt"
@@ -76,7 +76,7 @@
 
             <EditText
                 android:id="@+id/passwordEditSubsequent"
-                style="@style/editTextTheme"
+                style="@style/restrictedTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password_prompt_reenter"
@@ -95,14 +95,14 @@
 
             <EditText
                 android:id="@+id/securityQuestionAnswerInitial"
-                style="@style/editTextTheme"
+                style="@style/restrictedTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/security_answer" />
 
             <EditText
                 android:id="@+id/securityQuestionAnswerSubsequent"
-                style="@style/editTextTheme"
+                style="@style/restrictedTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/security_answer_reenter"

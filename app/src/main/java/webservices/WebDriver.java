@@ -11,6 +11,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 
@@ -240,8 +241,9 @@ public class WebDriver {
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
-                if (requestBuilder.jSONResultIsSuccess(result))
+                if (requestBuilder.jSONResultIsSuccess(result)) {
                     result = requestBuilder.jSONUserAgreement(result);
+                }
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
