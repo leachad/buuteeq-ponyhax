@@ -36,6 +36,7 @@ public class MyAccount extends ActionBarActivity
      */
     private CharSequence mTitle;
 
+    MyLocationManager myLocationManager;
     private Button mStartButton;
     private Button mStopButton;
     private Location mLastLocation;
@@ -46,7 +47,7 @@ public class MyAccount extends ActionBarActivity
         protected void onLocationReceived(Context context, Location location) {
             Date polledDate = new Date(); //grabs date stamp
             mLastLocation = location;
-            if (mLastLocation != null) { //This may or may not be a good condition
+            if (location != null) { //This may or may not be a good condition
                 Toast.makeText(getApplicationContext(), location.toString(), Toast.LENGTH_SHORT).show(); // for testing polling rates
 //                updateUI();
                 //add to database here and update UI appropriately
@@ -80,11 +81,13 @@ public class MyAccount extends ActionBarActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         //START location manager setup
+        myLocationManager = MyLocationManager.getInstance(getApplicationContext());
+
         mStartButton = (Button) findViewById(R.id.startButton);
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MyLocationManager.getInstance(getApplicationContext()).startLocationUpdates();
+                myLocationManager.startLocationUpdates();
                 enabledStopButton();
             }
         });
@@ -92,20 +95,21 @@ public class MyAccount extends ActionBarActivity
         mStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MyLocationManager.getInstance(getApplicationContext()).stopLocationUpdates();
+                myLocationManager.stopLocationUpdates();
                 enableStartButton();
             }
         });
         //END location manager setup
 
-        registerReceiver(mLocationReceiver, new IntentFilter(MyLocationManager.ACTION_LOCATION));
+        getApplication().registerReceiver(mLocationReceiver, new IntentFilter(MyLocationManager.ACTION_LOCATION));
         enabledStopButton();
+        myLocationManager.startLocationUpdates();
         setTitle("");
     }
 
     @Override
     public void onDestroy() {
-        unregisterReceiver(mLocationReceiver);
+        getApplication().unregisterReceiver(mLocationReceiver);
         super.onDestroy();
     }
 

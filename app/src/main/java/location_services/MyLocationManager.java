@@ -18,6 +18,8 @@ public class MyLocationManager {
 
     public static final String ACTION_LOCATION = "android.intent.action.LOCALE_CHANGED";
 
+    private static final int DEFAULT_INTERVAL = 6000;
+
     private static final int DATA_ONLY_DISTANCE = 10;
     private static final int CONNECTED_WIFI_DISTANCE = 1;
 
@@ -29,13 +31,14 @@ public class MyLocationManager {
     private static int minTime;
     private static int minDistance;
     //For Wifi checks
-    private static ConnectivityManager connManager = (ConnectivityManager) mAppContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-    private static NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+//    private static ConnectivityManager connManager = (ConnectivityManager) mAppContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+//    private static NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
     private LocationManager mLocationManager;
 
     private MyLocationManager(Context appContext) {
         mAppContext = appContext;
         mLocationManager = (LocationManager) mAppContext.getSystemService(Context.LOCATION_SERVICE);
+        minTime = DEFAULT_INTERVAL;
     }
 
     /**
@@ -51,13 +54,13 @@ public class MyLocationManager {
 
         //set polling state using constants
         //WIFI based
-        if (mWifi.isConnected()) {
-            minTime = CONNECTED_WIFI_RATE;
-            minDistance = CONNECTED_WIFI_DISTANCE;
-        } else {
-            minTime = DATA_ONLY_RATE;
-            minDistance = DATA_ONLY_DISTANCE;
-        }
+//        if (mWifi.isConnected()) {
+//            minTime = CONNECTED_WIFI_RATE;
+//            minDistance = CONNECTED_WIFI_DISTANCE;
+//        } else {
+//            minTime = DATA_ONLY_RATE;
+//            minDistance = DATA_ONLY_DISTANCE;
+//        }
 
         return ourInstance;
     }
