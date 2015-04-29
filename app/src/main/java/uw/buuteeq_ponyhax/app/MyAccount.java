@@ -47,6 +47,7 @@ public class MyAccount extends ActionBarActivity
             Date polledDate = new Date(); //grabs date stamp
             mLastLocation = location;
             if (mLastLocation != null) { //This may or may not be a good condition
+                Toast.makeText(getApplicationContext(), location.toString(), Toast.LENGTH_SHORT).show(); // for testing polling rates
 //                updateUI();
                 //add to database here and update UI appropriately
             }

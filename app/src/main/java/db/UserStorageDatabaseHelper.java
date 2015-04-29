@@ -135,11 +135,11 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         String userID = null;
         try {
             userID = WebDriver.checkUserCredentials(theEmailAddress, thePassword);
-
+//            Log.d("USERID: ", userID);
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-        Log.d("USERID: ", userID);
+
         return userID;
     }
 
