@@ -56,7 +56,7 @@
 
             <EditText
                 android:id="@+id/email_field"
-                style="@style/editTextTheme"
+                style="@style/restrictedTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/enter_email"
@@ -75,7 +75,7 @@
 
             <EditText
                 android:id="@+id/password_field"
-                style="@style/editTextTheme"
+                style="@style/restrictedTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/enter_password"
