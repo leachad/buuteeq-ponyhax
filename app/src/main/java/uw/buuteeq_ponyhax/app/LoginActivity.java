@@ -134,17 +134,21 @@ public class LoginActivity extends Activity {
         @Override
         public void onClick(View v) {
             if (checkUserCredentials()) {
-
-                String email = ((EditText) findViewById(R.id.email_field)).getText().toString().toLowerCase().trim();
-                SharedPreferences resetPrefs = getSharedPreferences(email, MODE_PRIVATE);
-                boolean reset = resetPrefs.getBoolean(User.USER_RESET, false);
                 Intent intent;
-                if (reset) {
-                    intent = new Intent(LoginActivity.this, CreateNewPasswordActivity.class);
-                    intent.putExtra(User.USER_EMAIL, email);
-                } else {
-                    intent = new Intent(LoginActivity.this, MyAccount.class);
-                }
+                intent = new Intent(LoginActivity.this, MyAccount.class);
+
+//                String email = ((EditText) findViewById(R.id.email_field)).getText().toString().toLowerCase().trim();
+//                SharedPreferences resetPrefs = getSharedPreferences(email, MODE_PRIVATE);
+//                boolean reset = resetPrefs.getBoolean(User.USER_RESET, false);
+//                Intent intent;
+//                intent = new Intent(LoginActivity.this, MyAccount.class);
+//                if (reset) {
+//                    intent = new Intent(LoginActivity.this, CreateNewPasswordActivity.class);
+//                    intent.putExtra(User.USER_EMAIL, email);
+//                } else {
+//                    intent = new Intent(LoginActivity.this, MyAccount.class);
+//                }
+
                 startActivity(intent);
                 finish();
             } else {
