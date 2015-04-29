@@ -67,7 +67,7 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
      */
     public void onCreate(SQLiteDatabase db) {
         /** Create the User Table.*/
-        db.execSQL("create table user (" + "user_id varchar(100), " +
+        db.execSQL("create table user (" + "user_id varchar(100) primary key, " +
                 "email_address varchar(100), " +
                 "password varchar(100), security_question varchar(100), " +
                 "security_answer varchar(100), issued_reset integer )");
@@ -135,7 +135,7 @@ public class UserStorageDatabaseHelper extends SQLiteOpenHelper {
         String userID = null;
         try {
             userID = WebDriver.checkUserCredentials(theEmailAddress, thePassword);
-            // TODO Add the user to the local database with correct security question and answer
+
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }

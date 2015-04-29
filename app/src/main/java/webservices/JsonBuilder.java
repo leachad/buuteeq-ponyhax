@@ -21,11 +21,11 @@ import db.Coordinate;
  * Enums used to maintain global scope for JSON evaluations.
  */
 public final class JsonBuilder extends PhpBuilder {
-    public static final String KEY_POINTS = "points";
-    public static final String KEY_AGREEMENT = "agreement";
-    public static final String KEY_RESULT = "result";
     public static final String VAL_SUCCESS = "success";
     public static final String VAL_FAIL = "fail";
+    public static String KEY_POINTS = "points";
+    public static String KEY_AGREEMENT = "agreement";
+    public static String KEY_RESULT = "result";
 
     public JsonBuilder(final String theCurrentDomain) {
         super(theCurrentDomain);
@@ -61,6 +61,7 @@ public final class JsonBuilder extends PhpBuilder {
 
     /**
      * Public method to return the User agreement to the calling code.
+     *
      * @return theUserAgreement
      */
     public String jSONUserAgreement(String theResult) throws JSONException {

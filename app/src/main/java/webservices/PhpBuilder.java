@@ -14,29 +14,14 @@ import db.User;
 public class PhpBuilder {
 
     /**
-     * Private field to hold a reference to the add user php file domain.
+     * Private field to hold a reference to the add user php file name.
      */
     public static final String ADD_USER_FILE = "adduser.php";
 
     /**
-     * Private field to hold a reference to the add coordinate php file domain.
+     * Private field to hold a reference to the add coordinate php file name.
      */
     public static final String ADD_COORDINATE_FILE = "addLog.php";
-
-    /**
-     * Private field to hold a reference to the add coordinate php file domain.
-     */
-    private static final String LOGIN_USER_FILE = "login.php";
-
-    /**
-     * Private field to hold a reference to the add coordinate php file domain.
-     */
-    private static final String GET_USER_COORDINATES_FILE = "view.php";
-
-    /**
-     * Private field to hold a reference to the user agreement php file domain.
-     */
-    private static final String USER_AGREEMENT_FILE = "agreement.php";
     /**
      * Private fields to hold variable strings needed to properly add a coordinate via the url.
      */
@@ -50,7 +35,22 @@ public class PhpBuilder {
     public static final String URL_START = "start";
     public static final String URL_END = "end";
     public static final String URL_USER_ID = "userid";
-
+    /**
+     * Private field to hold a reference to the add coordinate php file name.
+     */
+    private static final String LOGIN_USER_FILE = "login.php";
+    /**
+     * Private field to hold a reference to the add coordinate php file name.
+     */
+    private static final String GET_USER_COORDINATES_FILE = "view.php";
+    /**
+     * Private field to hold a reference to the user agreement php file name.
+     */
+    private static final String USER_AGREEMENT_FILE = "agreement.php";
+    /**
+     * Private field to hold a reference to the user reset php file name.
+     */
+    private static final String PASSWORD_RESET_FILE = "reset.php";
     /**
      * Private fields to hold variable strings needed to properly add a user via the url.
      */
@@ -62,6 +62,9 @@ public class PhpBuilder {
     private static final String START_ARGS = "?";
     private static final String APPEND_ARGS = "&";
     private static final String ASSIGN_ARGS = "=";
+    private static final String URL_SPACE = "%20";
+    private static final String ASCII_SPACE = " ";
+
     /**
      * Privately accessible field that will hold a reference to the domain used for
      * holding all the respective php and mysql files.
@@ -83,11 +86,11 @@ public class PhpBuilder {
     }
 
     private String getQuestionKeyValue(final String theQuestion) {
-        return URL_SEC_QUESTION + ASSIGN_ARGS + theQuestion.replaceAll(" ", "%20");
+        return URL_SEC_QUESTION + ASSIGN_ARGS + theQuestion.replaceAll(ASCII_SPACE, URL_SPACE);
     }
 
     private String getAnswerKeyValue(final String theAnswer) {
-        return URL_SEC_ANSWER + ASSIGN_ARGS + theAnswer.replaceAll(" ", "%20");
+        return URL_SEC_ANSWER + ASSIGN_ARGS + theAnswer.replaceAll(ASCII_SPACE, URL_SPACE);
     }
 
     private String getSourceKeyValue(final String theUserID) {
@@ -154,9 +157,9 @@ public class PhpBuilder {
      *
      * @return encodedEntity
      */
-    public String getUserLoginRequest(final User theUser) {
-        return myCurrentHostDomain + LOGIN_USER_FILE + START_ARGS + getEmailKeyValue(theUser.getEmail())
-                + APPEND_ARGS + getPasswordKeyValue(theUser.getPassword());
+    public String getUserLoginRequest(final String theEmailAddress, final String thePassword) {
+        return myCurrentHostDomain + LOGIN_USER_FILE + START_ARGS + getEmailKeyValue(theEmailAddress)
+                + APPEND_ARGS + getPasswordKeyValue(thePassword);
     }
 
     /**
@@ -176,6 +179,15 @@ public class PhpBuilder {
      */
     public String getUserAgreementRequest() {
         return myCurrentHostDomain + USER_AGREEMENT_FILE;
+    }
+
+    /**
+     * Public method to request a password reset from the server.
+     *
+     * @return resetRequest
+     */
+    public String getUserResetRequest(final String theEmailAddress) {
+        return myCurrentHostDomain + PASSWORD_RESET_FILE + START_ARGS + getEmailKeyValue(theEmailAddress);
     }
 
 

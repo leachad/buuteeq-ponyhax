@@ -80,14 +80,6 @@ public class LoginActivity extends Activity {
     }
 
     /**
-     * Private method to set the Shared Preferences.
-     */
-    private void setPrefs() {
-
-    }
-
-
-    /**
      * Private helper method that will aid the LoginListener in determining
      * whether or not the user is already registered in the system.
      *

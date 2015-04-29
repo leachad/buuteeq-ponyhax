@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -29,10 +28,14 @@ import db.User;
  */
 public class WebDriver {
 
-    /** Sets the Default domain of the application.*/
+    /**
+     * Sets the Default domain of the application.
+     */
     private static final String DEFAULT_DOMAIN = "http://450.atwebpages.com/";
 
-    /** Ensure that the domain is set before application executes.*/
+    /**
+     * Ensure that the domain is set before application executes.
+     */
     private static JsonBuilder requestBuilder = new JsonBuilder(DEFAULT_DOMAIN);
     /**
      * Private fields to hold the parameter variables before background tasks are executed.
@@ -45,7 +48,6 @@ public class WebDriver {
     private static long myEndTime;
 
 
-
     /**
      * Public method to set the variable domain to determine where the php files and
      * the databases will be
@@ -53,6 +55,7 @@ public class WebDriver {
     public static void setDomain(final String theDomain) {
         requestBuilder = new JsonBuilder(theDomain);
     }
+
     /**
      * POST OPERATIONS.
      */
@@ -66,7 +69,11 @@ public class WebDriver {
         new AddCoordinates().execute();
     }
 
-    //TODO Write a similar static method in here that will sit nicely inside a webview
+    //TODO Write a similar static method in here for the Reset Password that will sit nicely inside a webview
+    public static void resetPassword(final String theEmailAddress) {
+        myEmailAddress = theEmailAddress;
+        new ResetPassword().execute();
+    }
 
     /**
      * GET OPERATIONS.
@@ -164,7 +171,7 @@ public class WebDriver {
 
         protected String doInBackground(Void... userLogin) {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(requestBuilder.getUserLoginRequest(myUser));
+            HttpPost httpPost = new HttpPost(requestBuilder.getUserLoginRequest(myEmailAddress, myPassword));
 
             Log.d("http string", httpPost.getURI().toString());
 
@@ -216,8 +223,11 @@ public class WebDriver {
 
 
     /**
-     * Public static class that runs an AsyncTask to grab the User Agreement
+     * Private static class that runs an AsyncTask to grab the User Agreement
      * on the server and returns a String to the user.
+     *
+     * @author leachad
+     * @version 4/29/15
      */
     private static class GetUserAgreement extends AsyncTask<Void, Integer, String> {
 
@@ -239,6 +249,35 @@ public class WebDriver {
             return result;
         }
 
-
     }
+
+    /**
+     * Private static class that runs an AsyncTask to reset the User Password via a
+     * Web Browser.
+     *
+     * @author leachad
+     * @version 4/29/15
+     *          TODO Needs to sit inside a web view once logic is completed on server side
+     */
+    private static class ResetPassword extends AsyncTask<Void, Integer, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost httpPost = new HttpPost(requestBuilder.getUserResetRequest(myEmailAddress));
+            String result = JsonBuilder.VAL_FAIL;
+
+            try {
+                HttpResponse response = httpClient.execute(httpPost);
+                result = EntityUtils.toString(response.getEntity());
+                if (requestBuilder.jSONResultIsSuccess(result))
+                    result = requestBuilder.jSONUserAgreement(result);
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+            Log.d("AGREEMENT RET: ", result);
+            return null;
+        }
+    }
+
 }
