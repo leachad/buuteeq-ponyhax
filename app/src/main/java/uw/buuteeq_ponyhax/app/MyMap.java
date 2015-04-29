@@ -35,7 +35,8 @@ public class MyMap extends Fragment implements OnMapReadyCallback {
 
 
         //start location updates when the activity first starts up
-        MyLocationManager.getInstance(getActivity()).startLocationUpdates();
+        //TODO Figure out why the Location Manager keeps throwing errors
+        //MyLocationManager.getInstance(getActivity()).startLocationUpdates();
 
         return inflater.inflate(R.layout.activity_my_map, container, false);
     }

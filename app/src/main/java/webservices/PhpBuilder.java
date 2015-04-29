@@ -4,6 +4,9 @@
 
 package webservices;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import db.Coordinate;
 import db.User;
 
@@ -62,8 +65,6 @@ public class PhpBuilder {
     private static final String START_ARGS = "?";
     private static final String APPEND_ARGS = "&";
     private static final String ASSIGN_ARGS = "=";
-    private static final String URL_SPACE = "%20";
-    private static final String ASCII_SPACE = " ";
 
     /**
      * Privately accessible field that will hold a reference to the domain used for
@@ -77,20 +78,35 @@ public class PhpBuilder {
 
     }
 
+    private String getEncodedText(final String theText) {
+        String toRet = null;
+
+        try {
+            toRet = theText.replaceAll(" ", "%20");
+            toRet = URLEncoder.encode(theText, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+
+
+        return toRet;
+    }
+
     private String getEmailKeyValue(final String theEmailAddress) {
-        return URL_EMAIL + ASSIGN_ARGS + theEmailAddress;
+        return URL_EMAIL + ASSIGN_ARGS + getEncodedText(theEmailAddress);
     }
 
     private String getPasswordKeyValue(final String thePassword) {
-        return URL_PASSWORD + ASSIGN_ARGS + thePassword;
+        return URL_PASSWORD + ASSIGN_ARGS + getEncodedText(thePassword);
     }
 
     private String getQuestionKeyValue(final String theQuestion) {
-        return URL_SEC_QUESTION + ASSIGN_ARGS + theQuestion.replaceAll(ASCII_SPACE, URL_SPACE);
+        return URL_SEC_QUESTION + ASSIGN_ARGS + getEncodedText(theQuestion);
     }
 
     private String getAnswerKeyValue(final String theAnswer) {
-        return URL_SEC_ANSWER + ASSIGN_ARGS + theAnswer.replaceAll(ASCII_SPACE, URL_SPACE);
+        return URL_SEC_ANSWER + ASSIGN_ARGS + getEncodedText(theAnswer);
     }
 
     private String getSourceKeyValue(final String theUserID) {
@@ -136,7 +152,7 @@ public class PhpBuilder {
      */
     public String getAddUserRequest(final User theUser) {
         return myCurrentHostDomain + ADD_USER_FILE + START_ARGS + getEmailKeyValue(theUser.getEmail()) + APPEND_ARGS
-                + getPasswordKeyValue(theUser.getEmail()) + APPEND_ARGS + getQuestionKeyValue(theUser.getSecurityQuestion())
+                + getPasswordKeyValue(theUser.getPassword()) + APPEND_ARGS + getQuestionKeyValue(theUser.getSecurityQuestion())
                 + PhpBuilder.APPEND_ARGS + getAnswerKeyValue(theUser.getSecurityAnswer());
     }
 
