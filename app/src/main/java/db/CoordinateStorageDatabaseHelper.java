@@ -23,6 +23,8 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_LONGITUDE = "longitude";
     public static final String COLUMN_LATITUDE = "latitude";
     public static final String COLUMN_TIME_STAMP = "time_stamp";
+    public static final String COLUMN_USER_SPEED = "speed";
+    public static final String COLUMN_USER_HEADING = "heading";
     public static final String COLUMN_USER_ID = "user_id";
     public static final String COLUMN_PHOTO = "photo";
 
@@ -120,18 +122,19 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
             if (isBeforeFirst() || isAfterLast())
                 return null;
 
-            long longitude = getLong(getColumnIndex(COLUMN_LONGITUDE));
-            long latitude = getLong(getColumnIndex(COLUMN_LATITUDE));
+            double longitude = getLong(getColumnIndex(COLUMN_LONGITUDE));
+            double latitude = getLong(getColumnIndex(COLUMN_LATITUDE));
             long time_stamp = getLong(getColumnIndex(COLUMN_TIME_STAMP));
-            long user_id = getLong(getColumnIndex(COLUMN_USER_ID));
+            double speed = getDouble(getColumnIndex(COLUMN_USER_SPEED));
+            double heading = getDouble(getColumnIndex(COLUMN_USER_HEADING));
+            String source = getString(getColumnIndex(COLUMN_USER_ID));
             byte[] photo = getBlob(getColumnIndex(COLUMN_PHOTO));
 
-//            if (photo == null) {
-//                return new Coordinate(longitude, latitude, time_stamp, user_id);
-//            } else {
-//                return new Coordinate(longitude, latitude, time_stamp, user_id, photo);
-//            }
-            return null;
+            if (photo == null) {
+                return new Coordinate(longitude, latitude, time_stamp, speed, heading, source);
+            } else {
+                return new Coordinate(longitude, latitude, time_stamp, speed, heading, source, photo);
+            }
         }
 
 

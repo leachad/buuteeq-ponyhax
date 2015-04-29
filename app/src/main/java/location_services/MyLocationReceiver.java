@@ -18,7 +18,7 @@ public class MyLocationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        //TODO make sure to start the service again in here, or else nothing will happen
     }
 
     protected void onLocationReceived(Context context, Location loc) {
