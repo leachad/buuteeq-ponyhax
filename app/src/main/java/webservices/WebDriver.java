@@ -14,6 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
@@ -92,7 +93,16 @@ public class WebDriver {
     }
 
     public static String getUserAgreement() throws ExecutionException, InterruptedException {
-        return new GetUserAgreement().execute().get();
+        String agreement = new GetUserAgreement().execute().get();
+
+        try {
+            JSONObject json = new JSONObject(agreement);
+            agreement = json.getString("agreement");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return agreement;
     }
 
 
