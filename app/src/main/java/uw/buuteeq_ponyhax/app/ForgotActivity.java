@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import db.User;
 import db.UserStorageDatabaseHelper;
-import email.EmailSend;
+//import email.EmailSend;
 
 /**
  * Created by eduard_prokhor on 4/4/15.
@@ -33,7 +33,7 @@ public class ForgotActivity extends ActionBarActivity {
     /**
      * Variables referenced by the entire class.
      */
-    EmailSend mEmailSend;
+    //EmailSend mEmailSend;
     EditText mEmailEntryField;
     EditText mSecurityAnswerField;
     UserStorageDatabaseHelper mDbHelper;
@@ -46,7 +46,7 @@ public class ForgotActivity extends ActionBarActivity {
         setContentView(R.layout.forgot_page);
         setTitle("");
 
-        mEmailSend = new EmailSend();
+        //mEmailSend = new EmailSend();
         mEmailEntryField = (EditText) findViewById(R.id.userForPasswordreset);
         mSecurityAnswerField = (EditText) findViewById(R.id.resetPassSecAnswer);
         mSecurityAnswerField.setEnabled(false); //disabled until user types correct email address
@@ -101,7 +101,7 @@ public class ForgotActivity extends ActionBarActivity {
                 mDbHelper.modifyUserPassword(testPass, mUserID);
 
                 //testing to send to my email.
-                mEmailSend.sendEmail(userEmail, testPass);
+                //mEmailSend.sendEmail(userEmail, testPass);
                 Log.d("E-mail debugging", userEmail + " " + testPass);
 
                 Toast.makeText(getApplicationContext(),

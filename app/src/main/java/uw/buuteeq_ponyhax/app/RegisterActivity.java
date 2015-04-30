@@ -356,7 +356,7 @@ public class RegisterActivity extends ActionBarActivity {
                     resetFields();
                     makeDuplicateEntryToast();
                 } else {
-                    Toast.makeText(getApplicationContext(), "User Account Created! \n Check email inbox to complete registration", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "User Account Created! \n Check email inbox to complete registration", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                     startActivity(intent);
                     finish();
