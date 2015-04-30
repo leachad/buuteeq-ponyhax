@@ -70,6 +70,8 @@ public class MyMap extends Fragment implements OnMapReadyCallback {
         mMap.addMarker(new MarkerOptions().position(testLocation).title("Marker"));
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(testLocation, 17));
+
+        //TODO Are we loading all the previously logged points on the map here by default?
     }
 
     /**

@@ -28,6 +28,7 @@ import db.CoordinateStorageDatabaseHelper;
 import db.User;
 import location_services.MyLocationManager;
 import location_services.MyLocationReceiver;
+import webservices.WebDriver;
 
 public class MyAccount extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -50,8 +51,8 @@ public class MyAccount extends ActionBarActivity
             mLastLocation = location;
             if (location != null) { //This may or may not be a good condition
                 Toast.makeText(getApplicationContext(), location.toString(), Toast.LENGTH_SHORT).show(); // for testing polling rates
-//                updateUI();
-                //add to database here and update UI appropriately
+//                updateUI(); // Some call to MyMap
+
             }
             Toast.makeText(getApplicationContext(), "In changed", Toast.LENGTH_SHORT).show();
         }

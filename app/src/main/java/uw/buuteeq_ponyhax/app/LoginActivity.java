@@ -113,7 +113,15 @@ public class LoginActivity extends Activity {
          */
 
         if (!mPasswordField.getText().toString().trim().matches("") && !mEmailField.getText().toString().trim().matches("")) {
-            String userID = mDbHelper.retrieveUniqueUserID(mEmailField.getText().toString().trim(), mPasswordField.getText().toString().trim());
+            //String userID = mDbHelper.retrieveUniqueUserID(mEmailField.getText().toString().trim(), mPasswordField.getText().toString().trim());
+            String userID = null;
+
+            try {
+                userID = WebDriver.checkUserCredentials(mEmailField.getText().toString().trim(), mPasswordField.getText().toString().trim());
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
             if (userID == null) {
                 makeMissingUserToast();
             } else {

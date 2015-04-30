@@ -64,7 +64,6 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
             cv.put(COLUMN_LATITUDE, coordinate.getLatitude());
             cv.put(COLUMN_TIME_STAMP, coordinate.getTimeStamp());
             cv.put(COLUMN_USER_ID, coordinate.getUserID());
-            cv.put(COLUMN_PHOTO, coordinate.getCoordinatePhoto());
             insertConfirm = getWritableDatabase().insert(TABLE_NAME, null, cv);
         }
 
