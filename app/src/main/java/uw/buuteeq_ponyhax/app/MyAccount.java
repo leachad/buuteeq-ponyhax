@@ -6,6 +6,7 @@ package uw.buuteeq_ponyhax.app;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -44,7 +45,7 @@ public class MyAccount extends ActionBarActivity
     private BroadcastReceiver mLocationReceiver = new MyLocationReceiver() {
 
         @Override
-        protected void onLocationReceived(Context context, Location location) {
+        public void onLocationChanged(Location location) {
             Date polledDate = new Date(); //grabs date stamp
             mLastLocation = location;
             if (location != null) { //This may or may not be a good condition
@@ -52,15 +53,23 @@ public class MyAccount extends ActionBarActivity
 //                updateUI();
                 //add to database here and update UI appropriately
             }
-
-            //After everything -- reset LocationManager to reset data polling rate
-            MyLocationManager.getInstance(getApplicationContext()); //This could be the cause of an infinite loop if it polls right away..a slow yet battery sucking infinite loop
+            Toast.makeText(getApplicationContext(), "In changed", Toast.LENGTH_SHORT).show();
         }
 
         @Override
-        protected void onProviderEnabledChanged(boolean enabled) {
-            int toastText = enabled ? R.string.gps_enabled : R.string.gps_disabled;
-            Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_LONG).show(); //toast to show enabled
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+//            int toastText = enabled ? R.string.gps_enabled : R.string.gps_disabled;
+//            Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_LONG).show(); //toast to show enabled
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
         }
 
     };
@@ -87,7 +96,7 @@ public class MyAccount extends ActionBarActivity
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myLocationManager.startLocationUpdates();
+                myLocationManager.startLocationUpdates((android.location.LocationListener) mLocationReceiver);
                 enabledStopButton();
             }
         });
@@ -95,15 +104,14 @@ public class MyAccount extends ActionBarActivity
         mStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myLocationManager.stopLocationUpdates();
+                myLocationManager.stopLocationUpdates((android.location.LocationListener) mLocationReceiver);
                 enableStartButton();
             }
         });
         //END location manager setup
-
-        getApplication().registerReceiver(mLocationReceiver, new IntentFilter(MyLocationManager.ACTION_LOCATION));
+        registerReceiver(mLocationReceiver, new IntentFilter(MyLocationManager.ACTION_LOCATION));
         enabledStopButton();
-        myLocationManager.startLocationUpdates();
+        myLocationManager.startLocationUpdates((android.location.LocationListener) mLocationReceiver);
         setTitle("");
     }
 

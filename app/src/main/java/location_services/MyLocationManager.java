@@ -7,6 +7,7 @@ package location_services;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -71,20 +72,21 @@ public class MyLocationManager {
         return PendingIntent.getBroadcast(mAppContext, 0, broadcast, flags);
     }
 
-    public void startLocationUpdates() {
+    public void startLocationUpdates(LocationListener listener) {
         String provider = LocationManager.GPS_PROVIDER;
 
         //start updates from location manager
         PendingIntent pi = getLocationPendingIntent(true);
-        mLocationManager.requestLocationUpdates(provider, minTime, minDistance, pi);
+
+        mLocationManager.requestLocationUpdates(provider, minTime, minDistance, listener);
 
 
     }
 
-    public void stopLocationUpdates() {
+    public void stopLocationUpdates(LocationListener listener) {
         PendingIntent pi = getLocationPendingIntent(false);
         if (pi != null) {
-            mLocationManager.removeUpdates(pi);
+            mLocationManager.removeUpdates(listener);
             pi.cancel();
         }
     }
