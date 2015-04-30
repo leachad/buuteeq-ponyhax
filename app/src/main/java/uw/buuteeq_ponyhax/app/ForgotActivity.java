@@ -4,10 +4,8 @@
 
 package uw.buuteeq_ponyhax.app;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -15,8 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import db.User;
 import db.UserStorageDatabaseHelper;
+import webservices.WebDriver;
 //import email.EmailSend;
 
 /**
@@ -35,7 +33,7 @@ public class ForgotActivity extends ActionBarActivity {
      */
     //EmailSend mEmailSend;
     EditText mEmailEntryField;
-    EditText mSecurityAnswerField;
+
     UserStorageDatabaseHelper mDbHelper;
     String mUserID;
     boolean isCurrentUser = false;
@@ -48,11 +46,8 @@ public class ForgotActivity extends ActionBarActivity {
 
         //mEmailSend = new EmailSend();
         mEmailEntryField = (EditText) findViewById(R.id.userForPasswordreset);
-        mSecurityAnswerField = (EditText) findViewById(R.id.resetPassSecAnswer);
-        mSecurityAnswerField.setEnabled(false); //disabled until user types correct email address
         mDbHelper = new UserStorageDatabaseHelper(getApplicationContext());
         isCurrentUser = false;
-
 
         registerListeners();
     }
@@ -65,88 +60,39 @@ public class ForgotActivity extends ActionBarActivity {
                 finish();
             }
         });
-
-        mEmailEntryField.setOnEditorActionListener(new DisplayQuestionListener());
-
-
         (findViewById(R.id.passResetSubmit)).setOnClickListener(new SubmitListener());
-
-
     }
 
     private boolean checkTextEntered() {
-        return (!mSecurityAnswerField.getText().toString().matches("") && !mEmailEntryField.getText().toString().matches(""));
+        return (!mEmailEntryField.getText().toString().matches(""));
     }
 
     /**
      * Private class to implement a SubmitListener
      *
      * @author leachad
-     * @version 4.16.15
+     * @author eprokhor
+     * @version 4.29.15
      */
     private class SubmitListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            if (checkTextEntered()
-                    && mSecurityAnswerField.getText().toString().trim().matches(mDbHelper.obtainUserSecurityAnswer(mUserID))
-                    && mEmailEntryField.getText().toString().matches(mDbHelper.obtainUserEmail(mUserID))) {
+            if (checkTextEntered()) {
 
-                String userEmail = mDbHelper.obtainUserEmail(mUserID).trim();
-
-                //make a random pass and send it to their email.
-                String testPass = Long.toHexString(Double.doubleToLongBits(Math.random()));
-                testPass = testPass.substring(0, 4);
-                //update the database with the new pass of the user
-                mDbHelper.modifyUserPassword(testPass, mUserID);
-
-                //testing to send to my email.
-                //mEmailSend.sendEmail(userEmail, testPass);
-                Log.d("E-mail debugging", userEmail + " " + testPass);
+                String userEmail = mEmailEntryField.getText().toString().trim();
+                WebDriver.resetPassword(userEmail);
 
                 Toast.makeText(getApplicationContext(),
-                        "Your new randomly generated password was sent to your email", Toast.LENGTH_SHORT).show();
-
-                //create prefs from email so that it is independent from other email resets.
-                SharedPreferences resetPrefs = getSharedPreferences(userEmail, MODE_PRIVATE);
-                resetPrefs.edit().putBoolean(User.USER_RESET, true).apply();
-
+                        "Your new password can be reset with the email link.",
+                        Toast.LENGTH_SHORT).show();
                 finish();
 
-
             } else {
-                Toast.makeText(getApplicationContext(), "New Answer Must Consist of at least one character!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),
+                        "New Answer Must Consist of at least one character!",
+                        Toast.LENGTH_SHORT).show();
             }
-
         }
     }
-
-    /**
-     * Private class to implement a DisplayQuestionListener
-     *
-     * @author leachad
-     * @version 4.16.15
-     */
-    private class DisplayQuestionListener implements TextView.OnEditorActionListener {
-        @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            if (actionId == EditorInfo.IME_ACTION_NEXT && !mEmailEntryField.getText().toString().trim().matches("")) {
-                String userEmail = mEmailEntryField.getText().toString().toLowerCase().trim();
-                mUserID = mDbHelper.obtainUserID(userEmail);
-                if (mDbHelper.obtainUserEmail(mUserID) != null && mDbHelper.obtainUserEmail(mUserID).matches(userEmail)) {
-                    isCurrentUser = true;
-                    mSecurityAnswerField.setEnabled(true);
-                    ((TextView) findViewById(R.id.resetSecurityQuestion)).setText(mDbHelper.obtainUserSecurityQuestion(mDbHelper.obtainUserID(userEmail)));
-                } else {
-                    Toast.makeText(getApplicationContext(), "Email not found in the database", Toast.LENGTH_SHORT).show();
-                    mEmailEntryField.setText("");
-                    mEmailEntryField.requestFocus();
-                }
-
-            }
-            return false;
-        }
-
-    }
-
 }

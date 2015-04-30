@@ -32,7 +32,7 @@ public class LoginActivity extends Activity {
     /**
      * Private static field to hold an error message.
      */
-    private static final String MISSING_USER = "User does not exist in database";
+    private static final String MISSING_USER = "The User or Password is incorrect!";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

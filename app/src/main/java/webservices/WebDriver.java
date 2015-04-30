@@ -197,7 +197,7 @@ public class WebDriver {
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
-            Log.d("UserLogin result", result);
+
             return userID;
         }
 
@@ -227,7 +227,6 @@ public class WebDriver {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Log.d("CoordinateUpdate result", result);
             return loggedPoints;
         }
     }
@@ -257,7 +256,7 @@ public class WebDriver {
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
-            Log.d("AGREEMENT RET: ", result);
+
             return result;
         }
 
@@ -287,7 +286,7 @@ public class WebDriver {
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
-            Log.d("AGREEMENT RET: ", result);
+
             return null;
         }
     }

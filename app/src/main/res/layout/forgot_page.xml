@@ -20,8 +20,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_gravity="top"
-            android:layout_weight="0.94"
+            android:layout_weight="2.18"
             android:orientation="vertical"
             android:weightSum="100">
 
@@ -39,32 +38,12 @@
             <EditText
                 android:id="@+id/userForPasswordreset"
                 style="@style/editTextTheme"
-                android:layout_width="match_parent"
+                android:layout_width="294dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:ems="10"
                 android:hint="@string/enter_email"
-                android:inputType="textImeMultiLine"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/resetSecurityQuestion"
-                style="@style/editTextTheme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/auto_fill_security_question"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/resetPassSecAnswer"
-                style="@style/editTextTheme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:hint="@string/enter_security_answer"
-                android:inputType="textImeMultiLine"
+                android:inputType="textEmailAddress"
                 android:textSize="20sp" />
 
             <!--<TextView-->
