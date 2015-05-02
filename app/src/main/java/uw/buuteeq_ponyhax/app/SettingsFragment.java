@@ -14,11 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import db.User;
 import db.UserStorageDatabaseHelper;
+import webservices.WebDriver;
 
 
 /**
@@ -27,86 +27,49 @@ import db.UserStorageDatabaseHelper;
  */
 public class SettingsFragment extends Fragment {
 
-    /**
-     * Fields needed by the whole class.
-     */
-    private Spinner mQuestionSpinner;
-    private EditText mNewSecurityAnswer;
-    private Button mSubmitButton;
-    private Button mCancelButton;
-    private SharedPreferences mSharedPreferences;
     private UserStorageDatabaseHelper mDbHelper;
 
+    EditText emailFeildInSettings;
+    Button resetPassFromSettings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /** Instantiate the security question spinner.*/
-
+        emailFeildInSettings = (EditText) getActivity().findViewById(R.id.emailFeildInSettings);
+        resetPassFromSettings = (Button) getActivity().findViewById(R.id.resetpass_from_settings);
+        resetPassFromSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(checkTextEntered()) {
+                    String userEmail = emailFeildInSettings.getText().toString().trim();
+                    WebDriver.resetPassword(userEmail);
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Your new password can be reset with the email " +
+                                    "link that was sent to your email.",
+                            Toast.LENGTH_LONG).show();
+                    getActivity().finish();
+                }else{
+                    Toast.makeText(getActivity().getApplicationContext(), "Email must be vaild!",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
         return inflater.inflate(R.layout.settings_fragment_layout, container, false);
-    }
-
-    private boolean fieldsEmpty() {
-        return mQuestionSpinner.getSelectedItem().toString().matches(mQuestionSpinner.getPrompt().toString())
-                || mNewSecurityAnswer.getText().toString().matches("");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mQuestionSpinner = (Spinner) getActivity().findViewById(R.id.spinnerSecurityQuestion_reset);
-        mNewSecurityAnswer = (EditText) getActivity().findViewById(R.id.securityQuestionAnswer);
-        mSubmitButton = (Button) getActivity().findViewById(R.id.submitNewSecurityAnswer);
-        mCancelButton = (Button) getActivity().findViewById(R.id.cancelSettingsFragment);
-        mDbHelper = new UserStorageDatabaseHelper(getActivity().getApplicationContext());
-        mSharedPreferences = getActivity().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-        mSubmitButton.setOnClickListener(new SubmitListener());
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), MyAccount.class));
-                getActivity().finish();
-            }
-        });
-
-        getActivity().findViewById(R.id.resetpass_from_settings).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(getActivity(), CreateNewPasswordActivity.class);
-                myIntent.putExtra(User.USER_EMAIL, mSharedPreferences.getString(User.USER_EMAIL, ""));
-                startActivity(myIntent);
-                getActivity().finish();
-            }
-        });
 
 
     }
-
-    private class SubmitListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            if (fieldsEmpty()) {
-                Toast.makeText(getActivity(), "Please make sure all fields are entered", Toast.LENGTH_SHORT).show();
-            } else {
-                mSharedPreferences.edit().putString(User.USER_QUESTION, mQuestionSpinner.getSelectedItem().toString().trim()).apply();
-                mSharedPreferences.edit().putString(User.USER_ANSWER, mNewSecurityAnswer.toString().trim()).apply();
-                mDbHelper.modifySecurityQuestion(mQuestionSpinner.getSelectedItem().toString().trim(), mSharedPreferences.getString(User.USER_ID, ""));
-                mDbHelper.modifySecurityAnswer(mNewSecurityAnswer.getText().toString(), mSharedPreferences.getString(User.USER_ID, ""));
-                Toast.makeText(getActivity().getApplicationContext(),
-                        "Your security Question and answer have been changed.", Toast.LENGTH_SHORT).show();
-                Intent myIntent = new Intent(getActivity(), MyAccount.class);
-                myIntent.putExtra(User.USER_QUESTION, mSharedPreferences.getString(User.USER_QUESTION, ""));
-                myIntent.putExtra(User.USER_ANSWER, mSharedPreferences.getString(User.USER_ANSWER, ""));
-                startActivity(myIntent);
-                getActivity().finish();
-            }
-        }
+    private boolean checkTextEntered() {
+        return (!emailFeildInSettings.getText().toString().matches(""));
     }
 
 }

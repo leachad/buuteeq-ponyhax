@@ -12,7 +12,6 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-
     <LinearLayout
         style="@style/AppTheme"
         android:layout_width="match_parent"
@@ -31,84 +30,25 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="20sp" />
 
-        <LinearLayout
-            android:id="@+id/card_layout"
-            style="@style/AppTheme"
+        <EditText
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingTop="40dp"
-            android:weightSum="1">
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/emailFeildInSettings"
+            android:layout_gravity="center_horizontal"
+            android:hint="Enter your email" />
 
-            <Button
-                android:id="@+id/resetpass_from_settings"
-                style="@style/buttonTheme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.21"
-                android:text="@string/reset_password" />
-
-            <TextView
-                android:id="@+id/ChangeSecurityDescription"
-                style="@style/editTextTheme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_weight="0.21"
-                android:text="@string/security_question" />
-
-            <Spinner
-                android:id="@+id/spinnerSecurityQuestion_reset"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
-                android:background="#ffffffff"
-                android:entries="@array/question_options"
-                android:gravity="center"
-                android:prompt="@string/security_question"
-                android:spinnerMode="dropdown" />
-
-            <EditText
-                android:id="@+id/securityQuestionAnswer"
-                style="@style/editTextTheme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/security_answer"
-                android:inputType="text"
-
-                />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:id="@+id/cancelSettingsFragment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cancel" />
-
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="101.97" />
-
-                <Button
-                    android:id="@+id/submitNewSecurityAnswer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/submit" />
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
+        <Button
+            android:id="@+id/resetpass_from_settings"
+            style="@style/buttonTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.21"
+            android:text="@string/reset_password" />
 
     </LinearLayout>
-
 
 </ScrollView>
 

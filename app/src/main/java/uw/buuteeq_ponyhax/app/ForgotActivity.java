@@ -20,6 +20,7 @@ import webservices.WebDriver;
 /**
  * Created by eduard_prokhor on 4/4/15.
  * Edited by leach on 4/16/15
+ * Edited by eduard on 5/1/15
  * <p/>
  * Forgot activity allows the user to generate a new password that will be sent to their
  * email address for signing back in. Utilizes the EmailSend class developed by Huy that
@@ -85,12 +86,12 @@ public class ForgotActivity extends ActionBarActivity {
 
                 Toast.makeText(getApplicationContext(),
                         "Your new password can be reset with the email link.",
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_LONG).show();
                 finish();
 
             } else {
                 Toast.makeText(getApplicationContext(),
-                        "New Answer Must Consist of at least one character!",
+                        "Email Must be vaild!",
                         Toast.LENGTH_SHORT).show();
             }
         }
