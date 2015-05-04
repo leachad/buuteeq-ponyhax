@@ -4,7 +4,9 @@
 
 package uw.buuteeq_ponyhax.app;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -13,7 +15,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.concurrent.ExecutionException;
+
+import db.User;
 import db.UserStorageDatabaseHelper;
+import webservices.JsonBuilder;
 import webservices.WebDriver;
 //import email.EmailSend;
 
@@ -29,11 +35,8 @@ import webservices.WebDriver;
  */
 public class ForgotActivity extends ActionBarActivity {
 
-    /**
-     * Variables referenced by the entire class.
-     */
-    //EmailSend mEmailSend;
-    EditText mEmailEntryField;
+    private static final String RESET_PROMPT = "Your password can be reset with the link sent to: ";
+    private static final String RESET_FAILED = "Unable to execute reset request. Please try again later.";
 
     UserStorageDatabaseHelper mDbHelper;
     String mUserID;
@@ -46,7 +49,6 @@ public class ForgotActivity extends ActionBarActivity {
         setTitle("");
 
         //mEmailSend = new EmailSend();
-        mEmailEntryField = (EditText) findViewById(R.id.userForPasswordreset);
         mDbHelper = new UserStorageDatabaseHelper(getApplicationContext());
         isCurrentUser = false;
 
@@ -61,39 +63,36 @@ public class ForgotActivity extends ActionBarActivity {
                 finish();
             }
         });
-        (findViewById(R.id.passResetSubmit)).setOnClickListener(new SubmitListener());
-    }
-
-    private boolean checkTextEntered() {
-        return (!mEmailEntryField.getText().toString().matches(""));
+        (findViewById(R.id.passResetSubmit)).setOnClickListener(new ResetPasswordListener());
     }
 
     /**
-     * Private class to implement a SubmitListener
+     * Private class to implement a ResetPasswordListener.
      *
      * @author leachad
-     * @author eprokhor
-     * @version 4.29.15
+     * @version 5.3.15
      */
-    private class SubmitListener implements View.OnClickListener {
+    private class ResetPasswordListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            if (checkTextEntered()) {
 
-                String userEmail = mEmailEntryField.getText().toString().trim();
-                WebDriver.resetPassword(userEmail);
+            SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, FragmentActivity.MODE_PRIVATE);
+            try {
+                String result = WebDriver.resetPassword(prefs.getString(User.USER_EMAIL, null));
 
-                Toast.makeText(getApplicationContext(),
-                        "Your new password can be reset with the email link.",
-                        Toast.LENGTH_LONG).show();
-                finish();
-
-            } else {
-                Toast.makeText(getApplicationContext(),
-                        "Email Must be vaild!",
-                        Toast.LENGTH_SHORT).show();
+                if (result.matches(JsonBuilder.VAL_FAIL)) {
+                    Toast.makeText(getApplicationContext(), RESET_FAILED, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), RESET_PROMPT + prefs.getString(User.USER_EMAIL, null), Toast.LENGTH_SHORT).show();
+                    prefs.edit().clear().apply();
+                    finish();
+                }
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
             }
+
+
         }
     }
 }

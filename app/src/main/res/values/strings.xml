@@ -61,7 +61,8 @@
     <string name="title_section1">My Map</string>
     <string name="title_section2">Overview</string>
     <string name="title_section3">My Settings</string>
-    <string name="title_section4">Logout</string>
+    <string name="title_section4">Choose Date Range</string>
+    <string name="title_section5">Logout</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -111,6 +112,14 @@
         <item name="fav_sports_team">What is your favorite sports team?</item>
         <item name="first_job">What was your first job?</item>
     </string-array>
+
+    <!--
+    Range Picker fragment Values
+    -->
+    <string name="startDateText">Choose Range of Time</string>
+    <string name="selectDateRange">Select Date Range</string>
+    <string name="endDateText">Choose End Date</string>
+    <string name="queryDateRange">Query Date Range</string>
 
 
 </resources>

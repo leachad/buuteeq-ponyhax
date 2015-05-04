@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="@color/wallet_secondary_text_holo_dark"
         android:padding="20dp"
         tools:context="uw.buuteeq_ponyhax.app.MyAccount$PlaceholderFragment">
 
@@ -26,24 +27,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/action_settings"
+            android:text="@string/startDateText"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="20sp" />
-
+        
 
 
         <Button
-            android:id="@+id/resetPasswordSettings"
+            android:id="@+id/queryDateRangeButton"
             style="@style/buttonTheme"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.21"
-            android:text="@string/reset_password" />
+            android:text="@string/queryDateRange" />
 
     </LinearLayout>
 
 </ScrollView>
-
 
 

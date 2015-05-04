@@ -37,13 +37,9 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Test
-        WebDriver wd = new WebDriver();
         try {
-            Log.e("TEST", wd.getUserAgreement());
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+            Log.e("TEST", WebDriver.getUserAgreement());
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -128,6 +124,7 @@ public class LoginActivity extends Activity {
                 toRet = true;
                 SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
                 prefs.edit().putString(User.USER_ID, userID).apply();
+                prefs.edit().putString(User.USER_EMAIL, mEmailField.getText().toString()).apply();
 
             }
         }
@@ -157,19 +154,6 @@ public class LoginActivity extends Activity {
             if (checkUserCredentials()) {
                 Intent intent;
                 intent = new Intent(LoginActivity.this, MyAccount.class);
-
-//                String email = ((EditText) findViewById(R.id.email_field)).getText().toString().toLowerCase().trim();
-//                SharedPreferences resetPrefs = getSharedPreferences(email, MODE_PRIVATE);
-//                boolean reset = resetPrefs.getBoolean(User.USER_RESET, false);
-//                Intent intent;
-//                intent = new Intent(LoginActivity.this, MyAccount.class);
-//                if (reset) {
-//                    intent = new Intent(LoginActivity.this, CreateNewPasswordActivity.class);
-//                    intent.putExtra(User.USER_EMAIL, email);
-//                } else {
-//                    intent = new Intent(LoginActivity.this, MyAccount.class);
-//                }
-
                 startActivity(intent);
                 finish();
             } else {

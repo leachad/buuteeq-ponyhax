@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Range;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +43,7 @@ public class MyAccount extends ActionBarActivity
     private Button mStartButton;
     private Button mStopButton;
     private Location mLastLocation;
+
     //SETUP RECEIVER WITH INNER CLASS
     private BroadcastReceiver mLocationReceiver = new MyLocationReceiver() {
 
@@ -109,6 +111,9 @@ public class MyAccount extends ActionBarActivity
                 enableStartButton();
             }
         });
+
+
+
         //END location manager setup
         registerReceiver(mLocationReceiver, new IntentFilter(MyLocationManager.ACTION_LOCATION));
         enabledStopButton();
@@ -141,6 +146,9 @@ public class MyAccount extends ActionBarActivity
                 fragment = new SettingsFragment();
                 break;
             case 3:
+                fragment = new RangePickerFragment();
+                break;
+            case 4:
                 SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
                 prefs.edit().clear().apply();
                 choice = false;
@@ -173,6 +181,9 @@ public class MyAccount extends ActionBarActivity
                 break;
             case 4:
                 mTitle = getString(R.string.title_section4);
+                break;
+            case 5:
+                mTitle = getString(R.string.title_section5);
                 break;
         }
     }
@@ -217,5 +228,6 @@ public class MyAccount extends ActionBarActivity
         mStopButton.setEnabled(true);
         mStartButton.setEnabled(false);
     }
+
 
 }

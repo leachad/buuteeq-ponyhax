@@ -72,9 +72,9 @@ public class WebDriver {
     }
 
     //TODO Write a similar static method in here for the Reset Password that will sit nicely inside a webview
-    public static void resetPassword(final String theEmailAddress) {
+    public static String resetPassword(final String theEmailAddress) throws ExecutionException, InterruptedException {
         myEmailAddress = theEmailAddress;
-        new ResetPassword().execute();
+        return new ResetPassword().execute().get();
     }
 
     /**
@@ -287,7 +287,7 @@ public class WebDriver {
                 e.printStackTrace();
             }
 
-            return null;
+            return result;
         }
     }
 
