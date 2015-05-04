@@ -4,24 +4,16 @@
 
 package uw.buuteeq_ponyhax.app;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.concurrent.ExecutionException;
 
-import db.User;
-import db.UserStorageDatabaseHelper;
 import webservices.JsonBuilder;
 import webservices.WebDriver;
-//import email.EmailSend;
 
 /**
  * Created by eduard_prokhor on 4/4/15.

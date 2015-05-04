@@ -15,6 +15,7 @@ public class Coordinate {
     /**
      * Public static final fields used to store and edit prefs.
      */
+    public static final String COORDINATE_PREFS = "coordinate_prefs";
     public static final String START_TIME = "start_time"; //stored as a unix time stamp
     public static final String END_TIME = "end_time";
     public static final String COORDINATE_SOURCE = "coordinate_source";

@@ -7,10 +7,17 @@ package uw.buuteeq_ponyhax.app;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.ViewGroup;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
+
+import java.util.Calendar;
+
+import db.Coordinate;
+import db.User;
 
 /**
  * Created by leachad on 5/4/2015.
@@ -18,24 +25,36 @@ import android.view.ViewGroup;
  */
 public class RangeDialogFragment extends DialogFragment{
 
+    private DatePicker mDatePicker;
+    private TimePicker mTimePicker;
+
+
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        Calendar calendar = Calendar.getInstance();
+
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         dialogBuilder.setView(getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_range_picker, null));
 
-        dialogBuilder.setNegativeButton(R.string.confirmRange, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        mDatePicker = (DatePicker) getActivity().findViewById(R.id.rangeDatePicker);
+        mDatePicker.init(calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                calendar.get(Calendar.YEAR), null);
 
-            }
-        });
-        dialogBuilder.setPositiveButton(R.string.cancelRange, new DialogInterface.OnClickListener() {
+        mTimePicker = (TimePicker) getActivity().findViewById(R.id.rangeTimePicker);
+
+        dialogBuilder.setPositiveButton(R.string.confirmRange, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //TODO something with the date and time in here to store the information to shared prefs
+                setPrefsFromBoundary();
             }
         });
+        dialogBuilder.setNegativeButton(R.string.cancelRange, null);
+
+
+        /**
+         * Modify the dialog range window based on which button was clicked.
+         */
        if (this.getTag().matches(RangePickerFragment.START_RANGE)) {
             dialogBuilder.setTitle(R.string.startOfRange);
         } else {
@@ -43,5 +62,36 @@ public class RangeDialogFragment extends DialogFragment{
         }
 
         return dialogBuilder.create();
+    }
+
+    /**
+     * Private helper method to return the combined long as a time stamp.
+     * @return calTimeLong
+     */
+    private long getCalAndTimeLong() {
+        Calendar selected = Calendar.getInstance();
+        selected.set(mDatePicker.getYear(), mDatePicker.getMonth(),
+                mDatePicker.getDayOfMonth(), mTimePicker.getCurrentHour(), mTimePicker.getCurrentMinute());
+        return selected.getTimeInMillis();
+    }
+
+    /**
+     * Private helper method to determine which dialog range fragment currently has focus
+     * and to set the prefs based on that current coordinate.
+     *
+     */
+    private void setPrefsFromBoundary() {
+        SharedPreferences prefs = getActivity().getApplicationContext()
+                .getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
+        if (this.getTag().matches(RangePickerFragment.START_RANGE)) {
+            prefs.edit().putString(Coordinate.COORDINATE_SOURCE, prefs.getString(User.USER_ID, null));
+            prefs.edit().putLong(Coordinate.START_TIME, getCalAndTimeLong()).apply();
+
+        } else {
+            prefs.edit().putString(Coordinate.COORDINATE_SOURCE, prefs.getString(User.USER_ID, null));
+            prefs.edit().putLong(Coordinate.END_TIME, getCalAndTimeLong()).apply();
+
+        }
+
     }
 }
