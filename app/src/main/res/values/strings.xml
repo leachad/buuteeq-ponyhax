@@ -119,6 +119,10 @@
     <string name="startDateText">Choose Range of Time</string>
     <string name="selectDateRange">Select Date Range</string>
     <string name="endDateText">Choose End Date</string>
+    <string name="startOfRange">START OF RANGE</string>
+    <string name="endOfRange">END OF RANGE</string>
+    <string name="confirmRange">OK</string>
+    <string name="cancelRange">CANCEL</string>
     <string name="queryDateRange">Query Date Range</string>
 
 

@@ -10,10 +10,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 
 public class RangePickerFragment extends Fragment {
 
+    public static final String START_RANGE = "start";
+    public static final String END_RANGE = "end";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,15 +27,39 @@ public class RangePickerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.range_picker_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_range_picker, container, false);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
+        Button mRangeStartButton = (Button) getActivity().findViewById(R.id.rangeStartButton);
+        Button mRangeEndButton = (Button) getActivity().findViewById(R.id.rangeEndButton);
+        Button mQueryDateRangeButton = (Button) getActivity().findViewById(R.id.queryDateRangeButton);
+
+        mRangeStartButton.setOnClickListener(new RangeDialogListener());
+        mRangeEndButton.setOnClickListener(new RangeDialogListener());
         //TODO Gather and store coordinates based on Values returned from Calendar and Time Pickers
 
+    }
+
+    /**
+     * Private class to implement a RangeDialogListener that follows the android convention of placing a
+     * date and time picker within a dialog fragment.
+     * @author leachad
+     * @version 5.4.15
+     */
+    private class RangeDialogListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+
+            if (v.getId() == R.id.rangeStartButton)
+                getActivity().getFragmentManager().beginTransaction().add(new RangeDialogFragment(), START_RANGE).commit();
+            else
+                getActivity().getFragmentManager().beginTransaction().add(new RangeDialogFragment(), END_RANGE).commit();
+        }
     }
 
 }
