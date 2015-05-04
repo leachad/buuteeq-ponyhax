@@ -36,7 +36,7 @@
                 android:textSize="30sp" />
 
             <EditText
-                android:id="@+id/userForPasswordreset"
+                android:id="@+id/notLoggedInPassReset"
                 style="@style/editTextTheme"
                 android:layout_width="294dp"
                 android:layout_height="wrap_content"

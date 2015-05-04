@@ -38,8 +38,6 @@ public class ForgotActivity extends ActionBarActivity {
     private static final String RESET_PROMPT = "Your password can be reset with the link sent to: ";
     private static final String RESET_FAILED = "Unable to execute reset request. Please try again later.";
 
-    UserStorageDatabaseHelper mDbHelper;
-    String mUserID;
     boolean isCurrentUser = false;
 
     @Override
@@ -47,16 +45,7 @@ public class ForgotActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forgot_page);
         setTitle("");
-
-        //mEmailSend = new EmailSend();
-        mDbHelper = new UserStorageDatabaseHelper(getApplicationContext());
         isCurrentUser = false;
-
-        registerListeners();
-    }
-
-    private void registerListeners() {
-
         (findViewById(R.id.passResetCancelButton)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,6 +53,7 @@ public class ForgotActivity extends ActionBarActivity {
             }
         });
         (findViewById(R.id.passResetSubmit)).setOnClickListener(new ResetPasswordListener());
+
     }
 
     /**
@@ -77,15 +67,16 @@ public class ForgotActivity extends ActionBarActivity {
         @Override
         public void onClick(View v) {
 
-            SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, FragmentActivity.MODE_PRIVATE);
+            EditText resetEmail = (EditText) findViewById(R.id.notLoggedInPassReset);
+            String email = resetEmail.getText().toString();
+
             try {
-                String result = WebDriver.resetPassword(prefs.getString(User.USER_EMAIL, null));
+                String result = WebDriver.resetPassword(email);
 
                 if (result.matches(JsonBuilder.VAL_FAIL)) {
                     Toast.makeText(getApplicationContext(), RESET_FAILED, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), RESET_PROMPT + prefs.getString(User.USER_EMAIL, null), Toast.LENGTH_SHORT).show();
-                    prefs.edit().clear().apply();
+                    Toast.makeText(getApplicationContext(), RESET_PROMPT + email, Toast.LENGTH_SHORT).show();
                     finish();
                 }
             } catch (ExecutionException | InterruptedException e) {

@@ -27,7 +27,7 @@ public class RangeDialogFragment extends DialogFragment{
         dialogBuilder.setNegativeButton(R.string.confirmRange, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //TODO used saved instance state to store data.
+
             }
         });
         dialogBuilder.setPositiveButton(R.string.cancelRange, new DialogInterface.OnClickListener() {

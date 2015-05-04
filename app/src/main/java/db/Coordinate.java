@@ -13,6 +13,13 @@ package db;
 public class Coordinate {
 
     /**
+     * Public static final fields used to store and edit prefs.
+     */
+    public static final String START_TIME = "start_time"; //stored as a unix time stamp
+    public static final String END_TIME = "end_time";
+    public static final String COORDINATE_SOURCE = "coordinate_source";
+
+    /**
      * Private fields to hold reference to the fields of the Coordinate object.
      */
     private double myLongitude;
