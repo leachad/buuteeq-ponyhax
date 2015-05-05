@@ -6,6 +6,7 @@ package uw.buuteeq_ponyhax.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,6 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
+import db.Coordinate;
 import db.User;
 
 /**
@@ -23,7 +27,19 @@ import db.User;
  */
 public class MyAccountFragment extends Fragment implements UIUpdater {
 
-    public void update() {
+    private TextView mTotalDistanceView;
+    private TextView mIntervalDistanceView;
+    private TextView mDataPointsView;
+    private TextView mLatitudeView;
+    private TextView mLongitudeView;
+    private TextView mSpeedView;
+    private TextView mBearingView;
+    private TextView mTimeView;
+
+
+    public void update(Location currentLocation, List<Coordinate> locations) {
+
+
 
     }
 
@@ -42,10 +58,16 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences prefs = getActivity().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-        ((TextView) getActivity().findViewById(R.id.text_account_name)).setText("User ID: \n" + prefs.getString(User.USER_ID, "N/A"));
-        ((TextView) getActivity().findViewById(R.id.text_account_email)).setText("Email: \n" + prefs.getString(User.USER_EMAIL, "N/A"));
-        ((TextView) getActivity().findViewById(R.id.text_account_numDataPoints)).setText("Data Points Logged: \n" + "N/A");
+
+        mTotalDistanceView = (TextView) getActivity().findViewById(R.id.text_total_distance);
+        mIntervalDistanceView = (TextView) getActivity().findViewById(R.id.text_total_distance_interval);
+        mDataPointsView = (TextView) getActivity().findViewById(R.id.text_account_numDataPoints);
+        mLatitudeView = (TextView) getActivity().findViewById(R.id.text_latitude);
+        mLongitudeView = (TextView) getActivity().findViewById(R.id.text_longitude);
+        mSpeedView = (TextView) getActivity().findViewById(R.id.text_speed);
+        mBearingView = (TextView) getActivity().findViewById(R.id.text_bearing);
+        mTimeView = (TextView) getActivity().findViewById(R.id.text_time);
+
 
     }
 }

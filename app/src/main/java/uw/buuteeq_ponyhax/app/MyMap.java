@@ -4,6 +4,7 @@
 
 package uw.buuteeq_ponyhax.app;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -18,6 +19,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.List;
+
+import db.Coordinate;
 import location_services.MyLocationManager;
 
 /**
@@ -27,7 +31,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
 
     private GoogleMap mMap;
 
-    public void update() {
+    public void update(Location currentLocation, List<Coordinate> locations) {
 
     }
 

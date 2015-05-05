@@ -23,7 +23,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
@@ -45,6 +47,7 @@ public class MyAccount extends ActionBarActivity
     private Location mLastLocation;
     private SharedPreferences prefs;
     private UIUpdater fragment;
+    private List<Coordinate> coordinates;
 
     //SETUP RECEIVER WITH INNER CLASS
     private BroadcastReceiver mLocationReceiver = new MyLocationReceiver() {
@@ -57,10 +60,13 @@ public class MyAccount extends ActionBarActivity
                 Coordinate locationCoordinate = new Coordinate(location.getLongitude(), location.getLatitude(), location.getTime(),
                         location.getSpeed(), location.getBearing(), prefs.getString(User.USER_ID, "N/A"));
                 CoordinateStorageDatabaseHelper helper = new CoordinateStorageDatabaseHelper(getApplicationContext());
+
                 helper.insertCoordinate(locationCoordinate);
-                fragment.update();
-                Toast.makeText(getApplicationContext(), location.toString(), Toast.LENGTH_SHORT).show(); // for testing polling rates
-//                updateUI();
+
+                addCoordinateToList(locationCoordinate);
+
+                fragment.update(mLastLocation, coordinates);
+
             }
 //            myLocationManager = MyLocationManager.getInstance(getApplicationContext()); //reinstantiate in case wifi state changes
         }
@@ -92,6 +98,8 @@ public class MyAccount extends ActionBarActivity
         NavigationDrawerFragment mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
+        coordinates = new ArrayList<Coordinate>();
+        loadCoordinates();
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -235,6 +243,19 @@ public class MyAccount extends ActionBarActivity
     private void enabledStopButton() {
         mStopButton.setEnabled(true);
         mStartButton.setEnabled(false);
+    }
+
+    /**
+     * This method is meant to grab the remote coordinates so that a local list can be kept and save
+     * data usage.
+     */
+    private void loadCoordinates() {
+        //remote.queryCoordinates
+        coordHelper.queryCoordinates();
+    }
+
+    private void addCoordinateToList(Coordinate coord) {
+        coordinates.add(coord);
     }
 
 

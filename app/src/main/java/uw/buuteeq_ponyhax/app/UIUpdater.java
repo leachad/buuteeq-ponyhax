@@ -4,11 +4,17 @@
 
 package uw.buuteeq_ponyhax.app;
 
+import android.location.Location;
+
+import java.util.List;
+
+import db.Coordinate;
+
 /**
  * Created by BrentYoung on 5/5/15.
  */
 public interface UIUpdater {
 
-    void update();
+    void update(Location currentLocation, List<Coordinate> locations);
 
 }

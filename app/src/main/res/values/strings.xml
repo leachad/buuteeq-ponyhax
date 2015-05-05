@@ -107,6 +107,7 @@
     <string name="speed_string">Speed: </string>
     <string name="total_distance_string">Total Distance Traveled: </string>
     <string name="total_distance_range_string">Total Distance Traveled During Interval: </string>
+    <string name="general_stats_string">General Statistics: </string>
 
 
     <!--

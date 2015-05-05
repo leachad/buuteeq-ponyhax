@@ -28,11 +28,60 @@
             android:text="@string/title_activity_my_account"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <LinearLayout
+        android:id="@+id/overall_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/sectional_background">
+
+
+        <TextView
+            android:id="@+id/text_overall_title"
+            style="@style/editTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:enabled="false"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="@string/general_stats_string" />
+
+        <TextView
+            android:id="@+id/text_total_distance"
+            style="@style/editTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:enabled="false"
+            android:text="@string/total_distance_string" />
+
+        <TextView
+            android:id="@+id/text_total_distance_interval"
+            style="@style/editTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="@string/total_distance_range_string" />
+
+        <TextView
+            android:id="@+id/text_account_numDataPoints"
+            style="@style/editTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="@string/num_data_points" />
+
+
+    </LinearLayout>
+
         <LinearLayout
-            android:id="@+id/card_layout"
+            android:id="@+id/recent_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@drawable/sectional_background">
 
             <TextView
                 android:id="@+id/text_account_name"
@@ -42,25 +91,49 @@
                 android:layout_marginTop="10dp"
                 android:enabled="false"
                 android:textStyle="bold"
+                android:gravity="center"
                 android:text="@string/recent_location_string" />
 
             <TextView
-                android:id="@+id/text_account_email"
+                android:id="@+id/text_latitude"
                 style="@style/editTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:enabled="false"
-                android:text="@string/email" />
+                android:text="@string/latitude_string" />
 
             <TextView
-                android:id="@+id/text_account_numDataPoints"
+                android:id="@+id/text_longitude"
                 style="@style/editTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:enabled="false"
-                android:text="@string/num_data_points" />
+                android:text="@string/longitude_string" />
+
+            <TextView
+                android:id="@+id/text_speed"
+                style="@style/editTextTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="@string/speed_string" />
+
+            <TextView
+                android:id="@+id/text_bearing"
+                style="@style/editTextTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="@string/bearing_string" />
+
+            <TextView
+                android:id="@+id/text_time"
+                style="@style/editTextTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="@string/time_stamp_string" />
 
 
         </LinearLayout>
