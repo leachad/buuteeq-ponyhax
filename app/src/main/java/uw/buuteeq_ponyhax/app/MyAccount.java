@@ -25,11 +25,11 @@ import android.widget.Toast;
 
 import java.util.Date;
 
+import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.User;
 import location_services.MyLocationManager;
 import location_services.MyLocationReceiver;
-import webservices.WebDriver;
 
 public class MyAccount extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -43,25 +43,31 @@ public class MyAccount extends ActionBarActivity
     private Button mStartButton;
     private Button mStopButton;
     private Location mLastLocation;
+    private SharedPreferences prefs;
+    private UIUpdater fragment;
 
     //SETUP RECEIVER WITH INNER CLASS
     private BroadcastReceiver mLocationReceiver = new MyLocationReceiver() {
 
         @Override
         public void onLocationChanged(Location location) {
-            Date polledDate = new Date(); //grabs date stamp
             mLastLocation = location;
-            if (location != null) { //This may or may not be a good condition
+            if (location != null) {
+                //Make new coordinate and insert into coordinate database
+                Coordinate locationCoordinate = new Coordinate(location.getLongitude(), location.getLatitude(), location.getTime(),
+                        location.getSpeed(), location.getBearing(), prefs.getString(User.USER_ID, "N/A"));
+                CoordinateStorageDatabaseHelper helper = new CoordinateStorageDatabaseHelper(getApplicationContext());
+                helper.insertCoordinate(locationCoordinate);
+                fragment.update();
                 Toast.makeText(getApplicationContext(), location.toString(), Toast.LENGTH_SHORT).show(); // for testing polling rates
-//                updateUI(); // Some call to MyMap
-
+//                updateUI();
             }
-            Toast.makeText(getApplicationContext(), "In changed", Toast.LENGTH_SHORT).show();
+//            myLocationManager = MyLocationManager.getInstance(getApplicationContext()); //reinstantiate in case wifi state changes
         }
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-
+            myLocationManager.startLocationUpdates((android.location.LocationListener) mLocationReceiver);
         }
 
         @Override
@@ -93,6 +99,7 @@ public class MyAccount extends ActionBarActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         //START location manager setup
+        prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
         myLocationManager = MyLocationManager.getInstance(getApplicationContext());
 
         mStartButton = (Button) findViewById(R.id.startButton);
@@ -157,6 +164,7 @@ public class MyAccount extends ActionBarActivity
         }
 
         if (choice) {
+            this.fragment = (UIUpdater) fragment;
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .commit();

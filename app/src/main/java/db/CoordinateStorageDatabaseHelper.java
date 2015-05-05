@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Class to implement a database for storing coordinate points.
@@ -17,7 +18,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "coordinate_storage.db";
+    public static final String DATABASE_NAME = "coordinate_storage_db";
     public static final String TABLE_NAME = "coordinate";
     public static final String COLUMN_ROW_ID = "row_id";
     public static final String COLUMN_LONGITUDE = "longitude";
@@ -38,8 +39,8 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_NAME + " ( " + COLUMN_ROW_ID + " integer primary key autoincrement " + COLUMN_LONGITUDE + " long "
-                + COLUMN_LATITUDE + " long " + COLUMN_TIME_STAMP + " long " + COLUMN_USER_ID + " blob(1024) " + COLUMN_PHOTO + ") ");
+        db.execSQL("create table " + TABLE_NAME + " ( " + COLUMN_ROW_ID + " integer primary key autoincrement, " + COLUMN_LONGITUDE + " long, "
+                + COLUMN_LATITUDE + " long, " + COLUMN_TIME_STAMP + " long, " + COLUMN_USER_ID + " varchar(100), " + COLUMN_PHOTO + " blob(1024) )");
 
     }
 
@@ -65,6 +66,7 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
             cv.put(COLUMN_TIME_STAMP, coordinate.getTimeStamp());
             cv.put(COLUMN_USER_ID, coordinate.getUserID());
             insertConfirm = getWritableDatabase().insert(TABLE_NAME, null, cv);
+            Log.d("INSERT", coordinate.getTimeStamp() + "");
         }
 
         return insertConfirm;

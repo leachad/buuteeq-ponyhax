@@ -41,7 +41,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:enabled="false"
-                android:text="@string/userNamePrompt" />
+                android:textStyle="bold"
+                android:text="@string/recent_location_string" />
 
             <TextView
                 android:id="@+id/text_account_email"

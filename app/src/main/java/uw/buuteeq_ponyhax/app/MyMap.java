@@ -23,9 +23,13 @@ import location_services.MyLocationManager;
 /**
  * MapFragment used to ease the transition between NavigationDrawer submenus
  */
-public class MyMap extends Fragment implements OnMapReadyCallback {
+public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
 
     private GoogleMap mMap;
+
+    public void update() {
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

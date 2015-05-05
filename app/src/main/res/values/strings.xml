@@ -72,7 +72,7 @@
     <string name="nameField">Full Name</string>
     <string name="userNamePrompt">User Name</string>
     <string name="confirmButton">Confirm</string>
-    <string name="title_activity_my_account">MyAccount</string>
+    <string name="title_activity_my_account">Overview</string>
     <string name="reset_password">Password Reset</string>
 
     <string name="title_activity_my_map">Map</string>
@@ -94,6 +94,19 @@
     Misc. Resources
     -->
     <string name="user_not_found">User not found</string>
+    
+    <!--
+    Overview Fragment resources
+    -->
+    
+    <string name="recent_location_string">My Last Recorded Location:</string>
+    <string name="latitude_string">Latitude: </string>
+    <string name="longitude_string">Longitude: </string>
+    <string name="bearing_string">Bearing: </string>
+    <string name="time_stamp_string">Time: </string>
+    <string name="speed_string">Speed: </string>
+    <string name="total_distance_string">Total Distance Traveled: </string>
+    <string name="total_distance_range_string">Total Distance Traveled During Interval: </string>
 
 
     <!--

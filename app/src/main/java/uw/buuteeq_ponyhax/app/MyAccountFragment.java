@@ -21,7 +21,11 @@ import db.User;
  * MyAccountFragment allows for flexibility of UI when navigating through submenus with
  * the navigation drawer.
  */
-public class MyAccountFragment extends Fragment {
+public class MyAccountFragment extends Fragment implements UIUpdater {
+
+    public void update() {
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

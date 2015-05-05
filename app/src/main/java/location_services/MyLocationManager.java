@@ -11,6 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 
 /**
  * Created by BrentYoung on 4/27/15.
@@ -19,13 +20,13 @@ public class MyLocationManager {
 
     public static final String ACTION_LOCATION = "android.intent.action.LOCALE_CHANGED";
 
-    private static final int DEFAULT_INTERVAL = 6000;
+    private static final int DEFAULT_INTERVAL = 60000; //1 min
 
-    private static final int DATA_ONLY_DISTANCE = 10;
-    private static final int CONNECTED_WIFI_DISTANCE = 1;
+    private static final int DATA_ONLY_DISTANCE = 1000;
+    private static final int CONNECTED_WIFI_DISTANCE = 10; //10 meters
 
-    private static final int DATA_ONLY_RATE = 10;
-    private static final int CONNECTED_WIFI_RATE = 20;
+    private static final int DATA_ONLY_RATE = 300000; //5 min 300000
+    private static final int CONNECTED_WIFI_RATE = 120000; //2 min 120000
 
     private static MyLocationManager ourInstance;
     private static Context mAppContext;
@@ -34,10 +35,13 @@ public class MyLocationManager {
     //For Wifi checks
 //    private static ConnectivityManager connManager = (ConnectivityManager) mAppContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 //    private static NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+    private static WifiManager wifi;
+
     private LocationManager mLocationManager;
 
     private MyLocationManager(Context appContext) {
         mAppContext = appContext;
+        wifi = (WifiManager) mAppContext.getSystemService(Context.WIFI_SERVICE);
         mLocationManager = (LocationManager) mAppContext.getSystemService(Context.LOCATION_SERVICE);
         minTime = DEFAULT_INTERVAL;
     }
@@ -53,16 +57,6 @@ public class MyLocationManager {
             ourInstance = new MyLocationManager(context.getApplicationContext());
         }
 
-        //set polling state using constants
-        //WIFI based
-//        if (mWifi.isConnected()) {
-//            minTime = CONNECTED_WIFI_RATE;
-//            minDistance = CONNECTED_WIFI_DISTANCE;
-//        } else {
-//            minTime = DATA_ONLY_RATE;
-//            minDistance = DATA_ONLY_DISTANCE;
-//        }
-
         return ourInstance;
     }
 
@@ -74,6 +68,15 @@ public class MyLocationManager {
 
     public void startLocationUpdates(LocationListener listener) {
         String provider = LocationManager.GPS_PROVIDER;
+        //set polling state using constants
+        //WIFI based
+//        if (wifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED) {
+//            minTime = CONNECTED_WIFI_RATE;
+//            minDistance = CONNECTED_WIFI_DISTANCE;
+//        } else {
+//            minTime = DATA_ONLY_RATE;
+//            minDistance = DATA_ONLY_DISTANCE;
+//        }
 
         //start updates from location manager
         PendingIntent pi = getLocationPendingIntent(true);
