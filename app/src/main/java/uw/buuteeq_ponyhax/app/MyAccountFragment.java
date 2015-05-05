@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Calendar;
 import java.util.List;
 
 import db.Coordinate;
@@ -27,6 +28,8 @@ import db.User;
  */
 public class MyAccountFragment extends Fragment implements UIUpdater {
 
+    private static final String UNIT = "M";
+
     private TextView mTotalDistanceView;
     private TextView mIntervalDistanceView;
     private TextView mDataPointsView;
@@ -37,11 +40,82 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
     private TextView mTimeView;
 
 
+
     public void update(Location currentLocation, List<Coordinate> locations) {
+        SharedPreferences prefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
 
+        long startTime = prefs.getLong(Coordinate.START_TIME, 0);
+        long endTime = prefs.getLong(Coordinate.END_TIME, 0);
 
+        double distanceTraveled = 0.;
+        double distanceTraveledInterval = 0.;
+
+        Coordinate prev = null;
+
+        for (Coordinate coordinate: locations) {
+
+            if (startTime == 0 && endTime == Calendar.getInstance().getTimeInMillis() || (coordinate.getTimeStamp() < endTime && coordinate.getTimeStamp() > startTime)) {
+
+                if (prev != null) distanceTraveledInterval += calcDistance(prev, coordinate, UNIT);
+
+            }
+
+            if (prev != null) distanceTraveled += calcDistance(prev, coordinate, UNIT);
+
+            prev = coordinate;
+        }
+
+        mLongitudeView.setText(R.string.longitude_string + " " + currentLocation.getLongitude());
+        mLatitudeView.setText(R.string.latitude_string + " " + currentLocation.getLatitude());
+        mSpeedView.setText(R.string.speed_string + " " + currentLocation.getSpeed());
+        mBearingView.setText(R.string.bearing_string + " " + currentLocation.getBearing());
+        mTimeView.setText(R.string.time_stamp_string + " " + currentLocation.getTime());
+
+        mTotalDistanceView.setText(R.string.total_distance_string + " " + distanceTraveled);
+        mIntervalDistanceView.setText(R.string.total_distance_range_string + " " + distanceTraveledInterval);
+        mDataPointsView.setText(R.string.num_data_points + " " + locations.size());
 
     }
+
+    private double calcDistance(Coordinate first, Coordinate second, String unit) {
+
+        double lon1 = first.getLongitude();
+        double lon2 = second.getLongitude();
+        double lat1 = first.getLatitude();
+        double lat2 = second.getLatitude();
+
+        double theta = lon1 - lon2;
+
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+
+        dist = Math.acos(dist);
+
+        dist = rad2deg(dist);
+
+        dist = dist * 60 * 1.1515;
+
+        if (unit == "K") {
+
+            dist = dist * 1.609344;
+
+        } else if (unit == "N") {
+
+            dist = dist * 0.8684;
+
+        }
+
+        return (dist);
+
+    }
+
+    private double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private double rad2deg(double rad) {
+        return (rad * 180 / Math.PI);
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

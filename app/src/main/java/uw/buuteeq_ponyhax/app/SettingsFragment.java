@@ -5,6 +5,7 @@
 package uw.buuteeq_ponyhax.app;
 
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -14,8 +15,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import db.Coordinate;
 import db.User;
 import webservices.JsonBuilder;
 import webservices.WebDriver;
@@ -25,11 +28,13 @@ import webservices.WebDriver;
  * Created by eduard_prokhor on 4/13/15.
  * edited by andrew leach on 4/17/15
  */
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment implements UIUpdater {
 
     private static final String RESET_PROMPT = "Your password can be reset with the link sent to: ";
     private static final String RESET_FAILED = "Unable to execute reset request. Please try again later.";
     Button resetPassword;
+
+    public void update(Location currentLocation, List<Coordinate> locations) {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

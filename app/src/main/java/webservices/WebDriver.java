@@ -86,7 +86,8 @@ public class WebDriver {
         return new UserLogin().execute().get();
     }
 
-    public static List<Coordinate> getLoggedCoordinates(final long theStartTime, final long theEndTime) throws ExecutionException, InterruptedException {
+    public static List<Coordinate> getLoggedCoordinates(User theUser, final long theStartTime, final long theEndTime) throws ExecutionException, InterruptedException {
+        myUser = theUser;
         myStartTime = theStartTime;
         myEndTime = theEndTime;
         return new GetUserCoordinates().execute().get();

@@ -24,14 +24,17 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.User;
 import location_services.MyLocationManager;
 import location_services.MyLocationReceiver;
+import webservices.WebDriver;
 
 public class MyAccount extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -56,16 +59,18 @@ public class MyAccount extends ActionBarActivity
         public void onLocationChanged(Location location) {
             mLastLocation = location;
             if (location != null) {
+                Toast.makeText(getApplicationContext(), "Got Coord", Toast.LENGTH_SHORT).show();
                 //Make new coordinate and insert into coordinate database
                 Coordinate locationCoordinate = new Coordinate(location.getLongitude(), location.getLatitude(), location.getTime(),
                         location.getSpeed(), location.getBearing(), prefs.getString(User.USER_ID, "N/A"));
-                CoordinateStorageDatabaseHelper helper = new CoordinateStorageDatabaseHelper(getApplicationContext());
 
-                helper.insertCoordinate(locationCoordinate);
+                coordHelper.insertCoordinate(locationCoordinate);
 
                 addCoordinateToList(locationCoordinate);
 
                 fragment.update(mLastLocation, coordinates);
+
+
 
             }
 //            myLocationManager = MyLocationManager.getInstance(getApplicationContext()); //reinstantiate in case wifi state changes
@@ -98,7 +103,8 @@ public class MyAccount extends ActionBarActivity
         NavigationDrawerFragment mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
-        coordinates = new ArrayList<Coordinate>();
+        coordinates = new ArrayList<>();
+        coordHelper = new CoordinateStorageDatabaseHelper(getApplicationContext());
         loadCoordinates();
 
         // Set up the drawer.
@@ -173,6 +179,7 @@ public class MyAccount extends ActionBarActivity
 
         if (choice) {
             this.fragment = (UIUpdater) fragment;
+//            this.fragment.update(mLastLocation, coordinates);
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .commit();
@@ -250,8 +257,26 @@ public class MyAccount extends ActionBarActivity
      * data usage.
      */
     private void loadCoordinates() {
-        //remote.queryCoordinates
-        coordHelper.queryCoordinates();
+        SharedPreferences prefs = getSharedPreferences(Coordinate.COORDINATE_PREFS, MODE_PRIVATE);
+        SharedPreferences userPrefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
+        User theUser = new User();
+        theUser.setID(userPrefs.getString(User.USER_ID, "0"));
+        coordinates = new ArrayList<>();
+        try {
+            List<Coordinate> theList = WebDriver.getLoggedCoordinates(theUser, prefs.getLong(Coordinate.START_TIME, 0), prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
+            if (theList != null) {
+                for (Coordinate c : theList) {
+                    coordinates.add(c);
+                }
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Toast.makeText(getApplicationContext(), "load finished", Toast.LENGTH_SHORT).show();
+//        coordHelper.queryCoordinates();
     }
 
     private void addCoordinateToList(Coordinate coord) {
