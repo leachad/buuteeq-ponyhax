@@ -12,10 +12,13 @@ import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import webservices.JsonBuilder;
+import webservices.WebDriver;
 
 /**
  * Class to implement a database for storing coordinate points.
@@ -101,6 +104,28 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
         return isUnique;
     }
 
+    /**
+     * Publicly accessible method to batch publish local coordinates to the database based on the data
+     * that the user has obtained while polling gps every 'n' seconds.
+     *
+     * @param theLocalCoordinates is a list of Coordinates generated before pushed to webservices
+     * @return isSuccess
+     */
+    public boolean publishCoordinateBatch(final List<Coordinate> theLocalCoordinates) {
+        boolean isSuccess = false;
+        try {
+            String result = WebDriver.addCoordinates(theLocalCoordinates);
+            if (result.matches(JsonBuilder.VAL_SUCCESS)) {
+                isSuccess = true;
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return isSuccess;
+
+    }
+
 
     /**
      * This method returns an instance of a UserCursor to the calling code. Does NOT ensure that
@@ -115,6 +140,7 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * This method returns all of the locally stored Coordinates as a List.
+     *
      * @param context application context
      * @return list of Coordinates store locally
      */

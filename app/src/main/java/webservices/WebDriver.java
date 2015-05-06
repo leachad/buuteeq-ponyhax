@@ -66,9 +66,9 @@ public class WebDriver {
         return new AddUser().execute().get();
     }
 
-    public static void addCoordinates(List<Coordinate> theCoordinateList) {
+    public static String addCoordinates(List<Coordinate> theCoordinateList) throws ExecutionException, InterruptedException {
         myCoordinateList = theCoordinateList;
-        new AddCoordinates().execute();
+        return new AddCoordinates().execute().get();
     }
 
     //TODO Write a similar static method in here for the Reset Password that will sit nicely inside a webview
@@ -163,7 +163,7 @@ public class WebDriver {
 
         protected String doInBackground(Void... addCoordinates) {
 
-            String result = "";
+            String result = JsonBuilder.VAL_FAIL;
             for (Coordinate coordinate : myCoordinateList) {
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpPost httpPost = new HttpPost(requestBuilder.getAddCoordinateRequest(coordinate, myUser.getUserID()));

@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
@@ -23,11 +24,10 @@ import db.User;
  * Created by leachad on 5/4/2015.
  * A Custom class that has the Date and Time Picker utilities on one Dialog Box.
  */
-public class RangeDialogFragment extends DialogFragment{
+public class RangeDialogFragment extends DialogFragment {
 
     private DatePicker mDatePicker;
     private TimePicker mTimePicker;
-
 
 
     @Override
@@ -35,13 +35,11 @@ public class RangeDialogFragment extends DialogFragment{
         Calendar calendar = Calendar.getInstance();
 
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        dialogBuilder.setView(getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_range_picker, null));
+        View curView = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_range_picker, null);
+        dialogBuilder.setView(curView);
 
-        mDatePicker = (DatePicker) getActivity().findViewById(R.id.rangeDatePicker);
-        mDatePicker.init(calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
-                calendar.get(Calendar.YEAR), null);
-
-        mTimePicker = (TimePicker) getActivity().findViewById(R.id.rangeTimePicker);
+        mDatePicker = (DatePicker) curView.findViewById(R.id.rangeDatePicker);
+        mTimePicker = (TimePicker) curView.findViewById(R.id.rangeTimePicker);
 
         dialogBuilder.setPositiveButton(R.string.confirmRange, new DialogInterface.OnClickListener() {
             @Override
@@ -55,10 +53,14 @@ public class RangeDialogFragment extends DialogFragment{
         /**
          * Modify the dialog range window based on which button was clicked.
          */
-       if (this.getTag().matches(RangePickerFragment.START_RANGE)) {
+        if (this.getTag().matches(RangePickerFragment.START_RANGE)) {
             dialogBuilder.setTitle(R.string.startOfRange);
         } else {
             dialogBuilder.setTitle(R.string.endOfRange);
+            //Set the current day and time to the current time in milliseconds and current day
+            mDatePicker.init(calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.YEAR), null);
+            mTimePicker.setCurrentHour(calendar.get(Calendar.HOUR));
+            mTimePicker.setCurrentMinute(calendar.get(Calendar.MINUTE));
         }
 
         return dialogBuilder.create();
@@ -66,6 +68,7 @@ public class RangeDialogFragment extends DialogFragment{
 
     /**
      * Private helper method to return the combined long as a time stamp.
+     *
      * @return calTimeLong
      */
     private long getCalAndTimeLong() {
@@ -78,7 +81,6 @@ public class RangeDialogFragment extends DialogFragment{
     /**
      * Private helper method to determine which dialog range fragment currently has focus
      * and to set the prefs based on that current coordinate.
-     *
      */
     private void setPrefsFromBoundary() {
         SharedPreferences prefs = getActivity().getApplicationContext()

@@ -274,9 +274,7 @@ public class MyAccount extends ActionBarActivity
                     coordinates.add(c);
                 }
             }
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
 
