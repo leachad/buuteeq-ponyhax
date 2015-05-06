@@ -4,10 +4,8 @@
 
 package uw.buuteeq_ponyhax.app;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +16,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.List;
-
-import db.Coordinate;
-import location_services.MyLocationManager;
 
 /**
  * MapFragment used to ease the transition between NavigationDrawer submenus
@@ -73,13 +66,26 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
      * Testing purposes only, but we can implement an actual setup later.
      */
     private void setUpMap() {
-        Log.d("test", "setUpMap");
-        LatLng testLocation = new LatLng(47.24458, -122.437618);
-        mMap.addMarker(new MarkerOptions().position(testLocation).title("Marker"));
+        //Set up coordinates
+        LatLng testLocation = new LatLng(47.244911, -122.438871);
+        LatLng testLocation2 = new LatLng(47.244889, -122.436940);
+
+        //Add the markers between two points
+        mMap.addMarker(new MarkerOptions().position(testLocation).title("Location 1"));
+        mMap.addMarker(new MarkerOptions().position(testLocation2).title("Location 2"));
+
+        //Add the line between the two points
+        PolylineOptions line = new PolylineOptions();
+        line.add(testLocation, testLocation2);
+        line.width(5);
+        line.color(Color.YELLOW);
+
+        mMap.addPolyline(line);
+
+
+        //Camera movement
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(testLocation, 17));
-
-        //TODO Are we loading all the previously logged points on the map here by default?
     }
 
     /**
