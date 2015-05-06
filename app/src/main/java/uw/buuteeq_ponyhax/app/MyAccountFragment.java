@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import db.Coordinate;
+import db.CoordinateStorageDatabaseHelper;
 import db.User;
 
 /**
@@ -65,15 +66,29 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
             prev = coordinate;
         }
 
-        mLongitudeView.setText(R.string.longitude_string + " " + currentLocation.getLongitude());
-        mLatitudeView.setText(R.string.latitude_string + " " + currentLocation.getLatitude());
-        mSpeedView.setText(R.string.speed_string + " " + currentLocation.getSpeed());
-        mBearingView.setText(R.string.bearing_string + " " + currentLocation.getBearing());
-        mTimeView.setText(R.string.time_stamp_string + " " + currentLocation.getTime());
+        if (currentLocation != null) {
+            mLongitudeView.setText(getResources().getString(R.string.longitude_string) + " " + currentLocation.getLongitude());
+            mLatitudeView.setText(getResources().getString(R.string.latitude_string) + " " + currentLocation.getLatitude());
+            mSpeedView.setText(getResources().getString(R.string.speed_string) + " " + currentLocation.getSpeed());
+            mBearingView.setText(getResources().getString(R.string.bearing_string) + " " + currentLocation.getBearing());
+            mTimeView.setText(getResources().getString(R.string.time_stamp_string) + " " + currentLocation.getTime());
 
-        mTotalDistanceView.setText(R.string.total_distance_string + " " + distanceTraveled);
-        mIntervalDistanceView.setText(R.string.total_distance_range_string + " " + distanceTraveledInterval);
-        mDataPointsView.setText(R.string.num_data_points + " " + locations.size());
+
+        } else {
+            if (!locations.isEmpty()) {
+                Coordinate last = locations.get(0);
+                mLongitudeView.setText(getResources().getString(R.string.longitude_string) + " " + last.getLongitude());
+                mLatitudeView.setText(getResources().getString(R.string.latitude_string) + " " + last.getLatitude());
+                mSpeedView.setText(getResources().getString(R.string.speed_string) + " " + last.getUserSpeed());
+                mBearingView.setText(getResources().getString(R.string.bearing_string) + " " + last.getHeading());
+                mTimeView.setText(getResources().getString(R.string.time_stamp_string) + " " + last.getTimeStamp());
+            }
+        }
+
+        mTotalDistanceView.setText(getResources().getString(R.string.total_distance_string) + " " + distanceTraveled + " miles");
+        mIntervalDistanceView.setText(getResources().getString(R.string.total_distance_range_string) + " " + distanceTraveledInterval + " miles");
+        mDataPointsView.setText(getResources().getString(R.string.num_data_points) + " " + locations.size());
+
 
     }
 
@@ -142,6 +157,9 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
         mBearingView = (TextView) getActivity().findViewById(R.id.text_bearing);
         mTimeView = (TextView) getActivity().findViewById(R.id.text_time);
 
+        CoordinateStorageDatabaseHelper db = new CoordinateStorageDatabaseHelper(getActivity().getApplicationContext());
+        List<Coordinate> coordinates = db.getAllCoordinates(getActivity().getApplicationContext());
+        update(null, coordinates);
 
     }
 }

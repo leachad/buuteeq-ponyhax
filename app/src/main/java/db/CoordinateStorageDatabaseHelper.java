@@ -6,11 +6,16 @@ package db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class to implement a database for storing coordinate points.
@@ -39,8 +44,9 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_NAME + " ( " + COLUMN_ROW_ID + " integer primary key autoincrement, " + COLUMN_LONGITUDE + " long, "
-                + COLUMN_LATITUDE + " long, " + COLUMN_TIME_STAMP + " long, " + COLUMN_USER_ID + " varchar(100), " + COLUMN_PHOTO + " blob(1024) )");
+        db.execSQL("create table " + TABLE_NAME + " ( " + COLUMN_ROW_ID + " integer primary key autoincrement, " + COLUMN_LONGITUDE + " double, "
+                + COLUMN_LATITUDE + " double, " + COLUMN_TIME_STAMP + " long, " + COLUMN_USER_ID + " varchar(100), " + COLUMN_USER_SPEED + " double, "
+                + COLUMN_USER_HEADING + " double, " + COLUMN_PHOTO + " blob(1024) )");
 
     }
 
@@ -65,6 +71,8 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
             cv.put(COLUMN_LATITUDE, coordinate.getLatitude());
             cv.put(COLUMN_TIME_STAMP, coordinate.getTimeStamp());
             cv.put(COLUMN_USER_ID, coordinate.getUserID());
+            cv.put(COLUMN_USER_SPEED, coordinate.getUserSpeed());
+            cv.put(COLUMN_USER_HEADING, coordinate.getHeading());
             insertConfirm = getWritableDatabase().insert(TABLE_NAME, null, cv);
             Log.d("INSERT", coordinate.getTimeStamp() + "");
         }
@@ -86,6 +94,8 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
             //TODO should we be making evaluations of unique coordinates? Perhaps a user
             //wants to update the picture or data in regards to a specific location or set of
             //locations?
+            //I think that since this is a data mining app, information about them not moving at certain times can also
+            //be useful, so coordinates that are the same save for the time stamp should be allowed
         }
         cursor.close();
         return isUnique;
@@ -104,6 +114,32 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method returns all of the locally stored Coordinates as a List.
+     * @param context application context
+     * @return list of Coordinates store locally
+     */
+    public List<Coordinate> getAllCoordinates(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        List<Coordinate> coordinates = new ArrayList<>();
+        Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_TIME_STAMP, new String[]{});
+
+        while (cursor.moveToNext()) {
+
+            Coordinate coordinate = new Coordinate(cursor.getDouble(cursor.getColumnIndex(COLUMN_LONGITUDE)),
+                    cursor.getDouble(cursor.getColumnIndex(COLUMN_LATITUDE)),
+                    cursor.getLong(cursor.getColumnIndex(COLUMN_TIME_STAMP)),
+                    cursor.getDouble(cursor.getColumnIndex(COLUMN_USER_SPEED)),
+                    cursor.getDouble(cursor.getColumnIndex(COLUMN_USER_HEADING)),
+                    prefs.getString(User.USER_ID, "0"));
+            coordinates.add(coordinate);
+
+        }
+
+        return coordinates;
+
+    }
+
+    /**
      * Instance of a private inner class that returns a Cursors that probes the rows
      * from the user table.
      */
@@ -113,7 +149,7 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
         }
 
         /**
-         * Returns a User object configured for the current row, or null
+         * Returns a Coordinate object configured for the current row, or null
          * if the current row is invalid. Allows the calling code to iterate
          * over the entirety of the rows in the database.
          *

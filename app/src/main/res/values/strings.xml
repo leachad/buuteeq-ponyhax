@@ -105,8 +105,8 @@
     <string name="bearing_string">Bearing: </string>
     <string name="time_stamp_string">Time: </string>
     <string name="speed_string">Speed: </string>
-    <string name="total_distance_string">Total Distance Traveled: </string>
-    <string name="total_distance_range_string">Total Distance Traveled During Interval: </string>
+    <string name="total_distance_string">Total Distance: </string>
+    <string name="total_distance_range_string">Total Interval Distance: </string>
     <string name="general_stats_string">General Statistics: </string>
 
 

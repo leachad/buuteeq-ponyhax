@@ -70,8 +70,6 @@ public class MyAccount extends ActionBarActivity
 
                 fragment.update(mLastLocation, coordinates);
 
-
-
             }
 //            myLocationManager = MyLocationManager.getInstance(getApplicationContext()); //reinstantiate in case wifi state changes
         }
@@ -275,8 +273,12 @@ public class MyAccount extends ActionBarActivity
             e.printStackTrace();
         }
 
+        List<Coordinate> moreCoords = coordHelper.getAllCoordinates(getApplicationContext());
+        for (Coordinate c: moreCoords) {
+            coordinates.add(c);
+        }
+
         Toast.makeText(getApplicationContext(), "load finished", Toast.LENGTH_SHORT).show();
-//        coordHelper.queryCoordinates();
     }
 
     private void addCoordinateToList(Coordinate coord) {
