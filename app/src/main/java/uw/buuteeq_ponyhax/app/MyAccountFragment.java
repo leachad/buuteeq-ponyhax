@@ -46,7 +46,7 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
         SharedPreferences prefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
 
         long startTime = prefs.getLong(Coordinate.START_TIME, 0);
-        long endTime = prefs.getLong(Coordinate.END_TIME, 0);
+        long endTime = prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis());
 
         double distanceTraveled = 0.;
         double distanceTraveledInterval = 0.;
@@ -55,7 +55,7 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
 
         for (Coordinate coordinate: locations) {
 
-            if (startTime == 0 && endTime == Calendar.getInstance().getTimeInMillis() || (coordinate.getTimeStamp() < endTime && coordinate.getTimeStamp() > startTime)) {
+            if ((startTime == 0 && endTime == Calendar.getInstance().getTimeInMillis()) || (coordinate.getTimeStamp() < endTime && coordinate.getTimeStamp() > startTime)) {
 
                 if (prev != null) distanceTraveledInterval += calcDistance(prev, coordinate, UNIT);
 
