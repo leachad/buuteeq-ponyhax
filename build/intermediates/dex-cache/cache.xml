@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="73ccb92b70112f2e463e415ef8d7275de7da6516">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-cfcc530278e3ead55a7f652a316ce2986990f7be.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9224bc4c54ba95147c7eabd874573763c07cb6be">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-a4c87c974ae028a4379f89d814d7a1dc1be4bded.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e3d791b42eaa90416cd0b2d2e608092794a3baa4">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-8304784b22f23babc249e4c000035d8a1e13fa38.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-nearby/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="ef5f051e7308febe289dc93c67c5f32785b4260a">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-526395b42a3f104e734f37f61f42ae4f3a854d8d.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4cd0b093824b3228fffc21ea369b98d0b1db6566">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-1c4224566d6da257da4e7086fc6bc4461a6b13c7.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a96b762bde4139de855735f175ec4d17dca55a6d">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-650c7879033b4efd91272bb888bb019b9e5a082b.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/22.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="c6d79137693d494dee16372d3921f919eb724ced">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-65b0349655727542dc7c695145ae7c836bb6bae2.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="055783146ba9654a725442563be78cad303aad1f">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-604a825392a154dc484ea1b88b66d7217f890d79.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="17f8750d5c0749e44dd7c54aa390d9c937803825">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-73f0ce1bc1f1b30f729146a11ea23321209dd92c.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/libs/internal_impl-22.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b5b92f469d515a13d778900f6d50c03d12f35504">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/internal_impl-22.0.0-94796f4f6553faa26127437bda2198c538907434.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-fitness/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3c0b099f9de16b265ecd6122fcb603e7d0d29f90">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-9630018df005ea0ad4a4f7cdb6e2f1eb4359662a.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-safetynet/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="c976518693e89ad44fbfccfc654941eaec198d08">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-adecbd29664933ba0b02d24327975f9c50f85e6a.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Development/Android/android-sdk-macosx/extras/android/m2repository/com/android/support/support-annotations/22.0.0/support-annotations-22.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="685d0b2c590447e85284ed84712cb363ba04eff8">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/support-annotations-22.0.0-e6f56d734e4fa861718045461fc8953f50d2c732.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0e8228b4bc69c6a2c8d7c18498a77e53417d2574">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-ccd141105823a73f2137a740a3ffc29d8017fd9b.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="29fd6d3794b71491c2789708cd8d03c71feb8954">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-be5592172723ebcb8fb7362c4671ac3bef4b6032.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4c93d99d454c975536bbe3b42283eee847f03ea3">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-5b2d105b3a40d096f405818080f6b668c63b03f8.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-drive/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="41b3870cbe5fa546d8095b5b89d42cb69f3dd175">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-7b836f10ae48c934c5267a9cae496a00772a9096.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/22.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="11842de6a309c447b3a3d60d73ad637a87c58994">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-d3c856aa0dfbe820310c65aa8e20dbd856736d39.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-panorama/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="1c5a76debf0c2857ccad422c4a80ed785982f8df">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-263b36e83678ee09b8849df9ea9b241e37712073.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3033cc3a2c68dff3e5b646d6d084bdbdf7d00b25">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-05a6c31c37e7dfa1dfd7dbcc01be01d1bfc702f5.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appstate/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="7ff613bf78ab057293892fdbd4169eda899c89b9">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-41e47d8c4327ea001c5007015c584a0133a39696.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a08d65794b844d8e7540bf9a33859bf3b2482d7f">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-7cfa24fea2e26344944d15105de3894f5fdfbca6.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-identity/7.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="fb04b12526b0073c7fb1ebb70c5842d82ee95596">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-14eee18fc811b07a0c0dc08b9638f3d293337997.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="d84409890828e07d344a3b9b1da545dba9897b51">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-2f1e465812ca2da173bacc306a7ea857dd0bb060.jar" />
+    </item>
+    <item
+        jar="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4e86306289ace4aa0cfec44a05ed2b410d36989d">
+        <dex dex="/Users/eduard_prokhor/Documents/Git/buuteeq-ponyhax/app/build/intermediates/pre-dexed/debug/classes-88fbe4622c6ff001e7b3aad53c123e1f5d15c5f0.jar" />
+    </item>
+
+</items>
