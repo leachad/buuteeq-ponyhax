@@ -260,6 +260,13 @@ public class MyAccount extends ActionBarActivity
         User theUser = new User();
         theUser.setID(userPrefs.getString(User.USER_ID, "0"));
         coordinates = new ArrayList<>();
+
+        //Naturally in time order due to the local points being the most recent
+        List<Coordinate> moreCoords = coordHelper.getAllCoordinates(getApplicationContext());
+        for (Coordinate c: moreCoords) {
+            coordinates.add(c);
+        }
+
         try {
             List<Coordinate> theList = WebDriver.getLoggedCoordinates(theUser, prefs.getLong(Coordinate.START_TIME, 0), prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
             if (theList != null) {
@@ -271,11 +278,6 @@ public class MyAccount extends ActionBarActivity
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-
-        List<Coordinate> moreCoords = coordHelper.getAllCoordinates(getApplicationContext());
-        for (Coordinate c: moreCoords) {
-            coordinates.add(c);
         }
 
         Toast.makeText(getApplicationContext(), "load finished", Toast.LENGTH_SHORT).show();
