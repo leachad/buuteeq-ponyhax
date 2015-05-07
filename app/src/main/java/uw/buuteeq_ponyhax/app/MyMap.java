@@ -20,35 +20,28 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.Date;
 import java.util.List;
 
 import db.Coordinate;
+import db.CoordinateStorageDatabaseHelper;
 
 /**
- * MapFragment used to ease the transition between NavigationDrawer submenus
+ * Created by Huy Ngo
+ * MapFragment is used to display the map into a fragment so that it is an option in NavigationDrawer.
  */
 public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
 
+    /**
+     * GoogleMap Object
+     */
     private GoogleMap mMap;
 
-    public void update(Location currentLocation, List<Coordinate> locations) {
-
-    }
-
-    public void updateView() {
-
-    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         super.onCreateView(inflater, container, savedInstanceState);
-
-
-        //start location updates when the activity first starts up
-        //TODO Figure out why the Location Manager keeps throwing errors
-        //MyLocationManager.getInstance(getActivity()).startLocationUpdates();
-
         return inflater.inflate(R.layout.activity_my_map, container, false);
     }
 
@@ -57,7 +50,6 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
     public void onResume() {
         super.onResume();
         setUpMapIfNeeded();
-
     }
 
     /**
@@ -73,7 +65,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
 
 
     /**
-     * Testing purposes only, but we can implement an actual setup later.
+     * Testing purposes only.
      */
     private void setUpMap() {
         //Set up coordinates
@@ -106,7 +98,70 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        setUpMap();
+        CoordinateStorageDatabaseHelper db = new CoordinateStorageDatabaseHelper(getActivity().getApplicationContext());
+        List<Coordinate> coordinates = db.getAllCoordinates(getActivity().getApplicationContext());
+        update(null, coordinates);
+        //setUpMap();
+    }
+
+    /**
+     * When there is an update in location, it will add the new location to the map.
+     *
+     * @param currentLocation current location
+     * @param locations the list of all coordinates
+     */
+    public void update(Location currentLocation, List<Coordinate> locations) {
+        if (locations.size() == 1) {
+            LatLng location1 = addLocation(locations.get(0));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, 17));
+        } else if (locations.size() > 1) {
+            Coordinate previousLocation = null;
+            for (Coordinate location : locations) {
+                addLocation(location);
+                if (previousLocation != null) {
+                    addLine(previousLocation, location);
+                }
+                previousLocation = location;
+            }
+            LatLng lastLocation = new LatLng(previousLocation.getLatitude(), previousLocation.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 17));
+        }
+    }
+
+    /**
+     * This method is for adding individual points to the map.
+     *
+     * @param location the location
+     * @return a LatLng object
+     */
+    private LatLng addLocation(Coordinate location) {
+        LatLng location1 = new LatLng(location.getLatitude(), location.getLongitude());
+        Date date = new Date(location.getTimeStamp() * 1000);
+        mMap.addMarker(new MarkerOptions().position(location1).title(date.toString()));
+        return location1;
+    }
+
+    /**
+     * This method is for adding the lines between two points.
+     *
+     * @param location1 location one
+     * @param location2 location two
+     */
+    private void addLine(Coordinate location1, Coordinate location2) {
+        LatLng testLocation = new LatLng(location1.getLatitude(), location1.getLongitude());
+        LatLng testLocation2 = new LatLng(location2.getLatitude(), location2.getLongitude());
+
+        PolylineOptions line = new PolylineOptions();
+        line.add(testLocation, testLocation2);
+        line.width(5);
+        line.color(Color.YELLOW);
+
+        mMap.addPolyline(line);
+
+    }
+
+    public void updateView() {
+        //Currently, do nothing for now
     }
 
 
