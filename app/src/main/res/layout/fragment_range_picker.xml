@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/startDateText"
                     android:layout_gravity="center"
-                    style="@style/buttonTheme"/>
+                    style="@style/lightButtonTheme"/>
 
             </LinearLayout>
 
@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/endDateText"
                     android:layout_gravity="center"
-                    style="@style/buttonTheme"/>
+                    style="@style/lightButtonTheme"/>
                 </LinearLayout>
 
         </LinearLayout>
@@ -101,7 +101,7 @@
 
         <Button
             android:id="@+id/queryDateRangeButton"
-            style="@style/buttonTheme"
+            style="@style/lightButtonTheme"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center_horizontal"

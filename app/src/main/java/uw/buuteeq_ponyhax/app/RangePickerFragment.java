@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 import db.Coordinate;
+import db.CoordinateStorageDatabaseHelper;
 
 
 public class RangePickerFragment extends android.support.v4.app.Fragment implements UIUpdater {
@@ -80,6 +81,12 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
         mEndDateDisplay.setText(new Date(prefs.getLong(Coordinate.END_TIME, 0)).toString());
     }
 
+    private boolean selectedDatesOrdered() {
+        SharedPreferences prefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
+
+        return prefs.getLong(Coordinate.START_TIME, 0) < prefs.getLong(Coordinate.END_TIME, 0);
+    }
+
     /**
      * Private class to implement a RangeDialogListener that follows the android convention of placing a
      * date and time picker within a dialog fragment.
@@ -118,10 +125,15 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
         @Override
         public void onClick(View v) {
             SharedPreferences prefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
-            modifyDisplayFields();
-            Toast.makeText(getActivity().getApplicationContext(),
-                    "START: " + prefs.getLong(Coordinate.START_TIME, 0) + " END: " + prefs.getLong(Coordinate.END_TIME, 0),
-                    Toast.LENGTH_SHORT).show();
+            if (!selectedDatesOrdered()) {
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "START: " + prefs.getLong(Coordinate.START_TIME, 0) + " END: " + prefs.getLong(Coordinate.END_TIME, 0),
+                        Toast.LENGTH_SHORT).show();
+
+            } else {
+
+            }
+
         }
     }
 

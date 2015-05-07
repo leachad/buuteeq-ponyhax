@@ -42,7 +42,7 @@ public class RangeDialogFragment extends DialogFragment {
 
         mDatePicker = (DatePicker) curView.findViewById(R.id.rangeDatePicker);
         mTimePicker = (TimePicker) curView.findViewById(R.id.rangeTimePicker);
-        mDatePicker.setSpinnersShown(false);
+        mDatePicker.setCalendarViewShown(false);
 
         dialogBuilder.setPositiveButton(R.string.confirmRange, new DialogInterface.OnClickListener() {
             @Override
@@ -56,14 +56,24 @@ public class RangeDialogFragment extends DialogFragment {
         /**
          * Modify the dialog range window based on which button was clicked.
          */
+        SharedPreferences prefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
         if (this.getTag().matches(RangePickerFragment.START_RANGE)) {
             dialogBuilder.setTitle(R.string.startOfRange);
         } else {
             dialogBuilder.setTitle(R.string.endOfRange);
+
+            if (prefs.getLong(Coordinate.END_TIME, 0) == 0)
+                mDatePicker.init(calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.YEAR), null);
+
         }
 
         dialogBuilder.setView(curView);
         return dialogBuilder.create();
+    }
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        setTargetFragment(null, -1);
     }
 
     /**
