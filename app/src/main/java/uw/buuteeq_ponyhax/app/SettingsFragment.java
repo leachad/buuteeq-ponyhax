@@ -36,6 +36,8 @@ public class SettingsFragment extends Fragment implements UIUpdater {
 
     public void update(Location currentLocation, List<Coordinate> locations) {}
 
+    public void updateView(){};
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

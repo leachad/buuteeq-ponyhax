@@ -177,7 +177,8 @@ public class MyAccount extends ActionBarActivity
 
         if (choice) {
             this.fragment = (UIUpdater) fragment;
-//            this.fragment.update(mLastLocation, coordinates);
+            //this.fragment.update(mLastLocation, coordinates);
+            this.fragment.updateView();
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .commit();

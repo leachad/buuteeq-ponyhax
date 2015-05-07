@@ -4,6 +4,8 @@
 
 package uw.buuteeq_ponyhax.app;
 
+import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,6 +18,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.List;
+
+import db.Coordinate;
 
 /**
  * MapFragment used to ease the transition between NavigationDrawer submenus
@@ -28,6 +35,9 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
 
     }
 
+    public void updateView() {
+
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -98,4 +108,6 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
         mMap = googleMap;
         setUpMap();
     }
+
+
 }

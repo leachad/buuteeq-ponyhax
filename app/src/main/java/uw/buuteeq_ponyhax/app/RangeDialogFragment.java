@@ -7,10 +7,12 @@ package uw.buuteeq_ponyhax.app;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Range;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
@@ -45,6 +47,7 @@ public class RangeDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 setPrefsFromBoundary();
+                updateParentView();
             }
         });
         dialogBuilder.setNegativeButton(R.string.cancelRange, null);
@@ -75,7 +78,11 @@ public class RangeDialogFragment extends DialogFragment {
         Calendar selected = Calendar.getInstance();
         selected.set(mDatePicker.getYear(), mDatePicker.getMonth(),
                 mDatePicker.getDayOfMonth(), mTimePicker.getCurrentHour(), mTimePicker.getCurrentMinute());
-        return selected.getTimeInMillis();
+        return selected.getTimeInMillis() % 1000;
+    }
+
+    private void updateParentView() {
+
     }
 
     /**

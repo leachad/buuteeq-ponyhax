@@ -40,6 +40,9 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
     private TextView mBearingView;
     private TextView mTimeView;
 
+    public void updateView() {
+
+    }
 
 
     public void update(Location currentLocation, List<Coordinate> locations) {
