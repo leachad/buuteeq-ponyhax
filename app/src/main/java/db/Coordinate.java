@@ -9,6 +9,7 @@ package db;
  * point. Can be modified to hold all applicable data points that may be useful
  * during the course of this assignment.
  * Created by Andrew on 4/10/2015.
+ * Updated by Huy on 5/6/2015
  */
 public class Coordinate {
 
@@ -76,7 +77,7 @@ public class Coordinate {
                       final double theSpeed, final double theHeading, final String theUserID, final byte[] theCoordinatePhoto) {
         myLongitude = theLongitude;
         myLatitude = theLatitude;
-        myTimeStamp = theTimeStamp;
+        myTimeStamp = theTimeStamp / 1000;
         mySpeed = theSpeed;
         myHeading = theHeading;
         myUserID = theUserID;
