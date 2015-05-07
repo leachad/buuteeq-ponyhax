@@ -5,12 +5,11 @@
 package uw.buuteeq_ponyhax.app;
 
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +28,10 @@ public class RangePickerFragment extends Fragment implements UIUpdater {
 
     public static final String START_RANGE = "start";
     public static final String END_RANGE = "end";
+    public static final int TIMESTAMP_DIVISOR = 1000;
     public TextView mStartDateDisplay;
     public TextView mEndDateDisplay;
-    public UIUpdater fragment;
+
 
 
     public void update(Location currentLocation, List<Coordinate> locations) {
@@ -39,7 +39,7 @@ public class RangePickerFragment extends Fragment implements UIUpdater {
     }
 
     public void updateView() {
-
+        modifyDisplayFields();
     }
 
     @Override
@@ -77,7 +77,7 @@ public class RangePickerFragment extends Fragment implements UIUpdater {
     private void modifyDisplayFields() {
         SharedPreferences prefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
         Date startDate = new Date(prefs.getLong(Coordinate.START_TIME, 0));
-        Date endDate = new Date(prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis() % 1000));
+        Date endDate = new Date(prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis() % TIMESTAMP_DIVISOR));
         mStartDateDisplay.setText(startDate.toString());
         mEndDateDisplay.setText(endDate.toString());
     }
@@ -85,6 +85,7 @@ public class RangePickerFragment extends Fragment implements UIUpdater {
     /**
      * Private class to implement a RangeDialogListener that follows the android convention of placing a
      * date and time picker within a dialog fragment.
+     *
      * @author leachad
      * @version 5.4.15
      */
@@ -93,16 +94,21 @@ public class RangePickerFragment extends Fragment implements UIUpdater {
         @Override
         public void onClick(View v) {
 
-            if (v.getId() == R.id.rangeStartButton)
+            if (v.getId() == R.id.rangeStartButton) {
+                modifyDisplayFields();
                 getActivity().getFragmentManager().beginTransaction().add(new RangeDialogFragment(), START_RANGE).commit();
-            else
+            } else {
+                modifyDisplayFields();
                 getActivity().getFragmentManager().beginTransaction().add(new RangeDialogFragment(), END_RANGE).commit();
+            }
+
         }
     }
 
     /**
      * Private class to implement a QueryRangeListener that verifies dates are within a correct range and will eventually
      * modify the displayed coordinates.
+     *
      * @author leachad
      * @version 5.6.15
      */
@@ -117,7 +123,6 @@ public class RangePickerFragment extends Fragment implements UIUpdater {
                     Toast.LENGTH_SHORT).show();
         }
     }
-
 
 
 }

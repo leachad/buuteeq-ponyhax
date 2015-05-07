@@ -35,6 +35,7 @@ public class LoginActivity extends Activity {
      * Private static field to hold an error message.
      */
     private static final String MISSING_USER = "The User or Password is incorrect!";
+    private static final int TIMESTAMP_DIVISOR = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,9 +125,13 @@ public class LoginActivity extends Activity {
                 makeMissingUserToast();
             } else {
                 toRet = true;
-                SharedPreferences userPrefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
+                SharedPreferences userPrefs = getApplicationContext().getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
                 userPrefs.edit().putString(User.USER_ID, userID).apply();
                 userPrefs.edit().putString(User.USER_EMAIL, mEmailField.getText().toString()).apply();
+
+                SharedPreferences coordinatePrefs = getApplicationContext().getSharedPreferences(Coordinate.COORDINATE_PREFS, MODE_PRIVATE);
+                coordinatePrefs.edit().putLong(Coordinate.START_TIME, 0).apply();
+                coordinatePrefs.edit().putLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis() % TIMESTAMP_DIVISOR);
 
             }
         }

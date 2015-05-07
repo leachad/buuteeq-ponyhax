@@ -38,10 +38,11 @@ public class RangeDialogFragment extends DialogFragment {
 
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         View curView = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_range_picker, null);
-        dialogBuilder.setView(curView);
+
 
         mDatePicker = (DatePicker) curView.findViewById(R.id.rangeDatePicker);
         mTimePicker = (TimePicker) curView.findViewById(R.id.rangeTimePicker);
+        mDatePicker.setCalendarViewShown(false);
 
         dialogBuilder.setPositiveButton(R.string.confirmRange, new DialogInterface.OnClickListener() {
             @Override
@@ -66,6 +67,7 @@ public class RangeDialogFragment extends DialogFragment {
             mTimePicker.setCurrentMinute(calendar.get(Calendar.MINUTE));
         }
 
+        dialogBuilder.setView(curView);
         return dialogBuilder.create();
     }
 
