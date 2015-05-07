@@ -24,11 +24,11 @@ import java.util.List;
 import db.Coordinate;
 
 
-public class RangePickerFragment extends Fragment implements UIUpdater {
+public class RangePickerFragment extends android.support.v4.app.Fragment implements UIUpdater {
 
     public static final String START_RANGE = "start";
     public static final String END_RANGE = "end";
-    public static final int TIMESTAMP_DIVISOR = 1000;
+    public static final int TARGET_CODE = 1;
     public TextView mStartDateDisplay;
     public TextView mEndDateDisplay;
 
@@ -74,12 +74,10 @@ public class RangePickerFragment extends Fragment implements UIUpdater {
 
     }
 
-    private void modifyDisplayFields() {
+    public void modifyDisplayFields() {
         SharedPreferences prefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
-        Date startDate = new Date(prefs.getLong(Coordinate.START_TIME, 0));
-        Date endDate = new Date(prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis() % TIMESTAMP_DIVISOR));
-        mStartDateDisplay.setText(startDate.toString());
-        mEndDateDisplay.setText(endDate.toString());
+        mStartDateDisplay.setText(new Date(prefs.getLong(Coordinate.START_TIME, 0)).toString());
+        mEndDateDisplay.setText(new Date(prefs.getLong(Coordinate.END_TIME, 0)).toString());
     }
 
     /**
@@ -94,12 +92,15 @@ public class RangePickerFragment extends Fragment implements UIUpdater {
         @Override
         public void onClick(View v) {
 
+            RangeDialogFragment dialog = new RangeDialogFragment();
             if (v.getId() == R.id.rangeStartButton) {
                 modifyDisplayFields();
-                getActivity().getFragmentManager().beginTransaction().add(new RangeDialogFragment(), START_RANGE).commit();
+                dialog.setTargetFragment(RangePickerFragment.this, -1);
+                getActivity().getSupportFragmentManager().beginTransaction().add(dialog, START_RANGE).commit();
             } else {
                 modifyDisplayFields();
-                getActivity().getFragmentManager().beginTransaction().add(new RangeDialogFragment(), END_RANGE).commit();
+                dialog.setTargetFragment(RangePickerFragment.this, -1);
+                getActivity().getSupportFragmentManager().beginTransaction().add(dialog, END_RANGE).commit();
             }
 
         }

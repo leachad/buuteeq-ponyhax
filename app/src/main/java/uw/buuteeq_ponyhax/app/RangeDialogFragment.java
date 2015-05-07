@@ -6,13 +6,13 @@ package uw.buuteeq_ponyhax.app;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Range;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
@@ -42,7 +42,7 @@ public class RangeDialogFragment extends DialogFragment {
 
         mDatePicker = (DatePicker) curView.findViewById(R.id.rangeDatePicker);
         mTimePicker = (TimePicker) curView.findViewById(R.id.rangeTimePicker);
-        mDatePicker.setCalendarViewShown(false);
+        mDatePicker.setSpinnersShown(false);
 
         dialogBuilder.setPositiveButton(R.string.confirmRange, new DialogInterface.OnClickListener() {
             @Override
@@ -53,7 +53,6 @@ public class RangeDialogFragment extends DialogFragment {
         });
         dialogBuilder.setNegativeButton(R.string.cancelRange, null);
 
-
         /**
          * Modify the dialog range window based on which button was clicked.
          */
@@ -61,10 +60,6 @@ public class RangeDialogFragment extends DialogFragment {
             dialogBuilder.setTitle(R.string.startOfRange);
         } else {
             dialogBuilder.setTitle(R.string.endOfRange);
-            //Set the current day and time to the current time in milliseconds and current day
-            mDatePicker.init(calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.YEAR), null);
-            mTimePicker.setCurrentHour(calendar.get(Calendar.HOUR));
-            mTimePicker.setCurrentMinute(calendar.get(Calendar.MINUTE));
         }
 
         dialogBuilder.setView(curView);
@@ -80,11 +75,14 @@ public class RangeDialogFragment extends DialogFragment {
         Calendar selected = Calendar.getInstance();
         selected.set(mDatePicker.getYear(), mDatePicker.getMonth(),
                 mDatePicker.getDayOfMonth(), mTimePicker.getCurrentHour(), mTimePicker.getCurrentMinute());
-        return selected.getTimeInMillis() % 1000;
+        Log.d("GetCalTimeLong: ", Long.toString(selected.getTimeInMillis()));
+        return selected.getTimeInMillis();
     }
 
     private void updateParentView() {
-
+        Fragment target = getTargetFragment();
+        if (target instanceof RangePickerFragment)
+            ((RangePickerFragment) target).modifyDisplayFields();
     }
 
     /**
