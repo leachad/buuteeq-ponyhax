@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
@@ -123,6 +127,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
                 }
                 previousLocation = location;
             }
+            assert previousLocation != null;
             LatLng lastLocation = new LatLng(previousLocation.getLatitude(), previousLocation.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 17));
         }
@@ -136,8 +141,11 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
      */
     private LatLng addLocation(Coordinate location) {
         LatLng location1 = new LatLng(location.getLatitude(), location.getLongitude());
-        Date date = new Date(location.getTimeStamp() * 1000);
-        mMap.addMarker(new MarkerOptions().position(location1).title(date.toString()));
+        Date date = new Date(location.getTimeStamp());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d yyyy h:mm:ss a", Locale.US);
+        String dateStamp = dateFormat.format(date);
+        Log.d("Timestamp in maps", dateStamp);
+        mMap.addMarker(new MarkerOptions().position(location1).title(dateStamp));
         return location1;
     }
 
