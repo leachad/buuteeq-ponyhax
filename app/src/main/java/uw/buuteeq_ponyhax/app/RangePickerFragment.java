@@ -34,10 +34,12 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import db.Coordinate;
+import db.CoordinateStorageDatabaseHelper;
 
 
-public class RangePickerFragment extends Fragment implements UIUpdater {
+public class RangePickerFragment extends android.support.v4.app.Fragment implements UIUpdater {
 
+<<<<<<< HEAD
     private static final String START_RANGE = "start";
     private static final String END_RANGE = "end";
     private static final String ERROR_MESSAGE = "Select Time and Date must be in Contiguous Order";
@@ -50,6 +52,14 @@ public class RangePickerFragment extends Fragment implements UIUpdater {
     private TextView mStartTime;
     private TextView mEndDate;
     private TextView mEndTime;
+=======
+    public static final String START_RANGE = "start";
+    public static final String END_RANGE = "end";
+    public static final int TARGET_CODE = 1;
+    public TextView mStartDateDisplay;
+    public TextView mEndDateDisplay;
+
+>>>>>>> 2c7e0f51a8ed897fe0d5d1169a1d627baa8946c9
 
 
     public void update(Location currentLocation, List<Coordinate> locations) {
@@ -103,6 +113,7 @@ public class RangePickerFragment extends Fragment implements UIUpdater {
         updateAllFields();
     }
 
+<<<<<<< HEAD
     private void closeKeyboard(Context context, IBinder windowToken) {
         InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         manager.hideSoftInputFromWindow(windowToken, 0);
@@ -115,6 +126,18 @@ public class RangePickerFragment extends Fragment implements UIUpdater {
 
         mEndDate.setText(getDate(new Date(prefs.getLong(Coordinate.END_TIME, 0))));
         mEndTime.setText(getTime(new Date(prefs.getLong(Coordinate.END_TIME, 0))));
+=======
+    public void modifyDisplayFields() {
+        SharedPreferences prefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
+        mStartDateDisplay.setText(new Date(prefs.getLong(Coordinate.START_TIME, 0)).toString());
+        mEndDateDisplay.setText(new Date(prefs.getLong(Coordinate.END_TIME, 0)).toString());
+    }
+
+    private boolean selectedDatesOrdered() {
+        SharedPreferences prefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
+
+        return prefs.getLong(Coordinate.START_TIME, 0) < prefs.getLong(Coordinate.END_TIME, 0);
+>>>>>>> 2c7e0f51a8ed897fe0d5d1169a1d627baa8946c9
     }
 
 
@@ -178,6 +201,7 @@ public class RangePickerFragment extends Fragment implements UIUpdater {
         }
     }
 
+<<<<<<< HEAD
     private String getTime(final Date theNewDate) {
         DateFormat df = SimpleDateFormat.getTimeInstance();
         return df.format(theNewDate);
@@ -221,6 +245,17 @@ public class RangePickerFragment extends Fragment implements UIUpdater {
                 mStartDate.setText(getDate(temp.getTime()));
             } else {
                 mEndDate.setText(getDate(temp.getTime()));
+=======
+            RangeDialogFragment dialog = new RangeDialogFragment();
+            if (v.getId() == R.id.rangeStartButton) {
+                modifyDisplayFields();
+                dialog.setTargetFragment(RangePickerFragment.this, -1);
+                getActivity().getSupportFragmentManager().beginTransaction().add(dialog, START_RANGE).commit();
+            } else {
+                modifyDisplayFields();
+                dialog.setTargetFragment(RangePickerFragment.this, -1);
+                getActivity().getSupportFragmentManager().beginTransaction().add(dialog, END_RANGE).commit();
+>>>>>>> 2c7e0f51a8ed897fe0d5d1169a1d627baa8946c9
             }
         }
     }
@@ -258,6 +293,21 @@ public class RangePickerFragment extends Fragment implements UIUpdater {
 
         @Override
         public void onClick(View v) {
+<<<<<<< HEAD
+=======
+            SharedPreferences prefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
+            if (!selectedDatesOrdered()) {
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "START: " + prefs.getLong(Coordinate.START_TIME, 0) + " END: " + prefs.getLong(Coordinate.END_TIME, 0),
+                        Toast.LENGTH_SHORT).show();
+
+            } else {
+
+            }
+
+        }
+    }
+>>>>>>> 2c7e0f51a8ed897fe0d5d1169a1d627baa8946c9
 
             if (!selectedDatesOrdered()) {
                 Toast.makeText(getActivity().getApplicationContext(), ERROR_MESSAGE, Toast.LENGTH_SHORT);

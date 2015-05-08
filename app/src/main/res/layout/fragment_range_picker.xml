@@ -65,7 +65,13 @@
                     android:textSize="16sp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+<<<<<<< HEAD
                     android:layout_weight="1"/>
+=======
+                    android:text="@string/startDateText"
+                    android:layout_gravity="center"
+                    style="@style/lightButtonTheme"/>
+>>>>>>> 2c7e0f51a8ed897fe0d5d1169a1d627baa8946c9
 
             </LinearLayout>
 
@@ -106,7 +112,14 @@
                     android:textSize="16sp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+<<<<<<< HEAD
                     android:layout_weight="1"/>
+=======
+                    android:text="@string/endDateText"
+                    android:layout_gravity="center"
+                    style="@style/lightButtonTheme"/>
+                </LinearLayout>
+>>>>>>> 2c7e0f51a8ed897fe0d5d1169a1d627baa8946c9
 
             </LinearLayout>
         </LinearLayout>
@@ -141,6 +154,17 @@
 
         </LinearLayout>
 
+<<<<<<< HEAD
+=======
+        <Button
+            android:id="@+id/queryDateRangeButton"
+            style="@style/lightButtonTheme"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.21"
+            android:text="@string/queryDateRange" />
+>>>>>>> 2c7e0f51a8ed897fe0d5d1169a1d627baa8946c9
 
     </LinearLayout>
 
