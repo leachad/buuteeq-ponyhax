@@ -5,10 +5,12 @@
 package uw.buuteeq_ponyhax.app;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,6 +34,8 @@ import java.util.concurrent.ExecutionException;
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.User;
+import location_services.GPSBroadcastReceiver;
+import location_services.GPSService;
 import location_services.MyLocationManager;
 import location_services.MyLocationReceiver;
 import webservices.WebDriver;

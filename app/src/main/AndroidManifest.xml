@@ -30,7 +30,7 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/login"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register"
@@ -51,10 +51,10 @@
         </activity>
         <activity
             android:name=".MyAccount"
-            android:label="@string/title_activity_my_account"></activity>
+            android:label="@string/title_activity_my_account"/>
         <activity
             android:name=".AgreementActivity"
-            android:label="@string/title_activity_agreement"></activity>
+            android:label="@string/title_activity_agreement"/>
 
         <meta-data
             android:name="com.google.android.gms.version"

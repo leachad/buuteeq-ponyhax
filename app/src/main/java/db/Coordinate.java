@@ -20,6 +20,7 @@ public class Coordinate {
     public static final String START_TIME = "start_time"; //stored as a unix time stamp
     public static final String END_TIME = "end_time";
     public static final String COORDINATE_SOURCE = "coordinate_source";
+    public static final String SEPARATOR = ": ";
 
     /**
      * Private fields to hold reference to the fields of the Coordinate object.
@@ -111,5 +112,11 @@ public class Coordinate {
 
     public byte[] getCoordinatePhoto() {
         return myCoordinatePhoto;
+    }
+
+    @Override
+    public String toString() {
+        return myLongitude + SEPARATOR + myLatitude + SEPARATOR + myTimeStamp
+                + SEPARATOR + myUserID + SEPARATOR + mySpeed + SEPARATOR + myHeading;
     }
 }
