@@ -12,8 +12,6 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.Fragment;
-import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,7 +19,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -34,14 +31,10 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import db.Coordinate;
-import db.CoordinateStorageDatabaseHelper;
 
 
 public class RangePickerFragment extends android.support.v4.app.Fragment implements UIUpdater {
-
-<<<<<<< HEAD
-    private static final String START_RANGE = "start";
-    private static final String END_RANGE = "end";
+    
     private static final String ERROR_MESSAGE = "Select Time and Date must be in Contiguous Order";
     private static final String DIALOG_PROMPT = "&#9660";
     private static final String BUFFER = " ";
@@ -52,14 +45,12 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     private TextView mStartTime;
     private TextView mEndDate;
     private TextView mEndTime;
-=======
+
     public static final String START_RANGE = "start";
     public static final String END_RANGE = "end";
     public static final int TARGET_CODE = 1;
     public TextView mStartDateDisplay;
     public TextView mEndDateDisplay;
-
->>>>>>> 2c7e0f51a8ed897fe0d5d1169a1d627baa8946c9
 
 
     public void update(Location currentLocation, List<Coordinate> locations) {
@@ -96,7 +87,6 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
         mEndTime = (TextView) getActivity().findViewById(R.id.endTimeField);
 
 
-
         mStartDate.setOnClickListener(new DateDialogListener(new OnDateChosen(START_RANGE)));
         mStartTime.setOnClickListener(new TimeDialogListener(new OnTimeChosen(START_RANGE)));
         mEndDate.setOnClickListener(new DateDialogListener(new OnDateChosen(END_RANGE)));
@@ -113,7 +103,6 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
         updateAllFields();
     }
 
-<<<<<<< HEAD
     private void closeKeyboard(Context context, IBinder windowToken) {
         InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         manager.hideSoftInputFromWindow(windowToken, 0);
@@ -126,18 +115,11 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
 
         mEndDate.setText(getDate(new Date(prefs.getLong(Coordinate.END_TIME, 0))));
         mEndTime.setText(getTime(new Date(prefs.getLong(Coordinate.END_TIME, 0))));
-=======
+    }
     public void modifyDisplayFields() {
         SharedPreferences prefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
         mStartDateDisplay.setText(new Date(prefs.getLong(Coordinate.START_TIME, 0)).toString());
         mEndDateDisplay.setText(new Date(prefs.getLong(Coordinate.END_TIME, 0)).toString());
-    }
-
-    private boolean selectedDatesOrdered() {
-        SharedPreferences prefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
-
-        return prefs.getLong(Coordinate.START_TIME, 0) < prefs.getLong(Coordinate.END_TIME, 0);
->>>>>>> 2c7e0f51a8ed897fe0d5d1169a1d627baa8946c9
     }
 
 
@@ -177,6 +159,7 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
         public TimeDialogListener(final OnTimeChosen theTimeChosen) {
             myTimeChosen = theTimeChosen;
         }
+
         @Override
         public void onClick(View v) {
             closeKeyboard(getActivity(), v.getWindowToken());
@@ -201,7 +184,6 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
         }
     }
 
-<<<<<<< HEAD
     private String getTime(final Date theNewDate) {
         DateFormat df = SimpleDateFormat.getTimeInstance();
         return df.format(theNewDate);
@@ -245,76 +227,59 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
                 mStartDate.setText(getDate(temp.getTime()));
             } else {
                 mEndDate.setText(getDate(temp.getTime()));
-=======
-            RangeDialogFragment dialog = new RangeDialogFragment();
-            if (v.getId() == R.id.rangeStartButton) {
-                modifyDisplayFields();
-                dialog.setTargetFragment(RangePickerFragment.this, -1);
-                getActivity().getSupportFragmentManager().beginTransaction().add(dialog, START_RANGE).commit();
-            } else {
-                modifyDisplayFields();
-                dialog.setTargetFragment(RangePickerFragment.this, -1);
-                getActivity().getSupportFragmentManager().beginTransaction().add(dialog, END_RANGE).commit();
->>>>>>> 2c7e0f51a8ed897fe0d5d1169a1d627baa8946c9
             }
         }
     }
 
-    /**
-     * Private class to implement an OnDateSelectedListener
-     */
-    private class OnTimeChosen implements TimePickerDialog.OnTimeSetListener {
-        private String myBoundary;
+        /**
+         * Private class to implement an OnDateSelectedListener
+         */
+        private class OnTimeChosen implements TimePickerDialog.OnTimeSetListener {
+            private String myBoundary;
 
-        public OnTimeChosen(final String theBoundary) {
-            myBoundary = theBoundary;
-        }
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            Calendar temp = Calendar.getInstance();
-            temp.set(0, 0, 0, hourOfDay, minute, 0);
-
-            if (myBoundary.matches(START_RANGE)) {
-                mStartTime.setText(getTime(temp.getTime()));
-            } else {
-                mEndTime.setText(getTime(temp.getTime()));
-            }
-        }
-    }
-
-    /**
-     * Private class to implement a QueryRangeListener that verifies dates are within a correct range and will eventually
-     * modify the displayed coordinates.
-     *
-     * @author leachad
-     * @version 5.6.15
-     */
-    private class QueryRangeListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-<<<<<<< HEAD
-=======
-            SharedPreferences prefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
-            if (!selectedDatesOrdered()) {
-                Toast.makeText(getActivity().getApplicationContext(),
-                        "START: " + prefs.getLong(Coordinate.START_TIME, 0) + " END: " + prefs.getLong(Coordinate.END_TIME, 0),
-                        Toast.LENGTH_SHORT).show();
-
-            } else {
-
+            public OnTimeChosen(final String theBoundary) {
+                myBoundary = theBoundary;
             }
 
-        }
-    }
->>>>>>> 2c7e0f51a8ed897fe0d5d1169a1d627baa8946c9
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                Calendar temp = Calendar.getInstance();
+                temp.set(0, 0, 0, hourOfDay, minute, 0);
 
-            if (!selectedDatesOrdered()) {
-                Toast.makeText(getActivity().getApplicationContext(), ERROR_MESSAGE, Toast.LENGTH_SHORT);
-            } else {
+                if (myBoundary.matches(START_RANGE)) {
+                    mStartTime.setText(getTime(temp.getTime()));
+                } else {
+                    mEndTime.setText(getTime(temp.getTime()));
+                }
+            }
+        }
+
+        /**
+         * Private class to implement a QueryRangeListener that verifies dates are within a correct range and will eventually
+         * modify the displayed coordinates.
+         *
+         * @author leachad
+         * @version 5.6.15
+         */
+        private class QueryRangeListener implements View.OnClickListener {
+
+            @Override
+            public void onClick(View v) {
+
+
+                SharedPreferences prefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
+                if (!selectedDatesOrdered()) {
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "START: " + prefs.getLong(Coordinate.START_TIME, 0) + " END: " + prefs.getLong(Coordinate.END_TIME, 0),
+                            Toast.LENGTH_SHORT).show();
+
+                } else {
+
+                }
 
             }
         }
+
     }
-}
+
 
