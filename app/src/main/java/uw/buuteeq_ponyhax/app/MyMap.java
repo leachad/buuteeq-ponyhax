@@ -115,6 +115,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
      * @param locations the list of all coordinates
      */
     public void update(Location currentLocation, List<Coordinate> locations) {
+        Log.d("Updating Map:", Integer.toString(locations.size()));
         if (locations.size() == 1) {
             LatLng location1 = addLocation(locations.get(0));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, 17));

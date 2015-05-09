@@ -219,7 +219,7 @@ public class WebDriver {
         protected List<Coordinate> doInBackground(Void... getUserCoordinates) {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(requestBuilder.getUserCoordinateRequest(myUser.getUserID(), myStartTime, myEndTime));
-
+            Log.d("GET USER COORD:", requestBuilder.getUserCoordinateRequest(myUser.getUserID(), myStartTime, myEndTime));
             String result = JsonBuilder.VAL_FAIL;
             List<Coordinate> loggedPoints = null;
             try {
