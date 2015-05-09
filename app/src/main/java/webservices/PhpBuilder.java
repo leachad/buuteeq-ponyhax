@@ -24,20 +24,7 @@ public class PhpBuilder {
     /**
      * Private field to hold a reference to the add coordinate php file name.
      */
-    public static final String ADD_COORDINATE_FILE = "addLog.php";
-    /**
-     * Private fields to hold variable strings needed to properly add a coordinate via the url.
-     */
-    public static final String URL_LATITUDE = "latitude";
-    public static final String URL_LONGITUDE = "longitude";
-    public static final String URL_SPEED = "speed";
-    public static final String URL_HEADING = "heading";
-    public static final String URL_SOURCE = "source";
-    public static final String URL_UID = "uid";
-    public static final String URL_TIMESTAMP = "timestamp";
-    public static final String URL_START = "start";
-    public static final String URL_END = "end";
-    public static final String URL_USER_ID = "userid";
+    public static final String ADD_COORDINATE_FILE = "logAdd.php";
     /**
      * Private field to hold a reference to the add coordinate php file name.
      */
@@ -54,6 +41,20 @@ public class PhpBuilder {
      * Private field to hold a reference to the user reset php file name.
      */
     private static final String PASSWORD_RESET_FILE = "reset.php";
+    /**
+     * Private fields to hold variable strings needed to properly add a coordinate via the url.
+     */
+    public static final String URL_LATITUDE = "lat";
+    public static final String URL_LONGITUDE = "lon";
+    public static final String URL_SPEED = "speed";
+    public static final String URL_HEADING = "heading";
+    public static final String URL_SOURCE = "source";
+    public static final String URL_UID = "uid";
+    public static final String URL_TIMESTAMP = "timestamp";
+    public static final String URL_START = "start";
+    public static final String URL_END = "end";
+    public static final String URL_USER_ID = "userid";
+
     /**
      * Private fields to hold variable strings needed to properly add a user via the url.
      */
