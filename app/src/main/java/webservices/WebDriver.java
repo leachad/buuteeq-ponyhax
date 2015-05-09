@@ -154,6 +154,8 @@ public class WebDriver {
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
+                if (requestBuilder.jSONResultIsSuccess(result))
+                    result = JsonBuilder.VAL_SUCCESS;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -167,6 +169,7 @@ public class WebDriver {
             for (Coordinate coordinate : myCoordinateList) {
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpPost httpPost = new HttpPost(requestBuilder.getAddCoordinateRequest(coordinate, myUser.getUserID()));
+                Log.d("ADD COORD:", requestBuilder.getAddCoordinateRequest(coordinate, myUser.getUserID()));
                 result = executePost(httpClient, httpPost);
             }
             return result;

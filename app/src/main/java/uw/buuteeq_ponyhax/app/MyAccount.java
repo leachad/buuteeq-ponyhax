@@ -5,11 +5,9 @@
 package uw.buuteeq_ponyhax.app;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,8 +30,6 @@ import java.util.concurrent.ExecutionException;
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.User;
-import location_services.GPSBroadcastReceiver;
-import location_services.GPSService;
 import location_services.MyLocationManager;
 import location_services.MyLocationReceiver;
 import webservices.WebDriver;
@@ -52,9 +49,11 @@ public class MyAccount extends ActionBarActivity
     private SharedPreferences prefs;
     private UIUpdater fragment;
     private List<Coordinate> coordinates;
+    private int publishCounter = 0;
 
     //SETUP RECEIVER WITH INNER CLASS
     private BroadcastReceiver mLocationReceiver = new MyLocationReceiver() {
+
 
         @Override
         public void onLocationChanged(Location location) {
@@ -285,6 +284,12 @@ public class MyAccount extends ActionBarActivity
 
     private void addCoordinateToList(Coordinate coord) {
         coordinates.add(coord);
+        if (publishCounter == 1) {
+            boolean success = coordHelper.publishCoordinateBatch(coordinates);
+            publishCounter = 0;
+            Log.d("PUBLISH: ", Boolean.toString(success));
+        }
+        publishCounter++;
     }
 
 

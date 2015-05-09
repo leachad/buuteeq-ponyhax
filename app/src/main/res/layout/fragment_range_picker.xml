@@ -16,8 +16,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:baselineAligned="false"
+        android:orientation="vertical"
         tools:context="uw.buuteeq_ponyhax.app.MyAccount$PlaceholderFragment">
 
         <TextView
@@ -50,10 +50,10 @@
                 <TextView
                     android:id="@+id/startDateField"
                     style="@style/textViewThemeLight"
-                    android:textSize="16sp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:textSize="16sp" />
 
                 <Space
                     android:layout_width="16dp"
@@ -62,14 +62,12 @@
                 <TextView
                     android:id="@+id/startTimeField"
                     style="@style/textViewThemeLight"
-                    android:textSize="16sp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
-
-                    android:text="@string/startDateText"
                     android:layout_gravity="center"
-                    style="@style/lightButtonTheme"/>
+                    android:layout_weight="1"
+                    android:text="@string/startDateText"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -95,10 +93,10 @@
                 <TextView
                     android:id="@+id/endDateField"
                     style="@style/textViewThemeLight"
-                    android:textSize="16sp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:textSize="16sp" />
 
                 <Space
                     android:layout_width="16dp"
@@ -107,18 +105,15 @@
                 <TextView
                     android:id="@+id/endTimeField"
                     style="@style/textViewThemeLight"
-                    android:textSize="16sp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-
-                    android:layout_weight="1"/>
-
-                    android:text="@string/endDateText"
                     android:layout_gravity="center"
-                    style="@style/lightButtonTheme"/>
-                </LinearLayout>
+                    android:layout_weight="1"
+                    android:text="@string/endDateText"
+                    android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
+
 
         <Space
             android:layout_width="match_parent"
@@ -127,41 +122,29 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="right">
+            android:layout_gravity="right"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/cancelChosenTimes"
-                style="@style/buttonTheme"
-                android:layout_width="0dp"
+                style="@style/lightButtonTheme"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight="0.21"
                 android:text="@string/cancelChosenTimes" />
 
             <Button
                 android:id="@+id/storeChosenTimes"
-                style="@style/buttonTheme"
-                android:layout_width="0dp"
+                style="@style/lightButtonTheme"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight="0.21"
                 android:text="@string/storeChosenTimes" />
 
         </LinearLayout>
+    </LinearLayout>
 
-
-        <Button
-            android:id="@+id/queryDateRangeButton"
-            style="@style/lightButtonTheme"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="0.21"
-            android:text="@string/queryDateRange" />
-
-
-    </ScrollView>
+</ScrollView>
 
 
 
