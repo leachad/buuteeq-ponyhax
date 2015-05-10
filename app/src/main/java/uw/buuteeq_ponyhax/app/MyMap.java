@@ -96,6 +96,29 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
         super.onResume();
         setUpMapIfNeeded();
 
+        SharedPreferences userPrefs = getActivity().getApplication().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getApplication().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
+
+        CoordinateStorageDatabaseHelper db = new CoordinateStorageDatabaseHelper(getActivity().getApplicationContext());
+        List<Coordinate> coordinates = db.getAllCoordinates(userPrefs.getString(User.USER_ID, CoordinateStorageDatabaseHelper.ALL_USERS));
+
+
+
+
+        User theUser = new User();
+        theUser.setID(userPrefs.getString(User.USER_ID, "-1"));
+        try {
+            List<Coordinate> theList = WebDriver.getLoggedCoordinates(theUser, prefs.getLong(Coordinate.START_TIME, 0), prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
+            if (theList != null) {
+                for (Coordinate c : theList) {
+                    coordinates.add(c);
+                }
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        update(null, coordinates);
+
     }
 
     /**
@@ -147,28 +170,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
         mMap = googleMap;
 //        setUpMap();
 
-        SharedPreferences userPrefs = getActivity().getApplication().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-        SharedPreferences prefs = getActivity().getApplication().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
 
-        CoordinateStorageDatabaseHelper db = new CoordinateStorageDatabaseHelper(getActivity().getApplicationContext());
-        List<Coordinate> coordinates = db.getAllCoordinates(userPrefs.getString(User.USER_ID, CoordinateStorageDatabaseHelper.ALL_USERS));
-
-
-
-
-        User theUser = new User();
-        theUser.setID(userPrefs.getString(User.USER_ID, "-1"));
-        try {
-            List<Coordinate> theList = WebDriver.getLoggedCoordinates(theUser, prefs.getLong(Coordinate.START_TIME, 0), prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
-            if (theList != null) {
-                for (Coordinate c : theList) {
-                    coordinates.add(c);
-                }
-            }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        update(null, coordinates);
 
     }
 }
