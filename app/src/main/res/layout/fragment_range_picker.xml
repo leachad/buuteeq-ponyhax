@@ -33,7 +33,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_gravity="center">
 
             <TextView
                 style="@style/AppTheme"
@@ -76,7 +77,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_gravity="center">
 
             <TextView
                 style="@style/AppTheme"
@@ -112,35 +114,6 @@
                     android:text="@string/endDateText"
                     android:textSize="16sp" />
             </LinearLayout>
-        </LinearLayout>
-
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="24dp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/cancelChosenTimes"
-                style="@style/lightButtonTheme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/cancelChosenTimes" />
-
-            <Button
-                android:id="@+id/storeChosenTimes"
-                style="@style/lightButtonTheme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/storeChosenTimes" />
-
         </LinearLayout>
     </LinearLayout>
 

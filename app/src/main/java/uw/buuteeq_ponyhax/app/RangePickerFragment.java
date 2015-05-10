@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,7 +21,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -33,9 +33,11 @@ import db.Coordinate;
 
 
 public class RangePickerFragment extends android.support.v4.app.Fragment implements UIUpdater {
-    
+
     private static final String ERROR_MESSAGE = "Select Time and Date must be in Contiguous Order";
     private static final String DIALOG_PROMPT = "&#9660";
+    private static final int TIMESTAMP_DIVISOR = 1000;
+    private SharedPreferences mSharedPrefs = null;
     private Calendar mCalendar = GregorianCalendar.getInstance();
     private Calendar mStartCalendar;
     private Calendar mEndCalendar;
@@ -47,9 +49,6 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     public static final String START_RANGE = "start";
     public static final String END_RANGE = "end";
     public static final int TARGET_CODE = 1;
-    public TextView mStartDateDisplay;
-    public TextView mEndDateDisplay;
-
 
     public void update(Location currentLocation, List<Coordinate> locations) {
 
@@ -80,6 +79,8 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     public void onResume() {
         super.onResume();
 
+
+
         /** Instantiate the EditText Fields that will display and hold listeners for date dialogs.*/
         mStartDate = (TextView) getActivity().findViewById(R.id.startDateField);
         mStartTime = (TextView) getActivity().findViewById(R.id.startTimeField);
@@ -99,8 +100,6 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
         mStartCalendar = GregorianCalendar.getInstance();
         mEndCalendar = GregorianCalendar.getInstance();
 
-        //TODO save both start and end time in prefs once the user elects to SAVE
-
         updateAllFields();
     }
 
@@ -110,14 +109,15 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     }
 
     private void updateAllFields() {
-        SharedPreferences prefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
-        mStartDate.setText(getDate(new Date(prefs.getLong(Coordinate.START_TIME, 0))));
-        mStartTime.setText(getTime(new Date(prefs.getLong(Coordinate.START_TIME, 0))));
-        mStartCalendar.setTime(new Date(prefs.getLong(Coordinate.START_TIME, 0)));
+        mSharedPrefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
+        mStartCalendar.setTime(new Date(mSharedPrefs.getLong(Coordinate.START_TIME, 0)));
+        mStartDate.setText(getDate(mStartCalendar.getTime()));
+        mStartTime.setText(getTime(mStartCalendar.getTime()));
 
-        mEndDate.setText(getDate(new Date(prefs.getLong(Coordinate.END_TIME, 0))));
-        mEndTime.setText(getTime(new Date(prefs.getLong(Coordinate.END_TIME, 0))));
-        mEndCalendar.setTime(new Date(prefs.getLong(Coordinate.END_TIME, 0)));
+        mEndCalendar.setTime(new Date(mSharedPrefs.getLong(Coordinate.END_TIME, 0)));
+        mEndDate.setText(getDate(mEndCalendar.getTime()));
+        mEndTime.setText(getTime(mEndCalendar.getTime()));
+
     }
 
     /**
@@ -182,7 +182,7 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     }
 
     private String getTime(final Date theNewDate) {
-        DateFormat df = SimpleDateFormat.getTimeInstance();
+        DateFormat df = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
         return df.format(theNewDate);
     }
 
@@ -193,9 +193,9 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
 
     private long getUnixTimeStamp(final String theBoundary) {
         if (theBoundary.matches(START_RANGE)) {
-            return mStartCalendar.getTimeInMillis();
+            return mStartCalendar.getTimeInMillis() / TIMESTAMP_DIVISOR;
         } else {
-            return mEndCalendar.getTimeInMillis();
+            return mEndCalendar.getTimeInMillis() / TIMESTAMP_DIVISOR;
         }
     }
 
@@ -216,57 +216,50 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
 
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            Calendar temp = Calendar.getInstance();
-            temp.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
             if (myBoundary.matches(START_RANGE)) {
-                mStartDate.setText(getDate(temp.getTime()));
-                mStartCalendar.set(Calendar.YEAR, year);
-                mStartCalendar.set(Calendar.MONTH, monthOfYear);
-                mStartCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                mStartCalendar.set(year, monthOfYear, dayOfMonth, mStartCalendar.get(Calendar.HOUR_OF_DAY), mStartCalendar.get(Calendar.MINUTE), 0);
+                mStartDate.setText(getDate(mStartCalendar.getTime()));
+                mSharedPrefs.edit().putLong(Coordinate.START_TIME, getUnixTimeStamp(START_RANGE)).apply();
+                Log.d("Start Date Set: ", Long.toString(getUnixTimeStamp(START_RANGE)));
             } else {
-                mEndDate.setText(getDate(temp.getTime()));
-                mEndCalendar.set(Calendar.YEAR, year);
-                mEndCalendar.set(Calendar.MONTH, monthOfYear);
-                mEndCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                mEndCalendar.set(year, monthOfYear, dayOfMonth, mEndCalendar.get(Calendar.HOUR_OF_DAY), mEndCalendar.get(Calendar.MINUTE), 0);
+                mEndDate.setText(getDate(mEndCalendar.getTime()));
+                mSharedPrefs.edit().putLong(Coordinate.END_TIME, getUnixTimeStamp(END_RANGE)).apply();
+                Log.d("End Date Set: ", Long.toString(getUnixTimeStamp(END_RANGE)));
             }
+
         }
     }
 
-        /**
-         * Private class to implement an OnDateSelectedListener
-         */
-        private class OnTimeChosen implements TimePickerDialog.OnTimeSetListener {
-            private String myBoundary;
+    /**
+     * Private class to implement an OnDateSelectedListener
+     */
+    private class OnTimeChosen implements TimePickerDialog.OnTimeSetListener {
+        private String myBoundary;
 
-            public OnTimeChosen(final String theBoundary) {
-                myBoundary = theBoundary;
-            }
-
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                Calendar temp = Calendar.getInstance();
-                temp.set(0, 0, 0, hourOfDay, minute, 0);
-
-                if (myBoundary.matches(START_RANGE)) {
-
-                    mStartCalendar.set(Calendar.HOUR, hourOfDay);
-                    mStartCalendar.set(Calendar.MINUTE, minute);
-                } else {
-                    mEndTime.setText(getTime(temp.getTime()));
-                    mEndCalendar.set(Calendar.HOUR, hourOfDay);
-                    mEndCalendar.set(Calendar.MINUTE, minute);
-                }
-
-                if (selectedDatesOrdered() && myBoundary.matches(START_RANGE)) {
-                    mStartTime.setText(getTime(temp.getTime()));
-                } else if (selectedDatesOrdered() && myBoundary.matches(END_RANGE)) {
-                    mEndTime.setText(getTime(temp.getTime()));
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(), ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
-                }
-            }
+        public OnTimeChosen(final String theBoundary) {
+            myBoundary = theBoundary;
         }
 
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+
+            if (myBoundary.matches(START_RANGE)) {
+                mStartCalendar.set(mStartCalendar.get(Calendar.YEAR), mStartCalendar.get(Calendar.MONTH), mStartCalendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute, 0);
+                mStartTime.setText(getTime(mStartCalendar.getTime()));
+                mSharedPrefs.edit().putLong(Coordinate.START_TIME, getUnixTimeStamp(START_RANGE)).apply();
+                Log.d("Start Time Set: ", Long.toString(getUnixTimeStamp(START_RANGE)));
+            } else {
+                mEndCalendar.set(mEndCalendar.get(Calendar.YEAR), mEndCalendar.get(Calendar.MONTH), mEndCalendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute, 0);
+                mEndTime.setText(getTime(mEndCalendar.getTime()));
+                mSharedPrefs.edit().putLong(Coordinate.END_TIME, getUnixTimeStamp(END_RANGE)).apply();
+                Log.d("End Time Set: ", Long.toString(getUnixTimeStamp(END_RANGE)));
+            }
+
+
+        }
     }
+}
 
 
