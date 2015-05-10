@@ -48,7 +48,7 @@ public class MyAccount extends ActionBarActivity
     private Location mLastLocation;
     private SharedPreferences prefs;
     private UIUpdater fragment;
-    private List<Coordinate> coordinates;
+    protected List<Coordinate> coordinates;
     private int publishCounter = 0;
 
     //SETUP RECEIVER WITH INNER CLASS
@@ -61,7 +61,7 @@ public class MyAccount extends ActionBarActivity
             if (location != null) {
                 Toast.makeText(getApplicationContext(), "Got Coord", Toast.LENGTH_SHORT).show();
                 //Make new coordinate and insert into coordinate database
-                Coordinate locationCoordinate = new Coordinate(location.getLongitude(), location.getLatitude(), location.getTime(),
+                Coordinate locationCoordinate = new Coordinate(location.getLongitude(), location.getLatitude(), System.currentTimeMillis() / 1000,
                         location.getSpeed(), location.getBearing(), prefs.getString(User.USER_ID, "N/A"));
 
                 coordHelper.insertCoordinate(locationCoordinate);
@@ -285,7 +285,7 @@ public class MyAccount extends ActionBarActivity
     private void addCoordinateToList(Coordinate coord) {
         coordinates.add(coord);
         if (publishCounter == 1) {
-            boolean success = coordHelper.publishCoordinateBatch(coordinates);
+            boolean success = coordHelper.publishCoordinateBatch(getApplicationContext());
             publishCounter = 0;
             Log.d("PUBLISH: ", Boolean.toString(success));
         }

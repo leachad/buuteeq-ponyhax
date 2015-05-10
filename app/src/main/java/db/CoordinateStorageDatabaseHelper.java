@@ -55,7 +55,12 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    }
 
+    public void wipeTable() {
+        getWritableDatabase().delete(TABLE_NAME, null, null);
+        Log.d("Database Table", "Successfully Wiped!");
+        //getWritableDatabase().close();
     }
 
     /******************************WRITE TO THE DATABASE*******************************/
@@ -77,9 +82,8 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
             cv.put(COLUMN_USER_SPEED, coordinate.getUserSpeed());
             cv.put(COLUMN_USER_HEADING, coordinate.getHeading());
             insertConfirm = getWritableDatabase().insert(TABLE_NAME, null, cv);
-            Log.d("INSERT", coordinate.getTimeStamp() + "");
+            Log.d("INSERT TO DATABASE", coordinate.getTimeStamp() + "");
         }
-
         return insertConfirm;
     }
 
@@ -111,12 +115,14 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
      * @param theLocalCoordinates is a list of Coordinates generated before pushed to webservices
      * @return isSuccess
      */
-    public boolean publishCoordinateBatch(final List<Coordinate> theLocalCoordinates) {
+    public boolean publishCoordinateBatch(Context context) {
+        List<Coordinate> theLocalCoordinates = getAllCoordinates(context);
         boolean isSuccess = false;
         try {
             String result = WebDriver.addCoordinates(theLocalCoordinates);
             if (result.matches(JsonBuilder.VAL_SUCCESS)) {
                 isSuccess = true;
+                wipeTable();
             }
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
@@ -160,7 +166,6 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
             coordinates.add(coordinate);
 
         }
-
         return coordinates;
 
     }

@@ -20,7 +20,7 @@ public class MyLocationManager {
 
     public static final String ACTION_LOCATION = "android.intent.action.LOCALE_CHANGED";
 
-    private static final int DEFAULT_INTERVAL = 60000; //1 min
+    private static final int DEFAULT_INTERVAL = 5000; //1 min
 
     private static final int DATA_ONLY_DISTANCE = 1000;
     private static final int CONNECTED_WIFI_DISTANCE = 10; //10 meters

@@ -106,6 +106,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
         List<Coordinate> coordinates = db.getAllCoordinates(getActivity().getApplicationContext());
         update(null, coordinates);
         //setUpMap();
+
     }
 
     /**
@@ -142,7 +143,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
      */
     private LatLng addLocation(Coordinate location) {
         LatLng location1 = new LatLng(location.getLatitude(), location.getLongitude());
-        Date date = new Date(location.getTimeStamp());
+        Date date = new Date(location.getTimeStamp() * 1000);
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d yyyy h:mm:ss a", Locale.US);
         String dateStamp = dateFormat.format(date);
         Log.d("Timestamp in maps", dateStamp);

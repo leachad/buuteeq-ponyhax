@@ -78,7 +78,7 @@ public class Coordinate {
                       final double theSpeed, final double theHeading, final String theUserID, final byte[] theCoordinatePhoto) {
         myLongitude = theLongitude;
         myLatitude = theLatitude;
-        myTimeStamp = theTimeStamp / 1000;
+        myTimeStamp = theTimeStamp;
         mySpeed = theSpeed;
         myHeading = theHeading;
         myUserID = theUserID;
