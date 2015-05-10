@@ -77,7 +77,7 @@ public final class JsonBuilder extends PhpBuilder {
     /**
      * Private method to return the points gleaned from querying the database.
      */
-    public List<Coordinate> jSONLoggedPoints(String theResult) throws JSONException {
+    public List<Coordinate> jSONLoggedPoints(String theResult, String theUserID) throws JSONException {
         JSONObject json = new JSONObject(theResult);
         Log.d("JSON LOGGED start", "in start");
         List<Coordinate> loggedPoints = null;
@@ -92,9 +92,14 @@ public final class JsonBuilder extends PhpBuilder {
             Log.d("JSON POINTS LENGTH", "" + points.length());
             for (int i = 0; i < points.length(); i++) {
                 JSONObject point = (JSONObject) points.get(i);
+                Log.d("LAT: ", Double.toString(point.getDouble(URL_LATITUDE)));
+                Log.d("LON: ", Double.toString(point.getDouble(URL_LONGITUDE)));
+                Log.d("SPEED: ", Double.toString(point.getDouble(URL_SPEED)));
+                Log.d("HEADING: ", Double.toString(point.getDouble(URL_HEADING)));
+                Log.d("TIME: ", Long.toString(point.getLong(URL_TIMESTAMP)));
+
                 loggedPoints.add(new Coordinate(point.getDouble(URL_LATITUDE), point.getDouble(URL_LONGITUDE),
-                        point.getLong(URL_TIMESTAMP), point.getDouble(URL_SPEED), point.getDouble(URL_HEADING),
-                        point.getString(URL_SOURCE)));
+                        point.getLong(URL_TIMESTAMP), point.getDouble(URL_SPEED), point.getDouble(URL_HEADING), theUserID));
             }
         }
         Log.d("JSON LOGGED P", "" + loggedPoints.size());

@@ -50,7 +50,7 @@ public class PhpBuilder {
     public static final String URL_HEADING = "heading";
     public static final String URL_SOURCE = "source";
     public static final String URL_UID = "uid";
-    public static final String URL_TIMESTAMP = "timestamp";
+    public static final String URL_TIMESTAMP = "time";
     public static final String URL_START = "start";
     public static final String URL_END = "end";
     public static final String URL_USER_ID = "userid";
@@ -66,6 +66,9 @@ public class PhpBuilder {
     private static final String START_ARGS = "?";
     private static final String APPEND_ARGS = "&";
     private static final String ASSIGN_ARGS = "=";
+    private static final String ASCII_SPACE = " ";
+    private static final String ENCODED_SPACE = "%20";
+    private static final String ENCODE_FORMAT = "utf-8";
 
     /**
      * Privately accessible field that will hold a reference to the domain used for
@@ -83,8 +86,8 @@ public class PhpBuilder {
         String toRet = null;
 
         try {
-            toRet = theText.replaceAll(" ", "%20");
-            toRet = URLEncoder.encode(theText, "utf-8");
+            toRet = theText.replaceAll(ASCII_SPACE, ENCODED_SPACE);
+            toRet = URLEncoder.encode(theText, ENCODE_FORMAT);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

@@ -226,7 +226,7 @@ public class WebDriver {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
                 if (requestBuilder.jSONResultIsSuccess(result))
-                    loggedPoints = requestBuilder.jSONLoggedPoints(result);
+                    loggedPoints = requestBuilder.jSONLoggedPoints(result, myUser.getUserID());
 
             } catch (Exception e) {
                 e.printStackTrace();
