@@ -41,6 +41,8 @@ public class PhpBuilder {
      * Private field to hold a reference to the user reset php file name.
      */
     private static final String PASSWORD_RESET_FILE = "reset.php";
+
+
     /**
      * Private fields to hold variable strings needed to properly add a coordinate via the url.
      */
@@ -50,7 +52,8 @@ public class PhpBuilder {
     public static final String URL_HEADING = "heading";
     public static final String URL_SOURCE = "source";
     public static final String URL_UID = "uid";
-    public static final String URL_TIMESTAMP = "time";
+    public static final String URL_TIMESTAMP = "timestamp";
+    public static final String URL_TIME = "time";
     public static final String URL_START = "start";
     public static final String URL_END = "end";
     public static final String URL_USER_ID = "userid";
@@ -63,6 +66,9 @@ public class PhpBuilder {
     private static final String URL_SEC_QUESTION = "question";
     private static final String URL_SEC_ANSWER = "answer";
 
+    /**
+     * PHP and URL encoding literals.
+     */
     private static final String START_ARGS = "?";
     private static final String APPEND_ARGS = "&";
     private static final String ASSIGN_ARGS = "=";
@@ -137,7 +143,7 @@ public class PhpBuilder {
         return URL_HEADING + ASSIGN_ARGS + theCurrentCoordinate.getHeading();
     }
 
-    private String getTimeKeyValue(final Coordinate theCurrentCoordinate) {
+    private String getTimeStampKeyValue(final Coordinate theCurrentCoordinate) {
         return URL_TIMESTAMP + ASSIGN_ARGS + theCurrentCoordinate.getTimeStamp();
     }
 
@@ -169,7 +175,7 @@ public class PhpBuilder {
         return myCurrentHostDomain + ADD_COORDINATE_FILE + START_ARGS + getLatKeyValue(thisCoordinate) + APPEND_ARGS
                 + getLongKeyValue(thisCoordinate) + APPEND_ARGS + getSpeedKeyValue(thisCoordinate)
                 + APPEND_ARGS + getHeadingKeyValue(thisCoordinate) + APPEND_ARGS
-                + getTimeKeyValue(thisCoordinate) + APPEND_ARGS + getSourceKeyValue(theUserID);
+                + getTimeStampKeyValue(thisCoordinate) + APPEND_ARGS + getSourceKeyValue(theUserID);
     }
 
     /**

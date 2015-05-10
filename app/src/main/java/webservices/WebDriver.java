@@ -11,7 +11,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,7 +70,6 @@ public class WebDriver {
         return new AddCoordinates().execute().get();
     }
 
-    //TODO Write a similar static method in here for the Reset Password that will sit nicely inside a webview
     public static String resetPassword(final String theEmailAddress) throws ExecutionException, InterruptedException {
         myEmailAddress = theEmailAddress;
         return new ResetPassword().execute().get();
@@ -188,9 +186,7 @@ public class WebDriver {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(requestBuilder.getUserLoginRequest(myEmailAddress, myPassword));
 
-            Log.d("http string", httpPost.getURI().toString());
-
-            String result = JsonBuilder.VAL_FAIL;
+            String result;
             String userID = null;
             try {
                 HttpResponse response = httpClient.execute(httpPost);
@@ -219,8 +215,7 @@ public class WebDriver {
         protected List<Coordinate> doInBackground(Void... getUserCoordinates) {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(requestBuilder.getUserCoordinateRequest(myUser.getUserID(), myStartTime, myEndTime));
-            Log.d("GET USER COORD:", requestBuilder.getUserCoordinateRequest(myUser.getUserID(), myStartTime, myEndTime));
-            String result = JsonBuilder.VAL_FAIL;
+            String result;
             List<Coordinate> loggedPoints = null;
             try {
                 HttpResponse response = httpClient.execute(httpPost);

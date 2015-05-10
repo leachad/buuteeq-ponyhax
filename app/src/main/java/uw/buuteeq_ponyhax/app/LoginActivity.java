@@ -128,11 +128,6 @@ public class LoginActivity extends Activity {
                 SharedPreferences userPrefs = getApplicationContext().getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
                 userPrefs.edit().putString(User.USER_ID, userID).apply();
                 userPrefs.edit().putString(User.USER_EMAIL, mEmailField.getText().toString()).apply();
-
-                SharedPreferences coordinatePrefs = getApplicationContext().getSharedPreferences(Coordinate.COORDINATE_PREFS, MODE_PRIVATE);
-                coordinatePrefs.edit().putLong(Coordinate.START_TIME, 0).apply();
-                coordinatePrefs.edit().putLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis() % TIMESTAMP_DIVISOR);
-
             }
         }
         return toRet;

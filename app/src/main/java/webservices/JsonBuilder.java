@@ -4,10 +4,6 @@
 
 package webservices;
 
-import android.annotation.TargetApi;
-import android.os.Build;
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,30 +75,18 @@ public final class JsonBuilder extends PhpBuilder {
      */
     public List<Coordinate> jSONLoggedPoints(String theResult, String theUserID) throws JSONException {
         JSONObject json = new JSONObject(theResult);
-        Log.d("JSON LOGGED start", "in start");
         List<Coordinate> loggedPoints = null;
-        Log.d("JSON RESULT", "" + "" + json.getString(KEY_RESULT));
+
         if (json.getString(KEY_RESULT).matches(VAL_SUCCESS)) {
-            Log.d("IN IF STATE", "" + "YES");
             loggedPoints = new ArrayList<>();
-//            JSONArray points = new JSONArray(json.getJSONArray(KEY_POINTS));
-            JSONArray points = json.getJSONArray("points");
+            JSONArray points = json.getJSONArray(KEY_POINTS);
 
-
-            Log.d("JSON POINTS LENGTH", "" + points.length());
             for (int i = 0; i < points.length(); i++) {
                 JSONObject point = (JSONObject) points.get(i);
-                Log.d("LAT: ", Double.toString(point.getDouble(URL_LATITUDE)));
-                Log.d("LON: ", Double.toString(point.getDouble(URL_LONGITUDE)));
-                Log.d("SPEED: ", Double.toString(point.getDouble(URL_SPEED)));
-                Log.d("HEADING: ", Double.toString(point.getDouble(URL_HEADING)));
-                Log.d("TIME: ", Long.toString(point.getLong(URL_TIMESTAMP)));
-
                 loggedPoints.add(new Coordinate(point.getDouble(URL_LATITUDE), point.getDouble(URL_LONGITUDE),
-                        point.getLong(URL_TIMESTAMP), point.getDouble(URL_SPEED), point.getDouble(URL_HEADING), theUserID));
+                        point.getLong(URL_TIME), point.getDouble(URL_SPEED), point.getDouble(URL_HEADING), theUserID));
             }
         }
-        Log.d("JSON LOGGED P", "" + loggedPoints.size());
         return loggedPoints;
     }
 }

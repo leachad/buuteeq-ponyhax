@@ -32,7 +32,7 @@ import java.util.List;
 import db.Coordinate;
 
 
-public class RangePickerFragment extends android.support.v4.app.Fragment implements UIUpdater {
+public class RangePickerFragment extends android.support.v4.app.Fragment  {
 
     private static final String ERROR_MESSAGE = "Select Time and Date must be in Contiguous Order";
     private static final String DIALOG_PROMPT = "&#9660";
@@ -48,10 +48,6 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
 
     public static final String START_RANGE = "start";
     public static final String END_RANGE = "end";
-    public static final int TARGET_CODE = 1;
-
-    public void update(Location currentLocation, List<Coordinate> locations) {}
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
