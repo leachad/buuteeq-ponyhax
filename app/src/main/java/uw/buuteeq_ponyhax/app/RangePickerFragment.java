@@ -50,13 +50,8 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     public static final String END_RANGE = "end";
     public static final int TARGET_CODE = 1;
 
-    public void update(Location currentLocation, List<Coordinate> locations) {
+    public void update(Location currentLocation, List<Coordinate> locations) {}
 
-    }
-
-    public void updateView() {
-
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

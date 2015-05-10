@@ -12,8 +12,11 @@ import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
+import java.nio.charset.CoderResult;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -31,11 +34,13 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ROW_ID = "row_id";
     public static final String COLUMN_LONGITUDE = "longitude";
     public static final String COLUMN_LATITUDE = "latitude";
-    public static final String COLUMN_TIME_STAMP = "time_stamp";
+    public static final String COLUMN_TIME_STAMP = "timestamp";
     public static final String COLUMN_USER_SPEED = "speed";
     public static final String COLUMN_USER_HEADING = "heading";
     public static final String COLUMN_USER_ID = "user_id";
     public static final String COLUMN_PHOTO = "photo";
+
+    public static final String ALL_USERS = "All_Users";
 
     /**
      * Constructor for a Coordinate Database
@@ -112,11 +117,11 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
      * Publicly accessible method to batch publish local coordinates to the database based on the data
      * that the user has obtained while polling gps every 'n' seconds.
      *
-     * @param theLocalCoordinates is a list of Coordinates generated before pushed to webservices
+     * theLocalCoordinates is a list of Coordinates generated before pushed to webservices
      * @return isSuccess
      */
-    public boolean publishCoordinateBatch(Context context) {
-        List<Coordinate> theLocalCoordinates = getAllCoordinates(context);
+    public boolean publishCoordinateBatch() {
+        List<Coordinate> theLocalCoordinates = getAllCoordinates(ALL_USERS);
         boolean isSuccess = false;
         try {
             String result = WebDriver.addCoordinates(theLocalCoordinates);
@@ -144,16 +149,9 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
         return new CoordinateCursor(wrapped);
     }
 
-    /**
-     * This method returns all of the locally stored Coordinates as a List.
-     *
-     * @param context application context
-     * @return list of Coordinates store locally
-     */
-    public List<Coordinate> getAllCoordinates(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+    public List<Coordinate> getAllCoordinates(String userID) {
         List<Coordinate> coordinates = new ArrayList<>();
-        Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_TIME_STAMP, new String[]{});
+        Cursor cursor = getCoordinateCursor(userID);
 
         while (cursor.moveToNext()) {
 
@@ -162,12 +160,28 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
                     cursor.getLong(cursor.getColumnIndex(COLUMN_TIME_STAMP)),
                     cursor.getDouble(cursor.getColumnIndex(COLUMN_USER_SPEED)),
                     cursor.getDouble(cursor.getColumnIndex(COLUMN_USER_HEADING)),
-                    prefs.getString(User.USER_ID, "0"));
+                    cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID)));
             coordinates.add(coordinate);
 
         }
+        Log.d("LOCAL COORD LENGTH", "" + coordinates.size());
         return coordinates;
+    }
 
+
+    /**
+     * This method returns an iterative cursor over the Coordinates associated with the userID passed.
+     * @param userID the user who's coordinate list you are interested in iterating over, ALL_USERS for all
+     * @return a iterative cursor for the return sql query
+     */
+    private Cursor getCoordinateCursor(String userID) {
+        Cursor cursor = null;
+        if (userID.equals(ALL_USERS)) {
+            cursor = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_TIME_STAMP + ";", new String[]{});
+        } else {
+            cursor = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_USER_ID + " = '" + userID + "' ORDER BY " + COLUMN_TIME_STAMP + ";", new String[]{});
+        }
+        return cursor;
     }
 
     /**

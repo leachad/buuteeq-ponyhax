@@ -59,14 +59,14 @@ public class MyAccount extends ActionBarActivity
         public void onLocationChanged(Location location) {
             mLastLocation = location;
             if (location != null) {
-                Toast.makeText(getApplicationContext(), "Got Coord", Toast.LENGTH_SHORT).show();
                 //Make new coordinate and insert into coordinate database
                 Coordinate locationCoordinate = new Coordinate(location.getLongitude(), location.getLatitude(), System.currentTimeMillis() / 1000,
                         location.getSpeed(), location.getBearing(), prefs.getString(User.USER_ID, "N/A"));
 
-                coordHelper.insertCoordinate(locationCoordinate);
+                coordHelper.insertCoordinate(locationCoordinate); //add to local database
+                publishCounter++;
 
-                addCoordinateToList(locationCoordinate);
+                addCoordinateToList(locationCoordinate); //add to list
 
                 fragment.update(mLastLocation, coordinates);
 
@@ -80,15 +80,10 @@ public class MyAccount extends ActionBarActivity
         }
 
         @Override
-        public void onProviderEnabled(String provider) {
-//            int toastText = enabled ? R.string.gps_enabled : R.string.gps_disabled;
-//            Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_LONG).show(); //toast to show enabled
-        }
+        public void onProviderEnabled(String provider) {}
 
         @Override
-        public void onProviderDisabled(String provider) {
-
-        }
+        public void onProviderDisabled(String provider) {}
 
     };
     private CoordinateStorageDatabaseHelper coordHelper;
@@ -101,7 +96,7 @@ public class MyAccount extends ActionBarActivity
         NavigationDrawerFragment mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
-        coordinates = new ArrayList<>();
+        if (coordinates == null) coordinates = new ArrayList<>();
         coordHelper = new CoordinateStorageDatabaseHelper(getApplicationContext());
         loadCoordinates();
 
@@ -256,21 +251,28 @@ public class MyAccount extends ActionBarActivity
      * data usage.
      */
     private void loadCoordinates() {
-        SharedPreferences prefs = getSharedPreferences(Coordinate.COORDINATE_PREFS, MODE_PRIVATE);
         SharedPreferences userPrefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
-        User theUser = new User();
-        theUser.setID(userPrefs.getString(User.USER_ID, "0"));
+        SharedPreferences prefs = getApplication().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
+
         coordinates = new ArrayList<>();
 
         //Naturally in time order due to the local points being the most recent
-        List<Coordinate> moreCoords = coordHelper.getAllCoordinates(getApplicationContext());
+        List<Coordinate> moreCoords = coordHelper.getAllCoordinates(userPrefs.getString(User.USER_ID, CoordinateStorageDatabaseHelper.ALL_USERS));
+
+        Toast.makeText(getApplicationContext(), "More Coords from local " + moreCoords.size(), Toast.LENGTH_LONG).show();
+
         for (Coordinate c: moreCoords) {
             coordinates.add(c);
         }
+        //grab webdriver coordinates
+
+        User theUser = new User();
+        theUser.setID(userPrefs.getString(User.USER_ID, "-1"));
 
         try {
             List<Coordinate> theList = WebDriver.getLoggedCoordinates(theUser, prefs.getLong(Coordinate.START_TIME, 0), prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
             if (theList != null) {
+                Toast.makeText(getApplicationContext(), "Web Driver list length " + theList.size(), Toast.LENGTH_SHORT).show();
                 for (Coordinate c : theList) {
                     coordinates.add(c);
                 }
@@ -279,17 +281,18 @@ public class MyAccount extends ActionBarActivity
             e.printStackTrace();
         }
 
+
         Toast.makeText(getApplicationContext(), "load finished", Toast.LENGTH_SHORT).show();
     }
 
     private void addCoordinateToList(Coordinate coord) {
         coordinates.add(coord);
-        if (publishCounter == 1) {
-            boolean success = coordHelper.publishCoordinateBatch(getApplicationContext());
+
+        if (publishCounter == 3) {
+            boolean success = coordHelper.publishCoordinateBatch();
             publishCounter = 0;
             Log.d("PUBLISH: ", Boolean.toString(success));
         }
-        publishCounter++;
     }
 
 

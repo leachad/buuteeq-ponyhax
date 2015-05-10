@@ -6,6 +6,7 @@ package webservices;
 
 import android.annotation.TargetApi;
 import android.os.Build;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,13 +77,19 @@ public final class JsonBuilder extends PhpBuilder {
     /**
      * Private method to return the points gleaned from querying the database.
      */
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     public List<Coordinate> jSONLoggedPoints(String theResult) throws JSONException {
         JSONObject json = new JSONObject(theResult);
+        Log.d("JSON LOGGED start", "in start");
         List<Coordinate> loggedPoints = null;
+        Log.d("JSON RESULT", "" + "" + json.getString(KEY_RESULT));
         if (json.getString(KEY_RESULT).matches(VAL_SUCCESS)) {
+            Log.d("IN IF STATE", "" + "YES");
             loggedPoints = new ArrayList<>();
-            JSONArray points = new JSONArray(json.getJSONArray(KEY_POINTS));
+//            JSONArray points = new JSONArray(json.getJSONArray(KEY_POINTS));
+            JSONArray points = json.getJSONArray("points");
+
+
+            Log.d("JSON POINTS LENGTH", "" + points.length());
             for (int i = 0; i < points.length(); i++) {
                 JSONObject point = (JSONObject) points.get(i);
                 loggedPoints.add(new Coordinate(point.getDouble(URL_LATITUDE), point.getDouble(URL_LONGITUDE),
@@ -90,6 +97,7 @@ public final class JsonBuilder extends PhpBuilder {
                         point.getString(URL_SOURCE)));
             }
         }
+        Log.d("JSON LOGGED P", "" + loggedPoints.size());
         return loggedPoints;
     }
 }

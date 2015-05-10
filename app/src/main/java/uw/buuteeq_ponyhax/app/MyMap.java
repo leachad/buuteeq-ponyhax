@@ -4,11 +4,12 @@
 
 package uw.buuteeq_ponyhax.app;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,34 +19,74 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
+import db.User;
+import webservices.WebDriver;
 
 /**
- * Created by Huy Ngo
- * MapFragment is used to display the map into a fragment so that it is an option in NavigationDrawer.
+ * MapFragment used to ease the transition between NavigationDrawer submenus
  */
 public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
 
-    /**
-     * GoogleMap Object
-     */
     private GoogleMap mMap;
+
+    /**
+     *
+     * @param currentLocation
+     * @param locations
+     */
+    @Override
+    public void update(Location currentLocation, List<Coordinate> locations) {
+
+        PolylineOptions line = new PolylineOptions();
+        line.width(5);
+        line.color(Color.YELLOW);
+        LatLng marker1 = new LatLng(47.244911, -122.438871);
+
+        //Splits this into two possible occurences, either the current location will be null because we have it in the list already anyways,
+        //or we wont be concerned with the list because we already have all of the points in the map.
+        if (currentLocation == null && locations != null) {
+
+            marker1 = new LatLng(locations.get(0).getLatitude(), locations.get(0).getLongitude());
+            for (int i = 1; i < locations.size(); i++) {
+                LatLng marker2 = new LatLng((locations.get(i).getLatitude()), locations.get(i).getLongitude());
+
+                line.add(marker1, marker2);
+
+                marker1 = marker2;
+
+            }
+
+        } else if (currentLocation != null) {
+            marker1 = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+            LatLng marker2 = new LatLng(locations.get(locations.size() - 1).getLatitude(), locations.get(locations.size() - 1).getLongitude());
+            line.add(marker2, marker1);
+        }
+        mMap.addPolyline(line);
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker1, 17));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         super.onCreateView(inflater, container, savedInstanceState);
+
+
+        //start location updates when the activity first starts up
+        //TODO Figure out why the Location Manager keeps throwing errors
+        //MyLocationManager.getInstance(getActivity()).startLocationUpdates();
+
         return inflater.inflate(R.layout.activity_my_map, container, false);
     }
 
@@ -54,6 +95,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
     public void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+
     }
 
     /**
@@ -65,34 +107,35 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
                     .findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
         }
+
     }
 
 
-    /**
-     * Testing purposes only.
-     */
-    private void setUpMap() {
-        //Set up coordinates
-        LatLng testLocation = new LatLng(47.244911, -122.438871);
-        LatLng testLocation2 = new LatLng(47.244889, -122.436940);
-
-        //Add the markers between two points
-        mMap.addMarker(new MarkerOptions().position(testLocation).title("Location 1"));
-        mMap.addMarker(new MarkerOptions().position(testLocation2).title("Location 2"));
-
-        //Add the line between the two points
-        PolylineOptions line = new PolylineOptions();
-        line.add(testLocation, testLocation2);
-        line.width(5);
-        line.color(Color.YELLOW);
-
-        mMap.addPolyline(line);
-
-
-        //Camera movement
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(testLocation, 17));
-    }
+//    /**
+//     * Testing purposes only, but we can implement an actual setup later.
+//     */
+//    private void setUpMap() {
+//        //Set up coordinates
+//        LatLng testLocation = new LatLng(47.244911, -122.438871);
+//        LatLng testLocation2 = new LatLng(47.244889, -122.436940);
+//
+//        //Add the markers between two points
+//        mMap.addMarker(new MarkerOptions().position(testLocation).title("Location 1"));
+//        mMap.addMarker(new MarkerOptions().position(testLocation2).title("Location 2"));
+//
+//        //Add the line between the two points
+//        PolylineOptions line = new PolylineOptions();
+//        line.add(testLocation, testLocation2);
+//        line.width(5);
+//        line.color(Color.YELLOW);
+//
+//        mMap.addPolyline(line);
+//
+//
+//        //Camera movement
+//        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(testLocation, 17));
+//    }
 
     /**
      * When the map is loaded and ready, it will call this!
@@ -102,77 +145,30 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+//        setUpMap();
+
+        SharedPreferences userPrefs = getActivity().getApplication().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getApplication().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
+
         CoordinateStorageDatabaseHelper db = new CoordinateStorageDatabaseHelper(getActivity().getApplicationContext());
-        List<Coordinate> coordinates = db.getAllCoordinates(getActivity().getApplicationContext());
-        update(null, coordinates);
-        //setUpMap();
+        List<Coordinate> coordinates = db.getAllCoordinates(userPrefs.getString(User.USER_ID, CoordinateStorageDatabaseHelper.ALL_USERS));
 
-    }
 
-    /**
-     * When there is an update in location, it will add the new location to the map.
-     *
-     * @param currentLocation current location
-     * @param locations the list of all coordinates
-     */
-    public void update(Location currentLocation, List<Coordinate> locations) {
-        Log.d("Updating Map:", Integer.toString(locations.size()));
-        if (locations.size() == 1) {
-            LatLng location1 = addLocation(locations.get(0));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, 17));
-        } else if (locations.size() > 1) {
-            Coordinate previousLocation = null;
-            for (Coordinate location : locations) {
-                addLocation(location);
-                if (previousLocation != null) {
-                    addLine(previousLocation, location);
+
+
+        User theUser = new User();
+        theUser.setID(userPrefs.getString(User.USER_ID, "-1"));
+        try {
+            List<Coordinate> theList = WebDriver.getLoggedCoordinates(theUser, prefs.getLong(Coordinate.START_TIME, 0), prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
+            if (theList != null) {
+                for (Coordinate c : theList) {
+                    coordinates.add(c);
                 }
-                previousLocation = location;
             }
-            assert previousLocation != null;
-            LatLng lastLocation = new LatLng(previousLocation.getLatitude(), previousLocation.getLongitude());
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 17));
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
         }
-    }
-
-    /**
-     * This method is for adding individual points to the map.
-     *
-     * @param location the location
-     * @return a LatLng object
-     */
-    private LatLng addLocation(Coordinate location) {
-        LatLng location1 = new LatLng(location.getLatitude(), location.getLongitude());
-        Date date = new Date(location.getTimeStamp() * 1000);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d yyyy h:mm:ss a", Locale.US);
-        String dateStamp = dateFormat.format(date);
-        Log.d("Timestamp in maps", dateStamp);
-        mMap.addMarker(new MarkerOptions().position(location1).title(dateStamp));
-        return location1;
-    }
-
-    /**
-     * This method is for adding the lines between two points.
-     *
-     * @param location1 location one
-     * @param location2 location two
-     */
-    private void addLine(Coordinate location1, Coordinate location2) {
-        LatLng testLocation = new LatLng(location1.getLatitude(), location1.getLongitude());
-        LatLng testLocation2 = new LatLng(location2.getLatitude(), location2.getLongitude());
-
-        PolylineOptions line = new PolylineOptions();
-        line.add(testLocation, testLocation2);
-        line.width(5);
-        line.color(Color.YELLOW);
-
-        mMap.addPolyline(line);
+        update(null, coordinates);
 
     }
-
-    public void updateView() {
-        //Currently, do nothing for now
-    }
-
-
 }

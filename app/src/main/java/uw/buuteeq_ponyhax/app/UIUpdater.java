@@ -16,6 +16,5 @@ import db.Coordinate;
 public interface UIUpdater {
 
     void update(Location currentLocation, List<Coordinate> locations);
-    void updateView();
 
 }

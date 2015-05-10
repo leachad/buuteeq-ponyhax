@@ -13,13 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.User;
+import webservices.WebDriver;
 
 /**
  * Created by BrentYoung on 4/12/15.
@@ -40,13 +44,9 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
     private TextView mBearingView;
     private TextView mTimeView;
 
-    public void updateView() {
-
-    }
-
 
     public void update(Location currentLocation, List<Coordinate> locations) {
-        SharedPreferences prefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getApplication().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
 
         long startTime = prefs.getLong(Coordinate.START_TIME, 0);
         long endTime = prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis());
@@ -160,8 +160,27 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
         mBearingView = (TextView) getActivity().findViewById(R.id.text_bearing);
         mTimeView = (TextView) getActivity().findViewById(R.id.text_time);
 
+        SharedPreferences userPrefs = getActivity().getApplication().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getApplication().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
+
         CoordinateStorageDatabaseHelper db = new CoordinateStorageDatabaseHelper(getActivity().getApplicationContext());
-        List<Coordinate> coordinates = db.getAllCoordinates(getActivity().getApplicationContext());
+        List<Coordinate> coordinates = db.getAllCoordinates(userPrefs.getString(User.USER_ID, CoordinateStorageDatabaseHelper.ALL_USERS));
+
+
+
+
+        User theUser = new User();
+        theUser.setID(userPrefs.getString(User.USER_ID, "-1"));
+        try {
+            List<Coordinate> theList = WebDriver.getLoggedCoordinates(theUser, prefs.getLong(Coordinate.START_TIME, 0), prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
+            if (theList != null) {
+                for (Coordinate c : theList) {
+                    coordinates.add(c);
+                }
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
         update(null, coordinates);
 
     }
