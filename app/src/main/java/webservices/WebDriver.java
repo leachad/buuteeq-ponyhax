@@ -42,6 +42,7 @@ public class WebDriver {
      * Private fields to hold the parameter variables before background tasks are executed.
      */
     private static User myUser;
+    private static String myUserID;
     private static List<Coordinate> myCoordinateList;
     private static String myEmailAddress;
     private static String myPassword;
@@ -84,8 +85,8 @@ public class WebDriver {
         return new UserLogin().execute().get();
     }
 
-    public static List<Coordinate> getLoggedCoordinates(User theUser, final long theStartTime, final long theEndTime) throws ExecutionException, InterruptedException {
-        myUser = theUser;
+    public static List<Coordinate> getLoggedCoordinates(String theUserID, final long theStartTime, final long theEndTime) throws ExecutionException, InterruptedException {
+        myUserID = theUserID;
         myStartTime = theStartTime;
         myEndTime = theEndTime;
         return new GetUserCoordinates().execute().get();
@@ -214,14 +215,14 @@ public class WebDriver {
 
         protected List<Coordinate> doInBackground(Void... getUserCoordinates) {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(requestBuilder.getUserCoordinateRequest(myUser.getUserID(), myStartTime, myEndTime));
+            HttpPost httpPost = new HttpPost(requestBuilder.getUserCoordinateRequest(myUserID, myStartTime, myEndTime));
             String result;
             List<Coordinate> loggedPoints = null;
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
                 if (requestBuilder.jSONResultIsSuccess(result))
-                    loggedPoints = requestBuilder.jSONLoggedPoints(result, myUser.getUserID());
+                    loggedPoints = requestBuilder.jSONLoggedPoints(result, myUserID);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -244,19 +245,19 @@ public class WebDriver {
         protected String doInBackground(Void... params) {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(requestBuilder.getUserAgreementRequest());
-            String result = JsonBuilder.VAL_FAIL;
+            String result;
+            String agreement = null;
 
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
-                if (requestBuilder.jSONResultIsSuccess(result)) {
-                    result = requestBuilder.jSONUserAgreement(result);
-                }
+                agreement = requestBuilder.jSONUserAgreement(result);
+
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
 
-            return result;
+            return agreement;
         }
 
     }

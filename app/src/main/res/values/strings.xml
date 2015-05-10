@@ -108,6 +108,7 @@
     <string name="total_distance_string">Total Distance: </string>
     <string name="total_distance_range_string">Total Interval Distance: </string>
     <string name="general_stats_string">General Statistics: </string>
+    <string name="display_list_points">Show List of Points</string>
 
 
     <!--

@@ -41,7 +41,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/startOfRange" />
+                android:text="@string/startOfRange"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -54,7 +55,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
 
                 <Space
                     android:layout_width="16dp"
@@ -68,7 +70,8 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/startDateText"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             </LinearLayout>
 
@@ -85,7 +88,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/endOfRange" />
+                android:text="@string/endOfRange"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -98,7 +102,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
 
                 <Space
                     android:layout_width="16dp"
@@ -112,7 +117,8 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/endDateText"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

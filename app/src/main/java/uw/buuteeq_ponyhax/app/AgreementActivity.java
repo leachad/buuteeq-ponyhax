@@ -13,8 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-
 import java.util.concurrent.ExecutionException;
 
 import webservices.WebDriver;

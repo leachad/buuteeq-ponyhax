@@ -12,10 +12,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -166,13 +165,16 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
         CoordinateStorageDatabaseHelper db = new CoordinateStorageDatabaseHelper(getActivity().getApplicationContext());
         List<Coordinate> coordinates = db.getAllCoordinates(userPrefs.getString(User.USER_ID, CoordinateStorageDatabaseHelper.ALL_USERS));
 
+        Button listButton = (Button) getActivity().findViewById(R.id.displayPointsButton);
+        listButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, new OverviewListFragment()).commit();
+            }
+        });
 
-
-
-        User theUser = new User();
-        theUser.setID(userPrefs.getString(User.USER_ID, "-1"));
         try {
-            List<Coordinate> theList = WebDriver.getLoggedCoordinates(theUser, prefs.getLong(Coordinate.START_TIME, 0), prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
+            List<Coordinate> theList = WebDriver.getLoggedCoordinates(userPrefs.getString(User.USER_ID, null), prefs.getLong(Coordinate.START_TIME, 0), prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
             if (theList != null) {
                 for (Coordinate c : theList) {
                     coordinates.add(c);

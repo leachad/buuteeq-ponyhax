@@ -11,7 +11,6 @@ import android.database.CursorWrapper;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.concurrent.ExecutionException;
 

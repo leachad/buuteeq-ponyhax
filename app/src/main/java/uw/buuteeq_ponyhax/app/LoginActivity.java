@@ -14,10 +14,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 
-import db.Coordinate;
 import db.User;
 import db.UserStorageDatabaseHelper;
 import webservices.WebDriver;

@@ -80,10 +80,12 @@ public class MyAccount extends ActionBarActivity
         }
 
         @Override
-        public void onProviderEnabled(String provider) {}
+        public void onProviderEnabled(String provider) {
+        }
 
         @Override
-        public void onProviderDisabled(String provider) {}
+        public void onProviderDisabled(String provider) {
+        }
 
     };
     private CoordinateStorageDatabaseHelper coordHelper;
@@ -125,7 +127,6 @@ public class MyAccount extends ActionBarActivity
                 enableStartButton();
             }
         });
-
 
 
         //END location manager setup
@@ -261,16 +262,16 @@ public class MyAccount extends ActionBarActivity
 
         Toast.makeText(getApplicationContext(), "More Coords from local " + moreCoords.size(), Toast.LENGTH_LONG).show();
 
-        for (Coordinate c: moreCoords) {
+        for (Coordinate c : moreCoords) {
             coordinates.add(c);
         }
-        //grab webdriver coordinates
-
-        User theUser = new User();
-        theUser.setID(userPrefs.getString(User.USER_ID, "-1"));
 
         try {
-            List<Coordinate> theList = WebDriver.getLoggedCoordinates(theUser, prefs.getLong(Coordinate.START_TIME, 0), prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
+            List<Coordinate> theList =
+                    WebDriver.getLoggedCoordinates(userPrefs.getString(User.USER_ID, null),
+                            prefs.getLong(Coordinate.START_TIME, 0),
+                            prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
+
             if (theList != null) {
                 Toast.makeText(getApplicationContext(), "Web Driver list length " + theList.size(), Toast.LENGTH_SHORT).show();
                 for (Coordinate c : theList) {

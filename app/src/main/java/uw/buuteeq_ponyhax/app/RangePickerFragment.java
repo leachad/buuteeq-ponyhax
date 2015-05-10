@@ -32,7 +32,7 @@ import java.util.List;
 import db.Coordinate;
 
 
-public class RangePickerFragment extends android.support.v4.app.Fragment  {
+public class RangePickerFragment extends android.support.v4.app.Fragment implements UIUpdater  {
 
     private static final String ERROR_MESSAGE = "Select Time and Date must be in Contiguous Order";
     private static final String DIALOG_PROMPT = "&#9660";
@@ -100,7 +100,7 @@ public class RangePickerFragment extends android.support.v4.app.Fragment  {
     }
 
     private void updateAllFields() {
-        mSharedPrefs = getActivity().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
+        mSharedPrefs = getActivity().getApplicationContext().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
         mStartCalendar.setTime(new Date(mSharedPrefs.getLong(Coordinate.START_TIME, 0)));
         mStartDate.setText(getDate(mStartCalendar.getTime()));
         mStartTime.setText(getTime(mStartCalendar.getTime()));
@@ -108,6 +108,11 @@ public class RangePickerFragment extends android.support.v4.app.Fragment  {
         mEndCalendar.setTime(new Date(mSharedPrefs.getLong(Coordinate.END_TIME, 0)));
         mEndDate.setText(getDate(mEndCalendar.getTime()));
         mEndTime.setText(getTime(mEndCalendar.getTime()));
+
+    }
+
+    @Override
+    public void update(Location currentLocation, List<Coordinate> locations) {
 
     }
 
