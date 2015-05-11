@@ -150,7 +150,9 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
 
         try {
             List<Coordinate> theList = WebDriver.getLoggedCoordinates(LocalStorage.getUserID(getActivity()),
-                    LocalStorage.getStartTime(getActivity()), LocalStorage.getEndTimeCurrentTimeBackup(getActivity()));
+                    LocalStorage.getStartTime(getActivity()),
+                    LocalStorage.getEndTimeCurrentTimeBackup(getActivity()));
+
             if (theList != null) {
                 for (Coordinate c : theList) {
                     coordinates.add(c);
