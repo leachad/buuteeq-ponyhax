@@ -77,7 +77,7 @@ public class MyAccount extends ActionBarActivity
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            myLocationManager.startLocationUpdates((android.location.LocationListener) mLocationReceiver);
+//            myLocationManager.startLocationUpdates((android.location.LocationListener) mLocationReceiver);
         }
 
         @Override
@@ -132,8 +132,9 @@ public class MyAccount extends ActionBarActivity
 
         //END location manager setup
         registerReceiver(mLocationReceiver, new IntentFilter(MyLocationManager.ACTION_LOCATION));
-        enabledStopButton();
-        myLocationManager.startLocationUpdates((android.location.LocationListener) mLocationReceiver);
+        enableStartButton();
+//        enabledStopButton();
+//        myLocationManager.startLocationUpdates((android.location.LocationListener) mLocationReceiver);
         setTitle("");
     }
 
@@ -258,7 +259,7 @@ public class MyAccount extends ActionBarActivity
         //Naturally in time order due to the local points being the most recent
         List<Coordinate> moreCoords = coordHelper.getAllCoordinates(LocalStorage.getUserIDCoordinateQuery(getApplicationContext()));
 
-        Toast.makeText(getApplicationContext(), "More Coords from local " + moreCoords.size(), Toast.LENGTH_LONG).show();
+//        Toast.makeText(getApplicationContext(), "More Coords from local " + moreCoords.size(), Toast.LENGTH_LONG).show();
 
         for (Coordinate c : moreCoords) {
             coordinates.add(c);
@@ -271,7 +272,7 @@ public class MyAccount extends ActionBarActivity
                             LocalStorage.getEndTimeCurrentTimeBackup(getApplicationContext()));
 
             if (theList != null) {
-                Toast.makeText(getApplicationContext(), "Web Driver list length " + theList.size(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "Web Driver list length " + theList.size(), Toast.LENGTH_SHORT).show();
                 for (Coordinate c : theList) {
                     coordinates.add(c);
                 }
@@ -284,7 +285,7 @@ public class MyAccount extends ActionBarActivity
     private void addCoordinateToList(Coordinate coord) {
         coordinates.add(coord);
 
-        if (publishCounter == 3) {
+        if (publishCounter == 5) {
             coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
             publishCounter = 0;
             Log.d("PUBLISH: ", Integer.toString(publishCounter));

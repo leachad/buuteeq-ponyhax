@@ -100,15 +100,16 @@
     -->
     
     <string name="recent_location_string">Locations Gathered</string>
-    <string name="latitude_string">Latitude: </string>
-    <string name="longitude_string">Longitude: </string>
-    <string name="bearing_string">Bearing: </string>
-    <string name="time_stamp_string">Time: </string>
-    <string name="speed_string">Speed: </string>
+    <string name="latitude_string">Latitude:  </string>
+    <string name="longitude_string">Longitude:  </string>
+    <string name="bearing_string">Bearing:  </string>
+    <string name="time_stamp_string">Time:  </string>
+    <string name="speed_string">Speed:  </string>
     <string name="total_distance_string">Total Distance: </string>
-    <string name="total_distance_range_string">Total Interval Distance: </string>
+    <string name="total_distance_range_string">Interval Distance: </string>
     <string name="general_stats_string">General Statistics: </string>
     <string name="display_list_points">Show List of Points</string>
+    <string name="list_title">Coordinate List:</string>
 
 
     <!--
