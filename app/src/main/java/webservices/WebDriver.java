@@ -289,7 +289,7 @@ public class WebDriver {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(requestBuilder.getUserResetRequest(myEmailAddress));
             String result;
-            String instructions = null;
+            String instructions = "fail";
 
             try {
                 HttpResponse response = httpClient.execute(httpPost);
