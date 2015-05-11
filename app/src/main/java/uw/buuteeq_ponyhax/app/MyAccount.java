@@ -294,9 +294,9 @@ public class MyAccount extends ActionBarActivity
         coordinates.add(coord);
 
         if (publishCounter == 3) {
-            boolean success = coordHelper.publishCoordinateBatch(getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE).getString(User.USER_ID, null));
+            coordHelper.publishCoordinateBatch(getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE).getString(User.USER_ID, null));
             publishCounter = 0;
-            Log.d("PUBLISH: ", Boolean.toString(success));
+            Log.d("PUBLISH: ", Integer.toString(publishCounter));
         }
     }
 

@@ -14,9 +14,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-import webservices.JsonBuilder;
 import webservices.WebDriver;
 
 /**
@@ -112,24 +110,16 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
     /**
      * Publicly accessible method to batch publish local coordinates to the database based on the data
      * that the user has obtained while polling gps every 'n' seconds.
-     *
+     * <p/>
      * theLocalCoordinates is a list of Coordinates generated before pushed to webservices
+     *
      * @return isSuccess
      */
-    public boolean publishCoordinateBatch(final String theUserID) {
+    public void publishCoordinateBatch(final String theUserID) {
         List<Coordinate> theLocalCoordinates = getAllCoordinates(ALL_USERS);
-        boolean isSuccess = false;
-        try {
-            String result = WebDriver.addCoordinates(theLocalCoordinates, theUserID);
-            if (result.matches(JsonBuilder.VAL_SUCCESS)) {
-                isSuccess = true;
-                wipeTable();
-            }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        WebDriver.addCoordinates(theLocalCoordinates, theUserID);
+        wipeTable();
 
-        return isSuccess;
 
     }
 
@@ -167,6 +157,7 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * This method returns an iterative cursor over the Coordinates associated with the userID passed.
+     *
      * @param userID the user who's coordinate list you are interested in iterating over, ALL_USERS for all
      * @return a iterative cursor for the return sql query
      */

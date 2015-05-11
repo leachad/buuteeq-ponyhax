@@ -66,10 +66,21 @@ public class WebDriver {
         return new AddUser().execute().get();
     }
 
-    public static String addCoordinates(List<Coordinate> theCoordinateList, String theUserID) throws ExecutionException, InterruptedException {
+    public static void addCoordinates(List<Coordinate> theCoordinateList, String theUserID) {
         myCoordinateList = theCoordinateList;
         myUserID = theUserID;
-        return new AddCoordinates().execute().get();
+        String result = null;
+
+        try {
+            result = new AddCoordinates().execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        if (result != null) {
+            //TODO store the result
+        }
+
     }
 
     public static String resetPassword(final String theEmailAddress) throws ExecutionException, InterruptedException {
@@ -98,7 +109,7 @@ public class WebDriver {
 
         try {
             JSONObject json = new JSONObject(agreement);
-            agreement = json.getString("agreement");
+            agreement = json.getString(JsonBuilder.KEY_AGREEMENT);
         } catch (JSONException e) {
             e.printStackTrace();
         }
