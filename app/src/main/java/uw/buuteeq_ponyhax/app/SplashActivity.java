@@ -9,7 +9,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import java.util.concurrent.ExecutionException;
+
 import db.User;
+import webservices.WebDriver;
 
 /**
  * SplashActivity to display a timed "entry" to the application. Displays the globe, application
@@ -29,6 +32,7 @@ public class SplashActivity extends Activity {
             public void run() {
 
                 try {
+
                     sleep(3000);
                     checkScreen();
                 } catch (InterruptedException e) {
@@ -51,6 +55,13 @@ public class SplashActivity extends Activity {
 
         Intent myIntent;
         SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
+        try {
+            String agreement = WebDriver.getUserAgreement();
+            prefs.edit().putString(User.USER_AGREEMENT, agreement).apply();
+
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
         if (prefs != null && prefs.contains(User.USER_ID)) {
             myIntent = new Intent(SplashActivity.this, MyAccount.class);
         } else {
