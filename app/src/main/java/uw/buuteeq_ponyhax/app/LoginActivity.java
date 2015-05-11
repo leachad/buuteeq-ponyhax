@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 
 import db.Coordinate;
+import db.LocalStorage;
 import db.User;
 import db.UserStorageDatabaseHelper;
 import webservices.WebDriver;
@@ -101,7 +102,6 @@ public class LoginActivity extends Activity {
         boolean toRet = false;
         EditText mPasswordField = (EditText) findViewById(R.id.password_field);
         EditText mEmailField = (EditText) findViewById(R.id.email_field);
-        UserStorageDatabaseHelper mDbHelper = new UserStorageDatabaseHelper(getApplicationContext());
 
         /**
          * DEBUGGING: If necessary to delete a localized database, comment in the line below:
@@ -125,18 +125,11 @@ public class LoginActivity extends Activity {
                 makeMissingUserToast();
             } else {
                 toRet = true;
+                LocalStorage.putUserId(userID, getApplicationContext());
+                LocalStorage.putUserEmail(mEmailField.getText().toString().trim(), getApplicationContext());
+                LocalStorage.putStartTime(Calendar.getInstance().getTimeInMillis() / TIMESTAMP_DIVISOR, getApplicationContext());
+                LocalStorage.putEndTime(Calendar.getInstance().getTimeInMillis() / TIMESTAMP_DIVISOR, getApplicationContext());
 
-                SharedPreferences userPrefs = getApplicationContext().getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
-                SharedPreferences.Editor userEditor = userPrefs.edit();
-                userEditor.putString(User.USER_ID, userID);
-                userEditor.putString(User.USER_EMAIL, mEmailField.getText().toString());
-                userEditor.apply();
-
-                SharedPreferences coordPrefs = getApplicationContext().getSharedPreferences(Coordinate.COORDINATE_PREFS, MODE_PRIVATE);
-                SharedPreferences.Editor coordEditor = coordPrefs.edit();
-                coordEditor.putLong(Coordinate.START_TIME, Calendar.getInstance().getTimeInMillis() / TIMESTAMP_DIVISOR).apply();
-                coordEditor.putLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis() / TIMESTAMP_DIVISOR).apply();
-                coordEditor.apply();
             }
         }
         return toRet;

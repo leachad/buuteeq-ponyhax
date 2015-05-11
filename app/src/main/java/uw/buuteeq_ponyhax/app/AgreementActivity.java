@@ -6,7 +6,6 @@ package uw.buuteeq_ponyhax.app;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,7 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import db.User;
+import db.LocalStorage;
 
 /**
  * Class that propagates to the screen what the user is accepting by downloading our
@@ -27,10 +26,9 @@ public class AgreementActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agreement);
         setTitle("");
-        SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
         TextView agreement = (TextView) findViewById(R.id.userAgreementView);
 
-        String agreementText = prefs.getString(User.USER_AGREEMENT, null);
+        String agreementText = LocalStorage.getUserAgreement(getApplicationContext());
         if (agreementText != null) {
             agreementText = agreementText.replace("<h2>", "");
             agreementText = agreementText.replace("</h2>", "");

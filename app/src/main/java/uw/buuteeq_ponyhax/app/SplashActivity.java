@@ -11,6 +11,7 @@ import android.os.Bundle;
 
 import java.util.concurrent.ExecutionException;
 
+import db.LocalStorage;
 import db.User;
 import webservices.WebDriver;
 
@@ -54,15 +55,14 @@ public class SplashActivity extends Activity {
     private void checkScreen() {
 
         Intent myIntent;
-        SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
         try {
             String agreement = WebDriver.getUserAgreement();
-            prefs.edit().putString(User.USER_AGREEMENT, agreement).apply();
+            LocalStorage.putUserAgreement(agreement, getApplicationContext());
 
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        if (prefs != null && prefs.contains(User.USER_ID)) {
+        if (LocalStorage.getUserID(getApplicationContext()) != null) {
             myIntent = new Intent(SplashActivity.this, MyAccount.class);
         } else {
             myIntent = new Intent(SplashActivity.this, LoginActivity.class);
