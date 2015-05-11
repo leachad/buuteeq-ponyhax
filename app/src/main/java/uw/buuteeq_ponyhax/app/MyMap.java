@@ -38,7 +38,6 @@ import webservices.WebDriver;
 public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
 
     private GoogleMap mMap;
-    private boolean started;
 
     /**
      * @param currentLocation
@@ -51,6 +50,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
         line.width(5);
         line.color(Color.YELLOW);
         LatLng marker1 = new LatLng(47.244911, -122.438871);
+        boolean found = false;
 
         //Splits this into two possible occurences, either the current location will be null because we have it in the list already anyways,
         //or we wont be concerned with the list because we already have all of the points in the map.
@@ -68,17 +68,22 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
                 line.add(marker1, marker2);
 
                 marker1 = marker2;
+                found = true;
 
             }
 
         } else if (currentLocation != null) {
             marker1 = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
             LatLng marker2 = new LatLng(locations.get(locations.size() - 1).getLatitude(), locations.get(locations.size() - 1).getLongitude());
+            mMap.addMarker(new MarkerOptions().position(marker2).title("Location"));
             line.add(marker2, marker1);
+            found = true;
         }
-        mMap.addPolyline(line);
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker1, 17));
+        if (found) {
+            mMap.addPolyline(line);
+            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker1, 17));
+        }
     }
 
     @Override
@@ -89,11 +94,6 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
         return inflater.inflate(R.layout.activity_my_map, container, false);
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        started = false;
-    }
 
     @Override
     public void onResume() {
@@ -152,26 +152,25 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
 //        setUpMap();
 
 
-        if (!started) {
-            SharedPreferences userPrefs = getActivity().getApplication().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-            SharedPreferences prefs = getActivity().getApplication().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
+        Log.d("IN RESUME UPDATE", "yep!");
+        SharedPreferences userPrefs = getActivity().getApplication().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getApplication().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
 
-            CoordinateStorageDatabaseHelper db = new CoordinateStorageDatabaseHelper(getActivity().getApplicationContext());
-            List<Coordinate> coordinates = db.getAllCoordinates(userPrefs.getString(User.USER_ID, CoordinateStorageDatabaseHelper.ALL_USERS));
+        CoordinateStorageDatabaseHelper db = new CoordinateStorageDatabaseHelper(getActivity().getApplicationContext());
+        List<Coordinate> coordinates = db.getAllCoordinates(userPrefs.getString(User.USER_ID, CoordinateStorageDatabaseHelper.ALL_USERS));
 
-            try {
-                List<Coordinate> theList = WebDriver.getLoggedCoordinates(userPrefs.getString(User.USER_ID, null), prefs.getLong(Coordinate.START_TIME, 0), prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
-                if (theList != null) {
-                    for (Coordinate c : theList) {
-                        coordinates.add(c);
-                    }
+        try {
+            List<Coordinate> theList = WebDriver.getLoggedCoordinates(userPrefs.getString(User.USER_ID, null), prefs.getLong(Coordinate.START_TIME, 0), prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
+            if (theList != null) {
+                for (Coordinate c : theList) {
+                    coordinates.add(c);
                 }
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
             }
-            update(null, coordinates);
-            started = true;
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
         }
+        update(null, coordinates);
+
 
     }
 }
