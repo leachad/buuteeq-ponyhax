@@ -71,7 +71,6 @@ public class MyAccount extends ActionBarActivity
                 fragment.update(mLastLocation, coordinates);
 
             }
-//            myLocationManager = MyLocationManager.getInstance(getApplicationContext()); //reinstantiate in case wifi state changes
         }
 
         @Override
@@ -290,7 +289,7 @@ public class MyAccount extends ActionBarActivity
         coordinates.add(coord);
 
         if (publishCounter == 3) {
-            boolean success = coordHelper.publishCoordinateBatch();
+            boolean success = coordHelper.publishCoordinateBatch(getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE).getString(User.USER_ID, null));
             publishCounter = 0;
             Log.d("PUBLISH: ", Boolean.toString(success));
         }

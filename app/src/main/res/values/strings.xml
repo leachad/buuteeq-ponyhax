@@ -99,7 +99,7 @@
     Overview Fragment resources
     -->
     
-    <string name="recent_location_string">My Last Recorded Location:</string>
+    <string name="recent_location_string">Locations Gathered</string>
     <string name="latitude_string">Latitude: </string>
     <string name="longitude_string">Longitude: </string>
     <string name="bearing_string">Bearing: </string>

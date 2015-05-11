@@ -4,6 +4,9 @@
 
 package db;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Java class that holds all the fields pertinent to a coordinate in a given
  * point. Can be modified to hold all applicable data points that may be useful
@@ -19,12 +22,20 @@ public class Coordinate {
     public static final String COORDINATE_PREFS = "coordinate_prefs";
     public static final String START_TIME = "start_time"; //stored as a unix time stamp
     public static final String END_TIME = "end_time";
+    public static final String LONG_TITLE = " Longitude";
+    public static final String LAT_TITLE = " Latitude";
+    public static final String TIME_TITLE = " Date/Time";
+    public static final String SPEED_TITLE = " Speed";
+    public static final String SPEED_UNITS = " mph ";
+    public static final String HEADING_TITLE = " Heading";
+    public static final String USER_TITLE = " User-id";
     public static final String COORDINATE_SOURCE = "coordinate_source";
     public static final String SEPARATOR = ": ";
 
     /**
      * Private fields to hold reference to the fields of the Coordinate object.
      */
+    private static final int DATE_CONVERSION = 1000;
     private double myLongitude;
     private double myLatitude;
     private long myTimeStamp;
@@ -116,7 +127,7 @@ public class Coordinate {
 
     @Override
     public String toString() {
-        return myLongitude + SEPARATOR + myLatitude + SEPARATOR + myTimeStamp
-                + SEPARATOR + myUserID + SEPARATOR + mySpeed + SEPARATOR + myHeading;
+        return LONG_TITLE + SEPARATOR + myLongitude + LAT_TITLE + SEPARATOR + myLatitude + TIME_TITLE + SEPARATOR + new Date(myTimeStamp * DATE_CONVERSION).toString()
+                + SPEED_TITLE + SEPARATOR + mySpeed + SPEED_UNITS + HEADING_TITLE + SEPARATOR + myHeading;
     }
 }

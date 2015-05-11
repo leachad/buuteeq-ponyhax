@@ -66,8 +66,9 @@ public class WebDriver {
         return new AddUser().execute().get();
     }
 
-    public static String addCoordinates(List<Coordinate> theCoordinateList) throws ExecutionException, InterruptedException {
+    public static String addCoordinates(List<Coordinate> theCoordinateList, String theUserID) throws ExecutionException, InterruptedException {
         myCoordinateList = theCoordinateList;
+        myUserID = theUserID;
         return new AddCoordinates().execute().get();
     }
 
@@ -167,8 +168,8 @@ public class WebDriver {
             String result = JsonBuilder.VAL_FAIL;
             for (Coordinate coordinate : myCoordinateList) {
                 HttpClient httpClient = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost(requestBuilder.getAddCoordinateRequest(coordinate, myUser.getUserID()));
-                Log.d("ADD COORD:", requestBuilder.getAddCoordinateRequest(coordinate, myUser.getUserID()));
+                HttpPost httpPost = new HttpPost(requestBuilder.getAddCoordinateRequest(coordinate, myUserID));
+                Log.d("ADD COORD:", requestBuilder.getAddCoordinateRequest(coordinate, myUserID));
                 result = executePost(httpClient, httpPost);
             }
             return result;
@@ -276,18 +277,19 @@ public class WebDriver {
         protected String doInBackground(Void... params) {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(requestBuilder.getUserResetRequest(myEmailAddress));
-            String result = JsonBuilder.VAL_FAIL;
+            String result;
+            String instructions = null;
 
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
                 if (requestBuilder.jSONResultIsSuccess(result))
-                    result = requestBuilder.jSONUserAgreement(result);
+                    instructions = requestBuilder.jSONUserAgreement(result);
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
 
-            return result;
+            return instructions;
         }
     }
 

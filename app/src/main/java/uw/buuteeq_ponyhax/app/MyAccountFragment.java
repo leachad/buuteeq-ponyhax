@@ -12,10 +12,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -37,15 +41,11 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
     private TextView mTotalDistanceView;
     private TextView mIntervalDistanceView;
     private TextView mDataPointsView;
-    private TextView mLatitudeView;
-    private TextView mLongitudeView;
-    private TextView mSpeedView;
-    private TextView mBearingView;
-    private TextView mTimeView;
-
+    private ArrayAdapter<Coordinate> mCoordinateAdapter;
+    private ListView mPointListView;
 
     public void update(Location currentLocation, List<Coordinate> locations) {
-        SharedPreferences prefs = getActivity().getApplication().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getApplicationContext().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
 
         long startTime = prefs.getLong(Coordinate.START_TIME, 0);
         long endTime = prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis());
@@ -55,7 +55,7 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
 
         Coordinate prev = null;
 
-        for (Coordinate coordinate: locations) {
+        for (Coordinate coordinate : locations) {
 
             if ((startTime == 0 && endTime == Calendar.getInstance().getTimeInMillis()) || (coordinate.getTimeStamp() < endTime && coordinate.getTimeStamp() > startTime)) {
 
@@ -69,21 +69,11 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
         }
 
         if (currentLocation != null) {
-            mLongitudeView.setText(getResources().getString(R.string.longitude_string) + " " + currentLocation.getLongitude());
-            mLatitudeView.setText(getResources().getString(R.string.latitude_string) + " " + currentLocation.getLatitude());
-            mSpeedView.setText(getResources().getString(R.string.speed_string) + " " + currentLocation.getSpeed());
-            mBearingView.setText(getResources().getString(R.string.bearing_string) + " " + currentLocation.getBearing());
-            mTimeView.setText(getResources().getString(R.string.time_stamp_string) + " " + currentLocation.getTime());
-
+            updateListAdapter(locations);
 
         } else {
             if (!locations.isEmpty()) {
-                Coordinate last = locations.get(0);
-                mLongitudeView.setText(getResources().getString(R.string.longitude_string) + " " + last.getLongitude());
-                mLatitudeView.setText(getResources().getString(R.string.latitude_string) + " " + last.getLatitude());
-                mSpeedView.setText(getResources().getString(R.string.speed_string) + " " + last.getUserSpeed());
-                mBearingView.setText(getResources().getString(R.string.bearing_string) + " " + last.getHeading());
-                mTimeView.setText(getResources().getString(R.string.time_stamp_string) + " " + last.getTimeStamp());
+                updateListAdapter(locations);
             }
         }
 
@@ -111,12 +101,10 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
 
         dist = dist * 60 * 1.1515;
 
-        if (unit == "K") {
-
+        if (unit.matches("K")) {
             dist = dist * 1.609344;
 
-        } else if (unit == "N") {
-
+        } else if (unit.matches("N")) {
             dist = dist * 0.8684;
 
         }
@@ -153,25 +141,15 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
         mTotalDistanceView = (TextView) getActivity().findViewById(R.id.text_total_distance);
         mIntervalDistanceView = (TextView) getActivity().findViewById(R.id.text_total_distance_interval);
         mDataPointsView = (TextView) getActivity().findViewById(R.id.text_account_numDataPoints);
-        mLatitudeView = (TextView) getActivity().findViewById(R.id.text_latitude);
-        mLongitudeView = (TextView) getActivity().findViewById(R.id.text_longitude);
-        mSpeedView = (TextView) getActivity().findViewById(R.id.text_speed);
-        mBearingView = (TextView) getActivity().findViewById(R.id.text_bearing);
-        mTimeView = (TextView) getActivity().findViewById(R.id.text_time);
 
         SharedPreferences userPrefs = getActivity().getApplication().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
         SharedPreferences prefs = getActivity().getApplication().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
 
-        CoordinateStorageDatabaseHelper db = new CoordinateStorageDatabaseHelper(getActivity().getApplicationContext());
-        List<Coordinate> coordinates = db.getAllCoordinates(userPrefs.getString(User.USER_ID, CoordinateStorageDatabaseHelper.ALL_USERS));
+        mPointListView = (ListView) getActivity().findViewById(R.id.listViewMyAccount);
 
-        Button listButton = (Button) getActivity().findViewById(R.id.displayPointsButton);
-        listButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, new OverviewListFragment()).commit();
-            }
-        });
+        List<Coordinate> coordinates = pollCoordinates();
+        mCoordinateAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, new ArrayList<Coordinate>());
+        mPointListView.setAdapter(mCoordinateAdapter);
 
         try {
             List<Coordinate> theList = WebDriver.getLoggedCoordinates(userPrefs.getString(User.USER_ID, null), prefs.getLong(Coordinate.START_TIME, 0), prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
@@ -183,7 +161,37 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+        
         update(null, coordinates);
 
+    }
+
+    /**
+     * Private method used to update the contents of a List view everytime the user points are updated.
+     */
+    private void updateListAdapter(List<Coordinate> theUpdatedCoordinates)  {
+        mCoordinateAdapter.addAll(theUpdatedCoordinates);
+        mCoordinateAdapter.sort(new CoordinateComparator());
+        mCoordinateAdapter.notifyDataSetChanged();
+    }
+
+    private List<Coordinate> pollCoordinates() {
+        SharedPreferences userPrefs = getActivity().getApplication().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        CoordinateStorageDatabaseHelper db = new CoordinateStorageDatabaseHelper(getActivity().getApplicationContext());
+        return db.getAllCoordinates(userPrefs.getString(User.USER_ID, CoordinateStorageDatabaseHelper.ALL_USERS));
+    }
+
+
+    /**
+     * Private class to implement a CoordinateComparator for correctly sorting the coordinates.
+     * @author leachad
+     * @version 5.10.15
+     */
+    private class CoordinateComparator implements Comparator<Coordinate> {
+
+        @Override
+        public int compare(Coordinate theLeft, Coordinate theRight) {
+            return Long.valueOf(theRight.getTimeStamp()).compareTo(theLeft.getTimeStamp());
+        }
     }
 }

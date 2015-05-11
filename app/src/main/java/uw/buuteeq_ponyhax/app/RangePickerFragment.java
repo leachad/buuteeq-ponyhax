@@ -34,10 +34,9 @@ import db.Coordinate;
 
 public class RangePickerFragment extends android.support.v4.app.Fragment implements UIUpdater  {
 
-    private static final String ERROR_MESSAGE = "Select Time and Date must be in Contiguous Order";
-    private static final String DIALOG_PROMPT = "&#9660";
+//    private static final String ERROR_MESSAGE = "Select Time and Date must be in Contiguous Order";
+//    private static final String DIALOG_PROMPT = "&#9660";
     private static final int TIMESTAMP_DIVISOR = 1000;
-    private SharedPreferences mSharedPrefs = null;
     private Calendar mCalendar = GregorianCalendar.getInstance();
     private Calendar mStartCalendar;
     private Calendar mEndCalendar;
@@ -45,6 +44,7 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     private TextView mStartTime;
     private TextView mEndDate;
     private TextView mEndTime;
+    private SharedPreferences mSharedPreferences;
 
     public static final String START_RANGE = "start";
     public static final String END_RANGE = "end";
@@ -63,14 +63,15 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        mStartCalendar = GregorianCalendar.getInstance();
+        mEndCalendar = GregorianCalendar.getInstance();
         return inflater.inflate(R.layout.fragment_range_picker, container, false);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-
+        mSharedPreferences = getActivity().getApplicationContext().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
 
         /** Instantiate the EditText Fields that will display and hold listeners for date dialogs.*/
         mStartDate = (TextView) getActivity().findViewById(R.id.startDateField);
@@ -88,8 +89,6 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
         mEndDate.setOnTouchListener(new FieldSelectedListener());
         mEndTime.setOnTouchListener(new FieldSelectedListener());
 
-        mStartCalendar = GregorianCalendar.getInstance();
-        mEndCalendar = GregorianCalendar.getInstance();
 
         updateAllFields();
     }
@@ -100,12 +99,11 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     }
 
     private void updateAllFields() {
-        mSharedPrefs = getActivity().getApplicationContext().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
-        mStartCalendar.setTime(new Date(mSharedPrefs.getLong(Coordinate.START_TIME, 0)));
+        mStartCalendar.setTime(new Date(mSharedPreferences.getLong(Coordinate.START_TIME, 0)));
         mStartDate.setText(getDate(mStartCalendar.getTime()));
         mStartTime.setText(getTime(mStartCalendar.getTime()));
 
-        mEndCalendar.setTime(new Date(mSharedPrefs.getLong(Coordinate.END_TIME, 0)));
+        mEndCalendar.setTime(new Date(mSharedPreferences.getLong(Coordinate.END_TIME, 0)));
         mEndDate.setText(getDate(mEndCalendar.getTime()));
         mEndTime.setText(getTime(mEndCalendar.getTime()));
 
@@ -212,17 +210,20 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
 
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            SharedPreferences.Editor editor = mSharedPreferences.edit();
             if (myBoundary.matches(START_RANGE)) {
                 mStartCalendar.set(year, monthOfYear, dayOfMonth, mStartCalendar.get(Calendar.HOUR_OF_DAY), mStartCalendar.get(Calendar.MINUTE), 0);
                 mStartDate.setText(getDate(mStartCalendar.getTime()));
-                mSharedPrefs.edit().putLong(Coordinate.START_TIME, getUnixTimeStamp(START_RANGE)).apply();
+                editor.putLong(Coordinate.START_TIME, getUnixTimeStamp(START_RANGE));
                 Log.d("Start Date Set: ", Long.toString(getUnixTimeStamp(START_RANGE)));
             } else {
                 mEndCalendar.set(year, monthOfYear, dayOfMonth, mEndCalendar.get(Calendar.HOUR_OF_DAY), mEndCalendar.get(Calendar.MINUTE), 0);
                 mEndDate.setText(getDate(mEndCalendar.getTime()));
-                mSharedPrefs.edit().putLong(Coordinate.END_TIME, getUnixTimeStamp(END_RANGE)).apply();
+                editor.putLong(Coordinate.END_TIME, getUnixTimeStamp(END_RANGE));
                 Log.d("End Date Set: ", Long.toString(getUnixTimeStamp(END_RANGE)));
             }
+
+            editor.apply();
 
         }
     }
@@ -239,20 +240,20 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
 
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-
+            SharedPreferences.Editor editor = mSharedPreferences.edit();
             if (myBoundary.matches(START_RANGE)) {
                 mStartCalendar.set(mStartCalendar.get(Calendar.YEAR), mStartCalendar.get(Calendar.MONTH), mStartCalendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute, 0);
                 mStartTime.setText(getTime(mStartCalendar.getTime()));
-                mSharedPrefs.edit().putLong(Coordinate.START_TIME, getUnixTimeStamp(START_RANGE)).apply();
+                editor.putLong(Coordinate.START_TIME, getUnixTimeStamp(START_RANGE));
                 Log.d("Start Time Set: ", Long.toString(getUnixTimeStamp(START_RANGE)));
             } else {
                 mEndCalendar.set(mEndCalendar.get(Calendar.YEAR), mEndCalendar.get(Calendar.MONTH), mEndCalendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute, 0);
                 mEndTime.setText(getTime(mEndCalendar.getTime()));
-                mSharedPrefs.edit().putLong(Coordinate.END_TIME, getUnixTimeStamp(END_RANGE)).apply();
+                editor.putLong(Coordinate.END_TIME, getUnixTimeStamp(END_RANGE));
                 Log.d("End Time Set: ", Long.toString(getUnixTimeStamp(END_RANGE)));
             }
 
+            editor.apply();
 
         }
     }

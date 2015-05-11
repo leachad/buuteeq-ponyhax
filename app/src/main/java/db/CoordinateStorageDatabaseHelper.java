@@ -116,11 +116,11 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
      * theLocalCoordinates is a list of Coordinates generated before pushed to webservices
      * @return isSuccess
      */
-    public boolean publishCoordinateBatch() {
+    public boolean publishCoordinateBatch(final String theUserID) {
         List<Coordinate> theLocalCoordinates = getAllCoordinates(ALL_USERS);
         boolean isSuccess = false;
         try {
-            String result = WebDriver.addCoordinates(theLocalCoordinates);
+            String result = WebDriver.addCoordinates(theLocalCoordinates, theUserID);
             if (result.matches(JsonBuilder.VAL_SUCCESS)) {
                 isSuccess = true;
                 wipeTable();

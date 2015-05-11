@@ -14,8 +14,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 
+import db.Coordinate;
 import db.User;
 import db.UserStorageDatabaseHelper;
 import webservices.WebDriver;
@@ -123,9 +125,18 @@ public class LoginActivity extends Activity {
                 makeMissingUserToast();
             } else {
                 toRet = true;
+
                 SharedPreferences userPrefs = getApplicationContext().getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
-                userPrefs.edit().putString(User.USER_ID, userID).apply();
-                userPrefs.edit().putString(User.USER_EMAIL, mEmailField.getText().toString()).apply();
+                SharedPreferences.Editor userEditor = userPrefs.edit();
+                userEditor.putString(User.USER_ID, userID);
+                userEditor.putString(User.USER_EMAIL, mEmailField.getText().toString());
+                userEditor.apply();
+
+                SharedPreferences coordPrefs = getApplicationContext().getSharedPreferences(Coordinate.COORDINATE_PREFS, MODE_PRIVATE);
+                SharedPreferences.Editor coordEditor = coordPrefs.edit();
+                coordEditor.putLong(Coordinate.START_TIME, Calendar.getInstance().getTimeInMillis() / TIMESTAMP_DIVISOR).apply();
+                coordEditor.putLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis() / TIMESTAMP_DIVISOR).apply();
+                coordEditor.apply();
             }
         }
         return toRet;
