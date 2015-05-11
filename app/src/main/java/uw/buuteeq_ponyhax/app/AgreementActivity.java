@@ -30,7 +30,22 @@ public class AgreementActivity extends Activity {
         setTitle("");
         TextView agreement = (TextView) findViewById(R.id.userAgreementView);
         try {
-            agreement.setText(WebDriver.getUserAgreement());
+            String agreementText = WebDriver.getUserAgreement();
+            agreementText = agreementText.replace("<h2>", "");
+            agreementText = agreementText.replace("</h2>", "");
+            agreementText = agreementText.replace("<h3>", "");
+            agreementText = agreementText.replace("</h3>", "");
+            agreementText = agreementText.replace("<p>", "");
+            agreementText = agreementText.replace("</p>", "");
+            agreementText = agreementText.replace("<ol type=\"a\">", "");
+            agreementText = agreementText.replace("<li>", "");
+            agreementText = agreementText.replace("<ol type=\"i\">", "");
+            agreementText = agreementText.replace("</li>", "");
+            agreementText = agreementText.replace("</ol>", "");
+            agreementText = agreementText.replace("<ul>", "");
+            agreementText = agreementText.replace("</ul>", "");
+
+            agreement.setText(agreementText);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
