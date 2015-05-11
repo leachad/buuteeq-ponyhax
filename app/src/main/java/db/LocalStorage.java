@@ -61,4 +61,9 @@ public class LocalStorage {
         return sharedPreferences.getString(User.USER_AGREEMENT, null);
     }
 
+    public static void clearPrefs(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        sharedPreferences.edit().clear().apply();
+    }
+
 }

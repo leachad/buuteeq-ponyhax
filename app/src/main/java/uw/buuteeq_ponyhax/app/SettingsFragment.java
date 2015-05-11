@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import db.Coordinate;
+import db.LocalStorage;
 import db.User;
 import webservices.JsonBuilder;
 import webservices.WebDriver;
@@ -67,15 +68,16 @@ public class SettingsFragment extends Fragment implements UIUpdater {
         @Override
         public void onClick(View v) {
 
-            SharedPreferences prefs = getActivity().getSharedPreferences(User.USER_PREFS, FragmentActivity.MODE_PRIVATE);
+            String email =  LocalStorage.getUserEmail(getActivity());
+
             try {
-                String result = WebDriver.resetPassword(prefs.getString(User.USER_EMAIL, null));
+                String result = WebDriver.resetPassword(email);
 
                 if (result.matches(JsonBuilder.VAL_FAIL)) {
                     Toast.makeText(getActivity().getApplicationContext(), RESET_FAILED, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getActivity().getApplicationContext(), RESET_PROMPT + prefs.getString(User.USER_EMAIL, null), Toast.LENGTH_LONG).show();
-                    prefs.edit().clear().apply();
+                    Toast.makeText(getActivity(), RESET_PROMPT + email, Toast.LENGTH_SHORT).show();
+                    LocalStorage.clearPrefs(getActivity());
                     getActivity().finish();
                 }
             } catch (ExecutionException | InterruptedException e) {
