@@ -70,7 +70,10 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
             Log.e("MyMap", "MyMap is reading from database");
 
             CoordinateStorageDatabaseHelper db = new CoordinateStorageDatabaseHelper(getActivity().getApplicationContext());
+
             List<Coordinate> coordinates = db.getAllCoordinates(LocalStorage.getUserIDCoordinateQuery(getActivity()));
+
+
 
             User theUser = new User();
             theUser.setID(LocalStorage.getUserID(getActivity()));
