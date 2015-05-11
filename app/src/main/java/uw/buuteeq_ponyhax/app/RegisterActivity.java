@@ -246,23 +246,6 @@ public class RegisterActivity extends ActionBarActivity {
     }
 
     /**
-     * Sets the UserPrefs based on the Registration information of the user that was created.
-     */
-    private void setPrefs() {
-        SharedPreferences prefs = getApplicationContext().getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
-
-        prefs.edit().putString(User.USER_ID, myRegisteredUser.getUserID()).apply();
-        prefs.edit().putInt(User.USER_PASSWORD, myRegisteredUser.getPassword().trim().hashCode()).apply();
-        prefs.edit().putString(User.USER_EMAIL, myRegisteredUser.getEmail().trim()).apply();
-        prefs.edit().putString(User.USER_QUESTION, myRegisteredUser.getSecurityQuestion()).apply();
-        prefs.edit().putString(User.USER_ANSWER, myRegisteredUser.getSecurityAnswer()).apply();
-
-        SharedPreferences permPrefs = getSharedPreferences(User.PERM_PREFS, MODE_PRIVATE);
-        permPrefs.edit().putString(User.USER_NAME, myRegisteredUser.getUserName()).apply();
-    }
-
-
-    /**
      * Private helper method to make a bad password toast. Passwords do not match
      */
     private void makeBadPasswordToast() {

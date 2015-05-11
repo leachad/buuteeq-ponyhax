@@ -32,6 +32,7 @@ import java.util.concurrent.ExecutionException;
 
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
+import db.LocalStorage;
 import db.User;
 import webservices.WebDriver;
 
@@ -62,21 +63,20 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
     }
 
     private void readFromDatabase() {
-        SharedPreferences preferences = getActivity().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-        boolean loadDB = preferences.getBoolean("loadLocalDB", true);
+        boolean loadDB = LocalStorage.getDBFlag(getActivity());
+
 
         if (loadDB) {
             Log.e("MyMap", "MyMap is reading from database");
-            SharedPreferences userPrefs = getActivity().getApplication().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-            SharedPreferences prefs = getActivity().getApplication().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
 
             CoordinateStorageDatabaseHelper db = new CoordinateStorageDatabaseHelper(getActivity().getApplicationContext());
-            List<Coordinate> coordinates = db.getAllCoordinates(userPrefs.getString(User.USER_ID, CoordinateStorageDatabaseHelper.ALL_USERS));
+            List<Coordinate> coordinates = db.getAllCoordinates(LocalStorage.getUserIDCoordinateQuery(getActivity()));
 
             User theUser = new User();
-            theUser.setID(userPrefs.getString(User.USER_ID, "-1"));
+            theUser.setID(LocalStorage.getUserID(getActivity()));
             try {
-                List<Coordinate> theList = WebDriver.getLoggedCoordinates(userPrefs.getString(User.USER_ID, null), prefs.getLong(Coordinate.START_TIME, 0), prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
+                List<Coordinate> theList = WebDriver.getLoggedCoordinates(LocalStorage.getUserID(getActivity()),
+                        LocalStorage.getStartTime(getActivity()), LocalStorage.getEndTimeCurrentTimeBackup(getActivity()));
                 if (theList != null) {
                     for (Coordinate c : theList) {
                         if (c != null) {
@@ -88,9 +88,9 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
                 e.printStackTrace();
             }
             update(null, coordinates);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean("loadLocalDB", false);
-            editor.apply();
+
+            LocalStorage.putDBFlag(false, getActivity());
+
         }
     }
 
