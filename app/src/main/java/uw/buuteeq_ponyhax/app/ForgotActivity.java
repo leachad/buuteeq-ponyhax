@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import java.util.concurrent.ExecutionException;
 
+import db.LocalStorage;
 import webservices.JsonBuilder;
 import webservices.WebDriver;
 
@@ -60,15 +61,16 @@ public class ForgotActivity extends ActionBarActivity {
         public void onClick(View v) {
 
             EditText resetEmail = (EditText) findViewById(R.id.notLoggedInPassReset);
-            String email = resetEmail.getText().toString();
+
 
             try {
-                String result = WebDriver.resetPassword(email);
+                String result = WebDriver.resetPassword(resetEmail.getText().toString());
 
                 if (result.matches(JsonBuilder.VAL_FAIL)) {
                     Toast.makeText(getApplicationContext(), RESET_FAILED, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), RESET_PROMPT + email, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), RESET_PROMPT + resetEmail.getText().toString(), Toast.LENGTH_SHORT).show();
+                    LocalStorage.clearPrefs(getApplicationContext());
                     finish();
                 }
             } catch (ExecutionException | InterruptedException e) {

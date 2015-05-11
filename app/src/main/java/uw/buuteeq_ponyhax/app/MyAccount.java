@@ -62,7 +62,7 @@ public class MyAccount extends ActionBarActivity
             mLastLocation = location;
             if (location != null) {
                 //Make new coordinate and insert into coordinate database
-                Coordinate locationCoordinate = new Coordinate(location.getLongitude(), location.getLatitude(), System.currentTimeMillis() / 1000,
+                Coordinate locationCoordinate = new Coordinate(location.getLongitude(), location.getLatitude(), Calendar.getInstance().getTimeInMillis() / 1000,
                         location.getSpeed(), location.getBearing(), LocalStorage.getUserID(getApplicationContext()));
 
                 coordHelper.insertCoordinate(locationCoordinate); //add to local database

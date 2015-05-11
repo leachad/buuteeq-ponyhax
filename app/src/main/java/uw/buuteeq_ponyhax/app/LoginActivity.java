@@ -41,11 +41,6 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            Log.e("TEST", WebDriver.getUserAgreement());
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
 
         /** Set the first page view with activity_login.xml. */
         setContentView(R.layout.activity_login);

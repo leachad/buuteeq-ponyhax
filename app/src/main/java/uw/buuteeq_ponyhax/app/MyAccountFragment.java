@@ -226,18 +226,12 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
 
             String separator = "\t";
 
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd' at 'HH:mm");
-            Calendar mEndCalendar = GregorianCalendar.getInstance();
-
-            long seconds = getItem(position).getTimeStamp() / 1000;
-            long minutes = seconds / 60;
-            long hours = minutes / 60;
-
-            mEndCalendar.set(mEndCalendar.get(Calendar.YEAR), mEndCalendar.get(Calendar.MONTH), mEndCalendar.get(Calendar.DAY_OF_MONTH), (int)hours, (int)minutes, 0);
-            String date = df.format(mEndCalendar.getTime());
+            Date date = new Date(getItem(position).getTimeStamp() * 1000);
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd' at 'HH:mm");
+            String dateFormatted = formatter.format(date);
 
             TextView timeView = (TextView) convertView.findViewById(R.id.time_list_text);
-            timeView.setText(getResources().getString(R.string.time_stamp_string) + separator + date);
+            timeView.setText(getResources().getString(R.string.time_stamp_string) + separator + dateFormatted);
 
 
             NumberFormat num = NumberFormat.getNumberInstance();
