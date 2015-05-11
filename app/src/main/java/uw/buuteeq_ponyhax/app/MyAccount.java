@@ -57,6 +57,11 @@ public class MyAccount extends ActionBarActivity
 
         @Override
         public void onLocationChanged(Location location) {
+            prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("loadLocalDB", false);
+            editor.apply();
+
             mLastLocation = location;
             if (location != null) {
                 //Make new coordinate and insert into coordinate database
@@ -108,6 +113,9 @@ public class MyAccount extends ActionBarActivity
 
         //START location manager setup
         prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("loadLocalDB", true);
+        editor.apply();
         myLocationManager = MyLocationManager.getInstance(getApplicationContext());
 
         mStartButton = (Button) findViewById(R.id.startButton);
@@ -280,9 +288,6 @@ public class MyAccount extends ActionBarActivity
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-
-
-        Toast.makeText(getApplicationContext(), "load finished", Toast.LENGTH_SHORT).show();
     }
 
     private void addCoordinateToList(Coordinate coord) {
