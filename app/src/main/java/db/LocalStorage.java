@@ -31,6 +31,34 @@ public class LocalStorage {
         sharedPreferences.edit().putLong(User.END_TIME, theEndTime).apply();
     }
 
-    public 
+    public static void putUserAgreement(String theAgreement, Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putString(User.USER_AGREEMENT, theAgreement).apply();
+    }
+
+    public static String getUserID(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(User.USER_ID, null);
+    }
+
+    public static String getUserEmail(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(User.USER_EMAIL, null);
+    }
+
+    public static long getStartTime(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        return sharedPreferences.getLong(User.START_TIME, 0);
+    }
+
+    public static long getEndTime(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        return sharedPreferences.getLong(User.END_TIME, 0);
+    }
+
+    public static String getUserAgreement(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(User.USER_AGREEMENT, null);
+    }
 
 }
