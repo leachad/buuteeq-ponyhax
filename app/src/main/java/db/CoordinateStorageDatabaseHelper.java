@@ -34,7 +34,7 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_USER_ID = "user_id";
     public static final String COLUMN_PHOTO = "photo";
 
-    public static final String ALL_USERS = "All_Users";
+
 
     /**
      * Constructor for a Coordinate Database
@@ -116,7 +116,7 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
      * @return isSuccess
      */
     public void publishCoordinateBatch(final String theUserID) {
-        List<Coordinate> theLocalCoordinates = getAllCoordinates(ALL_USERS);
+        List<Coordinate> theLocalCoordinates = getAllCoordinates(User.ALL_USERS);
         WebDriver.addCoordinates(theLocalCoordinates, theUserID);
         wipeTable();
 
@@ -163,7 +163,7 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
      */
     private Cursor getCoordinateCursor(String userID) {
         Cursor cursor = null;
-        if (userID.equals(ALL_USERS)) {
+        if (userID.equals(User.ALL_USERS)) {
             cursor = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_TIME_STAMP + ";", new String[]{});
         } else {
             cursor = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_USER_ID + " = '" + userID + "' ORDER BY " + COLUMN_TIME_STAMP + ";", new String[]{});

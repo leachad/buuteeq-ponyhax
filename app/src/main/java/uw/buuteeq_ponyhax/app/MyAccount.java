@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutionException;
 
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
+import db.LocalStorage;
 import db.User;
 import location_services.MyLocationManager;
 import location_services.MyLocationReceiver;
@@ -171,8 +172,7 @@ public class MyAccount extends ActionBarActivity
                 fragment = new RangePickerFragment();
                 break;
             case 4:
-                SharedPreferences prefs = getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-                prefs.edit().clear().apply();
+                LocalStorage.clearPrefs(getApplicationContext());
                 choice = false;
                 finish();
                 break;
@@ -259,13 +259,11 @@ public class MyAccount extends ActionBarActivity
      * data usage.
      */
     private void loadCoordinates() {
-        SharedPreferences userPrefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
-        SharedPreferences prefs = getApplication().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
 
         coordinates = new ArrayList<>();
 
         //Naturally in time order due to the local points being the most recent
-        List<Coordinate> moreCoords = coordHelper.getAllCoordinates(userPrefs.getString(User.USER_ID, CoordinateStorageDatabaseHelper.ALL_USERS));
+        List<Coordinate> moreCoords = coordHelper.getAllCoordinates(LocalStorage.getUserIDCoordinateQuery(getApplicationContext()));
 
         Toast.makeText(getApplicationContext(), "More Coords from local " + moreCoords.size(), Toast.LENGTH_LONG).show();
 
@@ -275,9 +273,9 @@ public class MyAccount extends ActionBarActivity
 
         try {
             List<Coordinate> theList =
-                    WebDriver.getLoggedCoordinates(userPrefs.getString(User.USER_ID, null),
-                            prefs.getLong(Coordinate.START_TIME, 0),
-                            prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
+                    WebDriver.getLoggedCoordinates(LocalStorage.getUserID(getApplicationContext()),
+                            LocalStorage.getStartTime(getApplicationContext()),
+                            LocalStorage.getEndTimeCurrentTimeBackup(getApplicationContext()));
 
             if (theList != null) {
                 Toast.makeText(getApplicationContext(), "Web Driver list length " + theList.size(), Toast.LENGTH_SHORT).show();
