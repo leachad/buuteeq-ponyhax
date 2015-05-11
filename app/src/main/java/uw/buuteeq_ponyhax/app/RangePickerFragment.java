@@ -97,11 +97,11 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     }
 
     private void updateAllFields() {
-        mStartCalendar.setTime(new Date(LocalStorage.getStartTime(getActivity())));
+        mStartCalendar.setTime(new Date(LocalStorage.getStartTime(getActivity()) * TIMESTAMP_DIVISOR));
         mStartDate.setText(getDate(mStartCalendar.getTime()));
         mStartTime.setText(getTime(mStartCalendar.getTime()));
 
-        mEndCalendar.setTime(new Date(LocalStorage.getStartTime(getActivity())));
+        mEndCalendar.setTime(new Date(LocalStorage.getEndTime(getActivity()) * TIMESTAMP_DIVISOR));
         mEndDate.setText(getDate(mEndCalendar.getTime()));
         mEndTime.setText(getTime(mEndCalendar.getTime()));
 
