@@ -25,6 +25,7 @@ import java.util.concurrent.ExecutionException;
 
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
+import db.LocalStorage;
 import db.User;
 import webservices.WebDriver;
 
@@ -152,7 +153,9 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
         mPointListView.setAdapter(mCoordinateAdapter);
 
         try {
-            List<Coordinate> theList = WebDriver.getLoggedCoordinates(userPrefs.getString(User.USER_ID, null), prefs.getLong(Coordinate.START_TIME, 0), prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
+            List<Coordinate> theList = WebDriver.getLoggedCoordinates(LocalStorage.getUserID(getActivity()),
+                    LocalStorage.getStartTime(getActivity()),
+                    LocalStorage.getEndTimeCurrentTimeBackup(getActivity()));
             if (theList != null) {
                 for (Coordinate c : theList) {
                     coordinates.add(c);
