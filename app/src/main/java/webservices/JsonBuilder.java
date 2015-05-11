@@ -4,6 +4,8 @@
 
 package webservices;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,6 +25,7 @@ public final class JsonBuilder extends PhpBuilder {
     public static String KEY_POINTS = "points";
     public static String KEY_AGREEMENT = "agreement";
     public static String KEY_RESULT = "result";
+    public static String KEY_MESSAGE = "message";
 
     public JsonBuilder(final String theCurrentDomain) {
         super(theCurrentDomain);
@@ -44,6 +47,15 @@ public final class JsonBuilder extends PhpBuilder {
         return isSuccess;
     }
 
+    public String jSONResetPassInstructions(String theResult) throws JSONException {
+        JSONObject json = new JSONObject(theResult);
+        String instructions = null;
+        if (json.getString(KEY_RESULT).matches(VAL_SUCCESS))
+            instructions = json.getString(KEY_MESSAGE);
+
+        return instructions;
+    }
+
     /**
      * Private method to return the Users unique ID after successfully logging
      * in to the server.
@@ -63,6 +75,7 @@ public final class JsonBuilder extends PhpBuilder {
      */
     public String jSONUserAgreement(String theResult) throws JSONException {
         JSONObject json = new JSONObject(theResult);
+        Log.d("agreement JSON:", json.toString());
         String userAgreement = json.getString(KEY_AGREEMENT);
         System.out.println(userAgreement);
         return userAgreement;

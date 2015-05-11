@@ -289,13 +289,13 @@ public class WebDriver {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(requestBuilder.getUserResetRequest(myEmailAddress));
             String result;
-            String instructions = "fail";
+            String instructions = requestBuilder.VAL_FAIL;
 
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
                 if (requestBuilder.jSONResultIsSuccess(result))
-                    instructions = requestBuilder.jSONUserAgreement(result);
+                    instructions = requestBuilder.jSONResetPassInstructions(result);
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
