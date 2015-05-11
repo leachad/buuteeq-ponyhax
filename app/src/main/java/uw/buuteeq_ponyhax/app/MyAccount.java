@@ -47,7 +47,6 @@ public class MyAccount extends ActionBarActivity
     private Button mStartButton;
     private Button mStopButton;
     private Location mLastLocation;
-    private SharedPreferences prefs;
     private UIUpdater fragment;
     protected List<Coordinate> coordinates;
     private int publishCounter = 0;
@@ -58,16 +57,13 @@ public class MyAccount extends ActionBarActivity
 
         @Override
         public void onLocationChanged(Location location) {
-            prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean("loadLocalDB", false);
-            editor.apply();
+            LocalStorage.putDBFlag(false, getApplicationContext());
 
             mLastLocation = location;
             if (location != null) {
                 //Make new coordinate and insert into coordinate database
                 Coordinate locationCoordinate = new Coordinate(location.getLongitude(), location.getLatitude(), System.currentTimeMillis() / 1000,
-                        location.getSpeed(), location.getBearing(), prefs.getString(User.USER_ID, "N/A"));
+                        location.getSpeed(), location.getBearing(), LocalStorage.getUserID(getApplicationContext()));
 
                 coordHelper.insertCoordinate(locationCoordinate); //add to local database
                 publishCounter++;
@@ -113,10 +109,7 @@ public class MyAccount extends ActionBarActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         //START location manager setup
-        prefs = getSharedPreferences(User.USER_PREFS, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("loadLocalDB", true);
-        editor.apply();
+        LocalStorage.putDBFlag(true, getApplicationContext());
         myLocationManager = MyLocationManager.getInstance(getApplicationContext());
 
         mStartButton = (Button) findViewById(R.id.startButton);
@@ -292,7 +285,7 @@ public class MyAccount extends ActionBarActivity
         coordinates.add(coord);
 
         if (publishCounter == 3) {
-            coordHelper.publishCoordinateBatch(getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE).getString(User.USER_ID, null));
+            coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
             publishCounter = 0;
             Log.d("PUBLISH: ", Integer.toString(publishCounter));
         }

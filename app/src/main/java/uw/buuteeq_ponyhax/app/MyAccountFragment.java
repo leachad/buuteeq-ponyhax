@@ -25,6 +25,7 @@ import java.util.concurrent.ExecutionException;
 
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
+import db.LocalStorage;
 import db.User;
 import webservices.WebDriver;
 
@@ -45,10 +46,10 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
     private ListView mPointListView;
 
     public void update(Location currentLocation, List<Coordinate> locations) {
-        SharedPreferences prefs = getActivity().getApplicationContext().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
 
-        long startTime = prefs.getLong(Coordinate.START_TIME, 0);
-        long endTime = prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis());
+
+        long startTime = LocalStorage.getStartTime(getActivity());
+        long endTime = LocalStorage.getEndTimeCurrentTimeBackup(getActivity());
 
         double distanceTraveled = 0.;
         double distanceTraveledInterval = 0.;
@@ -141,10 +142,6 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
         mTotalDistanceView = (TextView) getActivity().findViewById(R.id.text_total_distance);
         mIntervalDistanceView = (TextView) getActivity().findViewById(R.id.text_total_distance_interval);
         mDataPointsView = (TextView) getActivity().findViewById(R.id.text_account_numDataPoints);
-
-        SharedPreferences userPrefs = getActivity().getApplication().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-        SharedPreferences prefs = getActivity().getApplication().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
-
         mPointListView = (ListView) getActivity().findViewById(R.id.listViewMyAccount);
 
         List<Coordinate> coordinates = pollCoordinates();
@@ -152,7 +149,8 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
         mPointListView.setAdapter(mCoordinateAdapter);
 
         try {
-            List<Coordinate> theList = WebDriver.getLoggedCoordinates(userPrefs.getString(User.USER_ID, null), prefs.getLong(Coordinate.START_TIME, 0), prefs.getLong(Coordinate.END_TIME, Calendar.getInstance().getTimeInMillis()));
+            List<Coordinate> theList = WebDriver.getLoggedCoordinates(LocalStorage.getUserID(getActivity()),
+                    LocalStorage.getStartTime(getActivity()), LocalStorage.getEndTimeCurrentTimeBackup(getActivity()));
             if (theList != null) {
                 for (Coordinate c : theList) {
                     coordinates.add(c);
@@ -176,9 +174,8 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
     }
 
     private List<Coordinate> pollCoordinates() {
-        SharedPreferences userPrefs = getActivity().getApplication().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
         CoordinateStorageDatabaseHelper db = new CoordinateStorageDatabaseHelper(getActivity().getApplicationContext());
-        return db.getAllCoordinates(userPrefs.getString(User.USER_ID, User.ALL_USERS));
+        return db.getAllCoordinates(LocalStorage.getUserID(getActivity()));
     }
 
 
