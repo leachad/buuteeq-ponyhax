@@ -4,11 +4,10 @@
 
 package uw.buuteeq_ponyhax.app;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,22 +15,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
-import db.User;
 import webservices.WebDriver;
 
 /**
@@ -240,19 +235,22 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
             String longitude = num.format(getItem(position).getLongitude());
             TextView longView = (TextView) convertView.findViewById(R.id.long_list_text);
             longView.setText(getResources().getString(R.string.longitude_string) + separator + longitude);
+            Log.w("LON DISPLAY:", longitude);
 
             String latitude = num.format(getItem(position).getLatitude());
             TextView latView = (TextView) convertView.findViewById(R.id.lat_list_text);
             latView.setText(getResources().getString(R.string.latitude_string) + separator + latitude);
-
+            Log.w("LAT DISPLAY:", latitude);
 
             String speed = num.format(getItem(position).getUserSpeed());
             TextView speedView = (TextView) convertView.findViewById(R.id.speed_list_text);
             speedView.setText(getResources().getString(R.string.speed_string) + separator + speed);
+            Log.w("SPEED DISPLAY:", speed);
 
             String bearing = num.format(getItem(position).getHeading());
             TextView bearingView = (TextView) convertView.findViewById(R.id.head_list_text);
             bearingView.setText(getResources().getString(R.string.bearing_string) + separator + bearing);
+            Log.w("BEARING DISPLAY:", bearing);
 
             return convertView;
         }

@@ -5,9 +5,9 @@
 package uw.buuteeq_ponyhax.app;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,8 +18,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.concurrent.ExecutionException;
+
 import db.User;
-import db.UserStorageDatabaseHelper;
+import webservices.WebDriver;
 
 
 public class RegisterActivity extends ActionBarActivity {
@@ -99,7 +101,7 @@ public class RegisterActivity extends ActionBarActivity {
      *                           context.
      */
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         if (!savedInstanceState.isEmpty()) {
             mNewUserFields[RegisterField.EMAIL_FIELD.indexValue].setText(savedInstanceState.getString(User.USER_EMAIL, ""));
             mNewUserFields[RegisterField.PASSWORD_INITIAL.indexValue].setText(savedInstanceState.getString(User.USER_PASSWORD, ""));
@@ -220,8 +222,14 @@ public class RegisterActivity extends ActionBarActivity {
      * Private helper method to issue a web request to the add user api implemented by the
      * professor. Does not add user to the database in this method if true.
      */
-    private boolean addEntryToDatabase() {
-        return new UserStorageDatabaseHelper(getApplicationContext()).insertUser(getNewUser());
+    private boolean userExists() {
+        boolean userExists = false;
+        try {
+            userExists = WebDriver.addUser(getNewUser());
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return userExists;
     }
 
 
@@ -334,7 +342,7 @@ public class RegisterActivity extends ActionBarActivity {
         public void onClick(View v) {
             //First, need to confirm that all appropriate initial, subsequent fields match
             if (passwordsAgree() && securityAnswersAgree() && allFieldsEntered() && passwordIsCorrectLength()) {
-                boolean unique = addEntryToDatabase();
+                boolean unique = userExists();
                 if (!unique) {
                     resetFields();
                     makeDuplicateEntryToast();

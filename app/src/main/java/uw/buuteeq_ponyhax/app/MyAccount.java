@@ -288,7 +288,7 @@ public class MyAccount extends ActionBarActivity
         if (publishCounter == 5) {
             coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
             publishCounter = 0;
-            Log.d("PUBLISH: ", Integer.toString(publishCounter));
+            Log.w("PUBLISH: ", Integer.toString(publishCounter));
         }
     }
 

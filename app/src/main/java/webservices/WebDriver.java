@@ -61,7 +61,7 @@ public class WebDriver {
     /**
      * POST OPERATIONS.
      */
-    public static String addUser(User theUser) throws ExecutionException, InterruptedException {
+    public static boolean addUser(User theUser) throws ExecutionException, InterruptedException {
         myUser = theUser;
         return new AddUser().execute().get();
     }
@@ -124,23 +124,24 @@ public class WebDriver {
      * @author leachad
      * @version 4.25.15
      */
-    private static class AddUser extends AsyncTask<Void, Integer, String> {
+    private static class AddUser extends AsyncTask<Void, Integer, Boolean> {
 
-        protected String doInBackground(Void... addUser) {
+        protected Boolean doInBackground(Void... addUser) {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(requestBuilder.getAddUserRequest(myUser));
-            Log.d("http Adduser", httpPost.getURI().toString());
-            String result = JsonBuilder.VAL_FAIL;
+            Log.w("http Adduser", httpPost.getURI().toString());
+            String result;
+            boolean userIsUnique = false;
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 result = EntityUtils.toString(response.getEntity());
                 if (requestBuilder.jSONResultIsSuccess(result)) {
-                    result = JsonBuilder.VAL_SUCCESS;
+                    userIsUnique = true;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return result;
+            return userIsUnique;
         }
     }
 
@@ -170,7 +171,7 @@ public class WebDriver {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Log.d("AddCoordinates result", result);
+            Log.w("AddCoordinates result", result);
             return result;
         }
 
@@ -180,7 +181,7 @@ public class WebDriver {
             for (Coordinate coordinate : myCoordinateList) {
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpPost httpPost = new HttpPost(requestBuilder.getAddCoordinateRequest(coordinate, myUserID));
-                Log.d("ADD COORD:", requestBuilder.getAddCoordinateRequest(coordinate, myUserID));
+                Log.w("ADD COORD:", requestBuilder.getAddCoordinateRequest(coordinate, myUserID));
                 result = executePost(httpClient, httpPost);
             }
             return result;
@@ -289,7 +290,7 @@ public class WebDriver {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(requestBuilder.getUserResetRequest(myEmailAddress));
             String result;
-            String instructions = requestBuilder.VAL_FAIL;
+            String instructions = JsonBuilder.VAL_FAIL;
 
             try {
                 HttpResponse response = httpClient.execute(httpPost);

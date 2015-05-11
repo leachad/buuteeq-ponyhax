@@ -75,7 +75,7 @@ public final class JsonBuilder extends PhpBuilder {
      */
     public String jSONUserAgreement(String theResult) throws JSONException {
         JSONObject json = new JSONObject(theResult);
-        Log.d("agreement JSON:", json.toString());
+        Log.w("agreement JSON:", json.toString());
         String userAgreement = json.getString(KEY_AGREEMENT);
         System.out.println(userAgreement);
         return userAgreement;

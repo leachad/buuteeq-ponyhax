@@ -1,6 +1,5 @@
 package db;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -44,6 +43,11 @@ public class LocalStorage {
         sharedPreferences.edit().putBoolean(User.DB_FLAG, theFlag).apply();
     }
 
+    public static void putUserFlag(boolean theUserExists, Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putBoolean(User.USER_EXISTS, theUserExists).apply();
+    }
+
     public static String getUserID(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
         return sharedPreferences.getString(User.USER_ID, null);
@@ -82,6 +86,11 @@ public class LocalStorage {
     public static boolean getDBFlag(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
         return sharedPreferences.getBoolean(User.DB_FLAG, true);
+    }
+
+    public static boolean getUserExists(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(User.USER_EXISTS, false);
     }
 
     public static void clearPrefs(Context context) {

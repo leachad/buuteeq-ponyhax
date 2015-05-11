@@ -81,7 +81,7 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
             cv.put(COLUMN_USER_SPEED, coordinate.getUserSpeed());
             cv.put(COLUMN_USER_HEADING, coordinate.getHeading());
             insertConfirm = getWritableDatabase().insert(TABLE_NAME, null, cv);
-            Log.d("INSERT TO DATABASE", coordinate.getTimeStamp() + "");
+            Log.d("INSERT TO DATABASE", coordinate.toString() + "");
         }
         return insertConfirm;
     }

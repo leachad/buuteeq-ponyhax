@@ -25,6 +25,7 @@ public class User {
     public static final String END_TIME = "endTime";
     public static final String ALL_USERS = "All_Users";
     public static final String DB_FLAG = "loadLocalDB";
+    public static final String USER_EXISTS = "userExistCheck";
 
 
     /**
