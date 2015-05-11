@@ -127,7 +127,7 @@ public class LoginActivity extends Activity {
                 toRet = true;
                 LocalStorage.putUserId(userID, getApplicationContext());
                 LocalStorage.putUserEmail(mEmailField.getText().toString().trim(), getApplicationContext());
-                LocalStorage.putStartTime(Calendar.getInstance().getTimeInMillis() / TIMESTAMP_DIVISOR, getApplicationContext());
+                LocalStorage.putStartTime(0, getApplicationContext());
                 LocalStorage.putEndTime(Calendar.getInstance().getTimeInMillis() / TIMESTAMP_DIVISOR, getApplicationContext());
 
             }

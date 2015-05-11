@@ -71,7 +71,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
             SharedPreferences prefs = getActivity().getApplication().getSharedPreferences(Coordinate.COORDINATE_PREFS, Context.MODE_PRIVATE);
 
             CoordinateStorageDatabaseHelper db = new CoordinateStorageDatabaseHelper(getActivity().getApplicationContext());
-            List<Coordinate> coordinates = db.getAllCoordinates(userPrefs.getString(User.USER_ID, CoordinateStorageDatabaseHelper.ALL_USERS));
+            List<Coordinate> coordinates = db.getAllCoordinates(userPrefs.getString(User.USER_ID, User.ALL_USERS));
 
             User theUser = new User();
             theUser.setID(userPrefs.getString(User.USER_ID, "-1"));

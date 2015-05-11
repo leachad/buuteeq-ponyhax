@@ -57,7 +57,7 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
 
         for (Coordinate coordinate : locations) {
 
-            if ((startTime == 0 && endTime == Calendar.getInstance().getTimeInMillis()) || (coordinate.getTimeStamp() < endTime && coordinate.getTimeStamp() > startTime)) {
+            if ((startTime == 0) || (coordinate.getTimeStamp() < endTime && coordinate.getTimeStamp() > startTime)) {
 
                 if (prev != null) distanceTraveledInterval += calcDistance(prev, coordinate, UNIT);
 
@@ -178,7 +178,7 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
     private List<Coordinate> pollCoordinates() {
         SharedPreferences userPrefs = getActivity().getApplication().getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
         CoordinateStorageDatabaseHelper db = new CoordinateStorageDatabaseHelper(getActivity().getApplicationContext());
-        return db.getAllCoordinates(userPrefs.getString(User.USER_ID, CoordinateStorageDatabaseHelper.ALL_USERS));
+        return db.getAllCoordinates(userPrefs.getString(User.USER_ID, User.ALL_USERS));
     }
 
 
