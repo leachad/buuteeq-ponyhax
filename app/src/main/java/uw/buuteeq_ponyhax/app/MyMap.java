@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -63,30 +64,22 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
 
         if (loadDB) {
             Log.w("MyMap", "MyMap is reading from database");
-
-            CoordinateStorageDatabaseHelper db = new CoordinateStorageDatabaseHelper(getActivity().getApplicationContext());
-
-            List<Coordinate> coordinates = db.getAllCoordinates(LocalStorage.getUserIDCoordinateQuery(getActivity()));
-
-
-
-            User theUser = new User();
-            theUser.setID(LocalStorage.getUserID(getActivity()));
+            List<Coordinate> coordinates = new ArrayList<>();
             try {
                 List<Coordinate> theList = WebDriver.getLoggedCoordinates(LocalStorage.getUserID(getActivity()),
-                        LocalStorage.getStartTime(getActivity()), LocalStorage.getEndTimeCurrentTimeBackup(getActivity()));
+                        LocalStorage.getStartTime(getActivity()),
+                        LocalStorage.getEndTimeCurrentTimeBackup(getActivity()));
+
                 if (theList != null) {
                     for (Coordinate c : theList) {
-                        if (c != null) {
-                            coordinates.add(c);
-                        }
+                        coordinates.add(c);
                     }
                 }
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
-            update(null, coordinates);
 
+            update(null, coordinates);
             LocalStorage.putDBFlag(false, getActivity());
 
         }
