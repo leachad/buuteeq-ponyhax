@@ -69,16 +69,12 @@ public class WebDriver {
     public static void addCoordinates(List<Coordinate> theCoordinateList, String theUserID) {
         myCoordinateList = theCoordinateList;
         myUserID = theUserID;
-        String result = null;
 
         try {
-            result = new AddCoordinates().execute().get();
+            new AddCoordinates().execute().get();
+            //TODO Use the obtained result for data integrity.
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-        }
-
-        if (result != null) {
-            //TODO store the result
         }
 
     }

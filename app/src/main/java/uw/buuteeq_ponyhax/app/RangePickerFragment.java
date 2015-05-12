@@ -35,19 +35,30 @@ import db.LocalStorage;
 
 public class RangePickerFragment extends android.support.v4.app.Fragment implements UIUpdater  {
 
+    /** Static fields for maintaining
+     *  data integrity dependent of the actions.
+     */
     private static final String ERROR_MESSAGE = "Select Time and Date must be in Contiguous Order";
-//    private static final String DIALOG_PROMPT = "&#9660";
     private static final int TIMESTAMP_DIVISOR = 1000;
+    public static final String START_RANGE = "start";
+    public static final String END_RANGE = "end";
+
+    /**
+     *  Backend calendars used for maintaining the correct date format.
+     */
     private Calendar mCalendar = GregorianCalendar.getInstance();
     private Calendar mStartCalendar;
     private Calendar mEndCalendar;
+
+    /**
+     * Text view widgets that allow use within the scope of the class.
+     */
     private TextView mStartDate;
     private TextView mStartTime;
     private TextView mEndDate;
     private TextView mEndTime;
 
-    public static final String START_RANGE = "start";
-    public static final String END_RANGE = "end";
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,31 +82,55 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     @Override
     public void onResume() {
         super.onResume();
-        /** Instantiate the EditText Fields that will display and hold listeners for date dialogs.*/
+
+        /** Instantiate the TextView Fields that will display and hold listeners
+         *  for Date and Time Dialogs.
+         *
+         */
         mStartDate = (TextView) getActivity().findViewById(R.id.startDateField);
         mStartTime = (TextView) getActivity().findViewById(R.id.startTimeField);
         mEndDate = (TextView) getActivity().findViewById(R.id.endDateField);
         mEndTime = (TextView) getActivity().findViewById(R.id.endTimeField);
 
+        /**
+         * Sets the OnClickListeners with the respective DateDialog/DateChosen OR TimeDialog/TimeChosen
+         * Listeners.
+         */
         mStartDate.setOnClickListener(new DateDialogListener(new OnDateChosen(START_RANGE)));
         mStartTime.setOnClickListener(new TimeDialogListener(new OnTimeChosen(START_RANGE)));
         mEndDate.setOnClickListener(new DateDialogListener(new OnDateChosen(END_RANGE)));
         mEndTime.setOnClickListener(new TimeDialogListener(new OnTimeChosen(END_RANGE)));
 
+        /**
+         * Sets the OnTouchListeners for the same TextViews to suppress the display of the
+         * soft keyboard.
+         */
         mStartDate.setOnTouchListener(new FieldSelectedListener());
         mStartTime.setOnTouchListener(new FieldSelectedListener());
         mEndDate.setOnTouchListener(new FieldSelectedListener());
         mEndTime.setOnTouchListener(new FieldSelectedListener());
 
-
+        /**
+         * Updates all fields from shared prefs using the static methods in the LocalStorage
+         * class.
+         */
         updateAllFields();
     }
 
+    /**
+     * Uses the InputMethodManager to suppress the display of the soft keyboard.
+     * @param context is the Application Context
+     * @param windowToken is the window where the keyboard should be suppressed
+     */
     private void closeKeyboard(Context context, IBinder windowToken) {
         InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         manager.hideSoftInputFromWindow(windowToken, 0);
     }
 
+
+    /**
+     * Updates the view fields based on prefs stored in LocalStorage.
+     */
     private void updateAllFields() {
         mStartCalendar.setTime(new Date(LocalStorage.getStartTime(getActivity()) * TIMESTAMP_DIVISOR));
         mStartDate.setText(getDate(mStartCalendar.getTime()));
@@ -107,9 +142,60 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
 
     }
 
+
+    /**
+     * Returns a formatted time String based on the Date passed
+     * as a parameter.
+     * @param theNewDate is the Date object with the date needed to display
+     * @return a formatted time display
+     */
+    private String getTime(final Date theNewDate) {
+        DateFormat df = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
+        return df.format(theNewDate);
+    }
+
+    /**
+     * Returns a formatted date String based on the Date passed
+     * as a parameter.
+     * @param theNewDate is the Date object with the date needed to display
+     * @return a formatted Date Display
+     */
+    private String getDate(final Date theNewDate) {
+        DateFormat df = SimpleDateFormat.getDateInstance();
+        return df.format(theNewDate);
+    }
+
+    /**
+     * Returns a formatted Unix time stamp as a long based
+     * on the date stored in the backing Calendars and divided
+     * by 1000 to obtain the correct date.
+     * @param theBoundary is the START_RANGE or the END_RANGE
+     * @return a unix time stamp as a long
+     */
+    private long getUnixTimeStamp(final String theBoundary) {
+        if (theBoundary.matches(START_RANGE)) {
+            return mStartCalendar.getTimeInMillis() / TIMESTAMP_DIVISOR;
+        } else {
+            return mEndCalendar.getTimeInMillis() / TIMESTAMP_DIVISOR;
+        }
+    }
+
+    /**
+     * Method to determine if the selected Date/Combos are in order.
+     * @return datesAreOrdered
+     */
+    private boolean selectedDatesOrdered() {
+        return getUnixTimeStamp(START_RANGE) < getUnixTimeStamp(END_RANGE);
+    }
+
+    /**
+     * Do nothing method that mimics a callback for updating view.
+     * @param currentLocation is theCurrentLocation
+     * @param locations is the list of Locations
+     */
     @Override
     public void update(Location currentLocation, List<Coordinate> locations) {
-
+        //do nothing method.
     }
 
     /**
@@ -157,47 +243,12 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
         }
     }
 
+
     /**
-     * Private class to implement a TextSelectedListener
-     *
+     * Private class to implement an OnDateSetListener. Determines the behavior for Display after
+     * the user selects a Date from the DatePicker widget in the Android Library.
      * @author leachad
-     * @version 5.8.15
-     */
-    private class FieldSelectedListener implements View.OnTouchListener {
-
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            closeKeyboard(getActivity(), v.getWindowToken());
-            return false;
-        }
-    }
-
-    private String getTime(final Date theNewDate) {
-        DateFormat df = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
-        return df.format(theNewDate);
-    }
-
-    private String getDate(final Date theNewDate) {
-        DateFormat df = SimpleDateFormat.getDateInstance();
-        return df.format(theNewDate);
-    }
-
-    private long getUnixTimeStamp(final String theBoundary) {
-        if (theBoundary.matches(START_RANGE)) {
-            return mStartCalendar.getTimeInMillis() / TIMESTAMP_DIVISOR;
-        } else {
-            return mEndCalendar.getTimeInMillis() / TIMESTAMP_DIVISOR;
-        }
-    }
-
-    private boolean selectedDatesOrdered() {
-        return getUnixTimeStamp(START_RANGE) < getUnixTimeStamp(END_RANGE);
-    }
-
-
-    /**
-     * Private class to implement an OnDateSelectedListener
+     * @version 5.7.15
      */
     private class OnDateChosen implements DatePickerDialog.OnDateSetListener {
         private String myBoundary;
@@ -206,6 +257,16 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
             myBoundary = theBoundary;
         }
 
+        /**
+         *
+         * OnDateset updates the prefs, textview displays, and backside calendars using
+         * the year month and day selected by the user.
+         *
+         * @param view is the DatePicker widget
+         * @param year is the selected year
+         * @param monthOfYear is the selected month
+         * @param dayOfMonth is the selected day
+         */
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             if (selectedDatesOrdered()) {
@@ -227,7 +288,10 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     }
 
     /**
-     * Private class to implement an OnDateSelectedListener
+     * Private class to implement an OnTimeSetListener. Determines the behavior for Display after
+     * the user selects a Time from the TimePicker widget in the Android Library.
+     * @author leachad
+     * @version 5.7.15
      */
     private class OnTimeChosen implements TimePickerDialog.OnTimeSetListener {
         private String myBoundary;
@@ -236,6 +300,13 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
             myBoundary = theBoundary;
         }
 
+        /**
+         * OnTimeSet updates the prefs, textview displays, and backside calendars using
+         * the hour and minute selected by the User.
+         * @param view is the TimePicker widget.
+         * @param hourOfDay is thehour selected
+         * @param minute is the minute selected
+         */
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             if (selectedDatesOrdered()) {
@@ -254,6 +325,25 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
                     Toast.makeText(getActivity(), ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
                 }
             }
+    }
+
+
+    /**
+     * Private class to implement a TouchListener. Suppresses the soft keyboard if the user touches
+     * the widget. Fail safe if the user fails to touch the painted area of the widget and instead
+     * touches the text.
+     *
+     * @author leachad
+     * @version 5.8.15
+     */
+    private class FieldSelectedListener implements View.OnTouchListener {
+
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            closeKeyboard(getActivity(), v.getWindowToken());
+            return false;
+        }
     }
 }
 

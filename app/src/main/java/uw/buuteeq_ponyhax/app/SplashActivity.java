@@ -6,13 +6,11 @@ package uw.buuteeq_ponyhax.app;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import java.util.concurrent.ExecutionException;
 
 import db.LocalStorage;
-import db.User;
 import webservices.WebDriver;
 
 /**

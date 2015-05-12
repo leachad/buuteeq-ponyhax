@@ -96,12 +96,11 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
         CoordinateCursor cursor = queryCoordinates();
         boolean isUnique = true;
         while (cursor.moveToNext()) {
-
-            //TODO should we be making evaluations of unique coordinates? Perhaps a user
-            //wants to update the picture or data in regards to a specific location or set of
-            //locations?
-            //I think that since this is a data mining app, information about them not moving at certain times can also
-            //be useful, so coordinates that are the same save for the time stamp should be allowed
+            Coordinate temp = cursor.getCoordinate();
+            if (temp.equals(coordinate)) {
+                isUnique = false;
+                break;
+            }
         }
         cursor.close();
         return isUnique;
@@ -162,7 +161,7 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
      * @return a iterative cursor for the return sql query
      */
     private Cursor getCoordinateCursor(String userID) {
-        Cursor cursor = null;
+        Cursor cursor;
         if (userID.equals(User.ALL_USERS)) {
             cursor = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_TIME_STAMP + ";", new String[]{});
         } else {
@@ -173,7 +172,7 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * Instance of a private inner class that returns a Cursors that probes the rows
-     * from the user table.
+     * from the coordinate table.
      */
     public static class CoordinateCursor extends CursorWrapper {
         public CoordinateCursor(Cursor c) {
@@ -185,7 +184,7 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
          * if the current row is invalid. Allows the calling code to iterate
          * over the entirety of the rows in the database.
          *
-         * @return user
+         * @return Coordinate with or without a photo blob
          */
         public Coordinate getCoordinate() {
             if (isBeforeFirst() || isAfterLast())

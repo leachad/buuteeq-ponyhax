@@ -5,22 +5,18 @@
 package uw.buuteeq_ponyhax.app;
 
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,7 +26,6 @@ import java.util.concurrent.ExecutionException;
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
-import db.User;
 import location_services.MyLocationManager;
 import location_services.MyLocationReceiver;
 import webservices.WebDriver;
@@ -207,15 +202,6 @@ public class MyAccount extends ActionBarActivity
         }
     }
 
-    /**
-     * Public method to restore the state of the action bar.
-     */
-    public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setDisplayShowTitleEnabled(true);
-//        actionBar.setTitle(mTitle);
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -258,8 +244,6 @@ public class MyAccount extends ActionBarActivity
 
         //Naturally in time order due to the local points being the most recent
         List<Coordinate> moreCoords = coordHelper.getAllCoordinates(LocalStorage.getUserIDCoordinateQuery(getApplicationContext()));
-
-//        Toast.makeText(getApplicationContext(), "More Coords from local " + moreCoords.size(), Toast.LENGTH_LONG).show();
 
         for (Coordinate c : moreCoords) {
             coordinates.add(c);
