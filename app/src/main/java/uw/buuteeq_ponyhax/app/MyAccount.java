@@ -139,6 +139,13 @@ public class MyAccount extends ActionBarActivity
     }
 
     @Override
+    protected void onStop() {
+        unregisterReceiver(mLocationReceiver);
+        mStopButton.performClick();
+        super.onStop();
+    }
+
+    @Override
     public void onDestroy() {
         unregisterReceiver(mLocationReceiver);
         mStopButton.performClick();
