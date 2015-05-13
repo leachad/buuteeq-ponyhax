@@ -26,7 +26,7 @@ public class MyLocationReceiver extends BroadcastReceiver implements LocationLis
             onLocationReceived(context, loc);
         }
 
-        if(intent.hasExtra(LocationManager.KEY_PROVIDER_ENABLED)) {
+        if (intent.hasExtra(LocationManager.KEY_PROVIDER_ENABLED)) {
             boolean enabled = intent.getBooleanExtra(LocationManager.KEY_PROVIDER_ENABLED, false);
             onProviderEnabledChanged(enabled);
         }

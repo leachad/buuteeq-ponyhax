@@ -12,155 +12,151 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1.0"
+        tools:context="uw.buuteeq_ponyhax.app.MyAccount$PlaceholderFragment">
+
+        <TextView
+            android:id="@+id/textView3"
+            style="@style/restrictedTextTheme"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="7dp"
+            android:gravity="center"
+            android:text="@string/title_activity_my_account"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/text_overall_title"
+            style="@style/editTextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/general_stats_string" />
+
+
+        <LinearLayout
+            android:id="@+id/overall_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/sectional_background"
             android:orientation="vertical"
-            android:weightSum="1.0"
-            tools:context="uw.buuteeq_ponyhax.app.MyAccount$PlaceholderFragment">
+            android:padding="7dp"
+            android:paddingLeft="2dp">
+
 
             <TextView
-                android:id="@+id/textView3"
-                style="@style/restrictedTextTheme"
+                android:id="@+id/text_total_distance"
+                style="@style/editTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="7dp"
-                android:gravity="center"
-                android:text="@string/title_activity_my_account"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:layout_marginBottom="3dp"
+                android:enabled="false"
+                android:text="@string/total_distance_string" />
 
             <TextView
-                android:id="@+id/text_overall_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/general_stats_string"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="5dp"
-                style="@style/editTextTheme"/>
-
-
-            <LinearLayout
-                android:id="@+id/overall_layout"
+                android:id="@+id/text_total_distance_interval"
+                style="@style/editTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="5dp"
-                android:padding="7dp"
-                android:paddingLeft="2dp"
-                android:background="@drawable/sectional_background">
+                android:layout_marginBottom="3dp"
+                android:enabled="false"
+                android:text="@string/total_distance_range_string" />
 
-
-                <TextView
-                    android:id="@+id/text_total_distance"
-                    style="@style/editTextTheme"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:enabled="false"
-                    android:layout_marginBottom="3dp"
-                    android:text="@string/total_distance_string" />
-
-                <TextView
-                    android:id="@+id/text_total_distance_interval"
-                    style="@style/editTextTheme"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:enabled="false"
-                    android:layout_marginBottom="3dp"
-                    android:text="@string/total_distance_range_string" />
-
-                <TextView
-                    android:id="@+id/text_account_numDataPoints"
-                    style="@style/editTextTheme"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:enabled="false"
-                    android:layout_marginBottom="3dp"
-                    android:text="@string/num_data_points" />
-
-
-            </LinearLayout>
-
-            <!--<LinearLayout-->
-            <!--android:id="@+id/recent_layout"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:orientation="vertical"-->
-            <!--android:background="@drawable/sectional_background">-->
-
-            <!--<TextView-->
-            <!--android:id="@+id/text_account_name"-->
-            <!--style="@style/editTextTheme"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="10dp"-->
-            <!--android:enabled="false"-->
-            <!--android:textStyle="bold"-->
-            <!--android:gravity="center"-->
-            <!--android:text="@string/recent_location_string" />-->
-
-            <!--<TextView-->
-            <!--android:id="@+id/text_latitude"-->
-            <!--style="@style/editTextTheme"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="10dp"-->
-            <!--android:enabled="false"-->
-            <!--android:text="@string/latitude_string" />-->
-
-            <!--<TextView-->
-            <!--android:id="@+id/text_longitude"-->
-            <!--style="@style/editTextTheme"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:enabled="false"-->
-            <!--android:text="@string/longitude_string" />-->
-
-            <!--<TextView-->
-            <!--android:id="@+id/text_speed"-->
-            <!--style="@style/editTextTheme"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:enabled="false"-->
-            <!--android:text="@string/speed_string" />-->
-
-            <!--<TextView-->
-            <!--android:id="@+id/text_bearing"-->
-            <!--style="@style/editTextTheme"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:enabled="false"-->
-            <!--android:text="@string/bearing_string" />-->
-
-            <!--<TextView-->
-            <!--android:id="@+id/text_time"-->
-            <!--style="@style/editTextTheme"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:enabled="false"-->
-            <!--android:text="@string/time_stamp_string" />-->
-
-
-            <!--</LinearLayout>-->
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/list_title"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="5dp"
-                style="@style/editTextTheme"/>
-
-            <ListView
-                android:id="@+id/listViewMyAccount"
+                android:id="@+id/text_account_numDataPoints"
+                style="@style/editTextTheme"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/sectional_background"
-                android:padding="5dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:enabled="false"
+                android:text="@string/num_data_points" />
+
 
         </LinearLayout>
 
+        <!--<LinearLayout-->
+        <!--android:id="@+id/recent_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:orientation="vertical"-->
+        <!--android:background="@drawable/sectional_background">-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/text_account_name"-->
+        <!--style="@style/editTextTheme"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:enabled="false"-->
+        <!--android:textStyle="bold"-->
+        <!--android:gravity="center"-->
+        <!--android:text="@string/recent_location_string" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/text_latitude"-->
+        <!--style="@style/editTextTheme"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:enabled="false"-->
+        <!--android:text="@string/latitude_string" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/text_longitude"-->
+        <!--style="@style/editTextTheme"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:enabled="false"-->
+        <!--android:text="@string/longitude_string" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/text_speed"-->
+        <!--style="@style/editTextTheme"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:enabled="false"-->
+        <!--android:text="@string/speed_string" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/text_bearing"-->
+        <!--style="@style/editTextTheme"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:enabled="false"-->
+        <!--android:text="@string/bearing_string" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/text_time"-->
+        <!--style="@style/editTextTheme"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:enabled="false"-->
+        <!--android:text="@string/time_stamp_string" />-->
 
 
+        <!--</LinearLayout>-->
+        <TextView
+            style="@style/editTextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/list_title" />
 
+        <ListView
+            android:id="@+id/listViewMyAccount"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/sectional_background"
+            android:padding="5dp" />
+
+    </LinearLayout>
 
 
 </LinearLayout>

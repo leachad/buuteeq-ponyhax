@@ -8,11 +8,11 @@
     style="@style/AppTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical">
+    android:paddingTop="@dimen/activity_vertical_margin">
 
     <TextView
         android:id="@+id/textView3"
@@ -20,23 +20,22 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/selectDateRange"
-        android:theme="@style/restrictedTextTheme"/>
+        android:theme="@style/restrictedTextTheme" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:baselineAligned="false"
-        android:orientation="vertical"
         android:gravity="center"
+        android:orientation="vertical"
         tools:context="uw.buuteeq_ponyhax.app.MyAccount$PlaceholderFragment">
-
 
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:orientation="vertical">
 
             <TextView
                 style="@style/AppTheme"
@@ -44,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/startOfRange"
-                android:textAppearance="?android:attr/textAppearanceLarge"/>
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -57,8 +56,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="16sp"
-                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="16sp" />
 
                 <Space
                     android:layout_width="16dp"
@@ -72,8 +71,8 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/startDateText"
-                    android:textSize="16sp"
-                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -82,8 +81,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:orientation="vertical">
 
             <TextView
                 style="@style/AppTheme"
@@ -91,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/endOfRange"
-                android:textAppearance="?android:attr/textAppearanceLarge"/>
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -104,8 +103,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="16sp"
-                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="16sp" />
 
                 <Space
                     android:layout_width="16dp"
@@ -119,8 +118,8 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/endDateText"
-                    android:textSize="16sp"
-                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

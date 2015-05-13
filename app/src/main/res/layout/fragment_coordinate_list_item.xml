@@ -1,68 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical"
-    style="@style/AppTheme">
+    style="@style/AppTheme"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:orientation="horizontal"
-        android:gravity="center_vertical" android:layout_marginBottom="5dp"
-        android:layout_marginTop="10dp">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/location_icon"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp"
+            android:src="@mipmap/location_icon" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/time_list_text"
             style="@style/editTextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="0dp"
-            android:text="@string/time_stamp_string"/>
+            android:text="@string/time_stamp_string" />
 
     </LinearLayout>
 
 
-
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/editTextTheme"
         android:id="@+id/lat_list_text"
-        android:layout_marginTop="5dp"
+        style="@style/editTextTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:text="@string/latitude_string"/>
+        android:layout_marginTop="5dp"
+        android:text="@string/latitude_string" />
 
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/editTextTheme"
         android:id="@+id/long_list_text"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:text="@string/longitude_string"/>
-
-    <TextView
+        style="@style/editTextTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/editTextTheme"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/longitude_string" />
+
+    <TextView
         android:id="@+id/head_list_text"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:text="@string/bearing_string"/>
-
-    <TextView
+        style="@style/editTextTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/editTextTheme"
-        android:id="@+id/speed_list_text"
-        android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:text="@string/speed_string"/>
+        android:layout_marginTop="5dp"
+        android:text="@string/bearing_string" />
+
+    <TextView
+        android:id="@+id/speed_list_text"
+        style="@style/editTextTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/speed_string" />
 
 
 </LinearLayout>

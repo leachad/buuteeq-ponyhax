@@ -35,13 +35,14 @@ import db.LocalStorage;
 
 public class RangePickerFragment extends android.support.v4.app.Fragment implements UIUpdater  {
 
+
     /** Static fields for maintaining
      *  data integrity dependent of the actions.
      */
-    private static final String ERROR_MESSAGE = "Select Time and Date must be in Contiguous Order";
-    private static final int TIMESTAMP_DIVISOR = 1000;
     public static final String START_RANGE = "start";
     public static final String END_RANGE = "end";
+    private static final String ERROR_MESSAGE = "Select Time and Date must be in Contiguous Order";
+    public static final int TIMESTAMP_DIVISOR = 1000;
 
     /**
      *  Backend calendars used for maintaining the correct date format.
@@ -57,8 +58,6 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     private TextView mStartTime;
     private TextView mEndDate;
     private TextView mEndTime;
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

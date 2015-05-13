@@ -94,11 +94,11 @@
     Misc. Resources
     -->
     <string name="user_not_found">User not found</string>
-    
+
     <!--
     Overview Fragment resources
     -->
-    
+
     <string name="recent_location_string">Locations Gathered</string>
     <string name="latitude_string">Latitude:  </string>
     <string name="longitude_string">Longitude:  </string>

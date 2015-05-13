@@ -33,19 +33,18 @@ import webservices.WebDriver;
 public class MyAccount extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    protected List<Coordinate> coordinates;
+    MyLocationManager myLocationManager;
     /**
      * Used to store the last screen title.
      */
     private CharSequence mTitle;
-
-    MyLocationManager myLocationManager;
     private Button mStartButton;
     private Button mStopButton;
     private Location mLastLocation;
     private UIUpdater fragment;
-    protected List<Coordinate> coordinates;
     private int publishCounter = 0;
-
+    private CoordinateStorageDatabaseHelper coordHelper;
     //SETUP RECEIVER WITH INNER CLASS
     private BroadcastReceiver mLocationReceiver = new MyLocationReceiver() {
 
@@ -84,7 +83,6 @@ public class MyAccount extends ActionBarActivity
         }
 
     };
-    private CoordinateStorageDatabaseHelper coordHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

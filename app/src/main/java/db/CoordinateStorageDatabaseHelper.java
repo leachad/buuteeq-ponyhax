@@ -35,7 +35,6 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PHOTO = "photo";
 
 
-
     /**
      * Constructor for a Coordinate Database
      */
@@ -112,7 +111,6 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
      * <p/>
      * theLocalCoordinates is a list of Coordinates generated before pushed to webservices
      *
-     * @return isSuccess
      */
     public void publishCoordinateBatch(final String theUserID) {
         List<Coordinate> theLocalCoordinates = getAllCoordinates(User.ALL_USERS);

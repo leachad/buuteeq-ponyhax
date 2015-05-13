@@ -46,7 +46,6 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.activity_my_map, container, false);
     }
