@@ -131,16 +131,16 @@ public class MyAccount extends ActionBarActivity
         setTitle("");
     }
 
-    @Override
-    protected void onStop() {
-        unregisterReceiver(mLocationReceiver);
-        mStopButton.performClick();
-        super.onStop();
-    }
+//    @Override
+//    protected void onStop() {
+//        unregisterReceiver(mLocationReceiver);
+//        mStopButton.performClick();
+//        super.onStop();
+//    }
 
     @Override
     public void onDestroy() {
-        //unregisterReceiver(mLocationReceiver);
+        unregisterReceiver(mLocationReceiver);
         mStopButton.performClick();
         super.onDestroy();
     }
