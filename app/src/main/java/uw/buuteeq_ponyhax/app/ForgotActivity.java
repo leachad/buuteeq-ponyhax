@@ -67,9 +67,9 @@ public class ForgotActivity extends ActionBarActivity {
                 String result = WebDriver.resetPassword(resetEmail.getText().toString());
 
                 if (result.matches(JsonBuilder.VAL_FAIL)) {
-                    Toast.makeText(getApplicationContext(), RESET_FAILED, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), RESET_FAILED, Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), RESET_PROMPT + resetEmail.getText().toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), RESET_PROMPT + resetEmail.getText().toString(), Toast.LENGTH_LONG).show();
                     LocalStorage.clearPrefs(getApplicationContext());
                     finish();
                 }
