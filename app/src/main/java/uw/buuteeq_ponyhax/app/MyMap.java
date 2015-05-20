@@ -4,6 +4,7 @@
 
 package uw.buuteeq_ponyhax.app;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -43,6 +44,8 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
     private int mapCoordinateSize;
     private Coordinate lastKnownLocation;
 
+    private MyAccountFragment.UIListUpdater mCallBackActivity;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -61,27 +64,30 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
         boolean loadDB = LocalStorage.getDBFlag(getActivity());
 
 
-        if (loadDB) {
-            Log.w("MyMap", "MyMap is reading from database");
-            List<Coordinate> coordinates = new ArrayList<>();
-            try {
-                List<Coordinate> theList = WebDriver.getLoggedCoordinates(LocalStorage.getUserID(getActivity()),
-                        LocalStorage.getStartTime(getActivity()),
-                        LocalStorage.getEndTimeCurrentTimeBackup(getActivity()));
+//        if (loadDB) {
+//            Log.w("MyMap", "MyMap is reading from database");
+//            List<Coordinate> coordinates = new ArrayList<>();
+//            try {
+//                List<Coordinate> theList = WebDriver.getLoggedCoordinates(LocalStorage.getUserID(getActivity()),
+//                        LocalStorage.getStartTime(getActivity()),
+//                        LocalStorage.getEndTimeCurrentTimeBackup(getActivity()));
+//
+//                if (theList != null) {
+//                    for (Coordinate c : theList) {
+//                        coordinates.add(c);
+//                    }
+//                }
+//            } catch (ExecutionException | InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//
+//            update(null, coordinates);
+//            LocalStorage.putDBFlag(false, getActivity());
+//
+//        }
 
-                if (theList != null) {
-                    for (Coordinate c : theList) {
-                        coordinates.add(c);
-                    }
-                }
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            update(null, coordinates);
-            LocalStorage.putDBFlag(false, getActivity());
-
-        }
+        List<Coordinate> coordinates = mCallBackActivity.getList();
+        update(null, coordinates);
     }
 
     /**
@@ -147,7 +153,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
     private void moveCameraToLastLocation() {
         if (lastKnownLocation != null) {
             LatLng lastLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 17));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 25));
         }
     }
 
@@ -181,5 +187,11 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
         moveCameraToLastLocation();
         mapCoordinateSize = locations.size();
         Log.w("MyMap", "location list size is " + locations.size());
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        mCallBackActivity = (MyAccountFragment.UIListUpdater) activity;
+        super.onAttach(activity);
     }
 }

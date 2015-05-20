@@ -31,7 +31,7 @@ import location_services.MyLocationReceiver;
 import webservices.WebDriver;
 
 public class MyAccount extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, MyAccountFragment.UIListUpdater {
 
     protected List<Coordinate> coordinates;
     MyLocationManager myLocationManager;
@@ -282,4 +282,9 @@ public class MyAccount extends ActionBarActivity
     }
 
 
+    @Override
+    public List<Coordinate> getList() {
+        Log.d("GETLIST CALL", "list returned length" + coordinates.size());
+        return coordinates;
+    }
 }

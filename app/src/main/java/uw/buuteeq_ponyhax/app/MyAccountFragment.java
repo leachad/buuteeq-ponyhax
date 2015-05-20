@@ -4,6 +4,7 @@
 
 package uw.buuteeq_ponyhax.app;
 
+import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -49,6 +50,8 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
     private MyCoordinateAdapter mCoordinateAdapter;
     private ListView mPointListView;
 
+    UIListUpdater mCallBackActivity;
+
     public void update(Location currentLocation, List<Coordinate> locations) {
 
         int scannedCoordinates = 0;
@@ -79,7 +82,7 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
             updateListAdapter(locations);
 
         } else {
-            if (!locations.isEmpty()) {
+            if (!locations.isEmpty() && mCoordinateAdapter.getCount() == 0) {
                 updateListAdapter(locations);
             }
         }
@@ -156,23 +159,25 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
         mPointListView.setDividerHeight(5);
 
 
-        List<Coordinate> coordinates = pollCoordinates();
+//        List<Coordinate> coordinates = pollCoordinates();
         mCoordinateAdapter = new MyCoordinateAdapter(new ArrayList<Coordinate>());
         mPointListView.setAdapter(mCoordinateAdapter);
 
-        try {
-            List<Coordinate> theList = WebDriver.getLoggedCoordinates(LocalStorage.getUserID(getActivity()),
-                    LocalStorage.getStartTime(getActivity()),
-                    LocalStorage.getEndTimeCurrentTimeBackup(getActivity()));
+//        try {
+//            List<Coordinate> theList = WebDriver.getLoggedCoordinates(LocalStorage.getUserID(getActivity()),
+//                    LocalStorage.getStartTime(getActivity()),
+//                    LocalStorage.getEndTimeCurrentTimeBackup(getActivity()));
+//
+//            if (theList != null) {
+//                for (Coordinate c : theList) {
+//                    coordinates.add(c);
+//                }
+//            }
+//        } catch (ExecutionException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
-            if (theList != null) {
-                for (Coordinate c : theList) {
-                    coordinates.add(c);
-                }
-            }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        List<Coordinate> coordinates = mCallBackActivity.getList();
         
         update(null, coordinates);
 
@@ -254,6 +259,17 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
 
             return convertView;
         }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        mCallBackActivity = (UIListUpdater) activity;
+        super.onAttach(activity);
+    }
+
+    public interface UIListUpdater {
+
+        List<Coordinate> getList();
     }
 
 }
