@@ -26,6 +26,7 @@ import java.util.concurrent.ExecutionException;
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
+import location_services.GPSPlotter;
 import location_services.MyLocationManager;
 import location_services.MyLocationReceiver;
 import webservices.WebDriver;
@@ -109,7 +110,8 @@ public class MyAccount extends ActionBarActivity
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myLocationManager.startLocationUpdates((android.location.LocationListener) mLocationReceiver);
+                //myLocationManager.startLocationUpdates((android.location.LocationListener) mLocationReceiver);
+                GPSPlotter.beginManagedLocationRequests(getApplicationContext());
                 enabledStopButton();
             }
         });
@@ -117,7 +119,8 @@ public class MyAccount extends ActionBarActivity
         mStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myLocationManager.stopLocationUpdates((android.location.LocationListener) mLocationReceiver);
+                //myLocationManager.stopLocationUpdates((android.location.LocationListener) mLocationReceiver);
+                GPSPlotter.endManagedLocationRequests(getApplicationContext());
                 enableStartButton();
             }
         });

@@ -60,7 +60,7 @@ public class Coordinate {
      * @param theUserID    is the unique user ID issued by the WebServices API
      */
 
-    public Coordinate(final double theLongitude, final double theLatitude, final long theTimeStamp, final double theSpeed, final double theHeading, final String theUserID) {
+    public Coordinate(final double theLatitude, final double theLongitude, final long theTimeStamp, final double theSpeed, final double theHeading, final String theUserID) {
         myLongitude = theLongitude;
         myLatitude = theLatitude;
         myTimeStamp = theTimeStamp;
@@ -84,7 +84,7 @@ public class Coordinate {
      *                           at that specific location.
      */
 
-    public Coordinate(final double theLongitude, final double theLatitude, final long theTimeStamp,
+    public Coordinate(final double theLatitude, final double theLongitude, final long theTimeStamp,
                       final double theSpeed, final double theHeading, final String theUserID, final byte[] theCoordinatePhoto) {
         myLongitude = theLongitude;
         myLatitude = theLatitude;
