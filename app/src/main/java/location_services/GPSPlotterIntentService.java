@@ -41,9 +41,7 @@ public class GPSPlotterIntentService extends IntentService {
      */
     private void grabLocation() {
         //TODO Current sample context will be derived from the classes that Ed develops
-        //further, this means that argument 1 of get LastKnownLocation will be a method call to the
-        //classes that Ed Develops, unless he stores those in Localstorage as well
-        Location location = LocalStorage.getLastKnowLocation(LocalStorage.SampleContext.GPS, getApplicationContext());
+        Location location = LocalStorage.getLastKnowLocation(LocalStorage.ProviderType.GPS, getApplicationContext());
         Log.w(LOGGING_KEY, location.toString());
 
     }

@@ -113,12 +113,12 @@ public class LocalStorage {
     /**
      * Public static method to put the modified interval rate for the LocationManager. Checks
      * to ensure that the location manager is not null and instantiates if true.
-     * @param theSampleContext is the current SampleContext enum used to identify the provider context
+     * @param theProviderType is the current SampleContext enum used to identify the provider context
      *                        @param context is the application context within the lifecycle.
      */
-    public static Location getLastKnowLocation(SampleContext theSampleContext, Context context) {
-        checkLocationManager(theSampleContext, context);
-        return mLocationManager.getLastKnownLocation(theSampleContext.mProviderType);
+    public static Location getLastKnowLocation(ProviderType theProviderType, Context context) {
+        checkLocationManager(theProviderType, context);
+        return mLocationManager.getLastKnownLocation(theProviderType.mProviderType);
     }
 
     /**
@@ -249,7 +249,7 @@ public class LocalStorage {
     /**
      * Private method to check the LocationManager and instantiate it if does not exist.
      */
-    private static void checkLocationManager(SampleContext theProvider, Context context) {
+    private static void checkLocationManager(ProviderType theProvider, Context context) {
 
 
         if (mLocationManager == null || !theProvider.mProviderType.matches(mLocationManager.getAllProviders().get(0))) {
@@ -271,12 +271,12 @@ public class LocalStorage {
 
     }
 
-    public enum SampleContext {
+    public enum ProviderType {
         GPS(LocationManager.GPS_PROVIDER), PASSIVE(LocationManager.PASSIVE_PROVIDER), NETWORK(LocationManager.NETWORK_PROVIDER);
 
         public String mProviderType;
 
-        SampleContext(String provider) {
+        ProviderType(String provider) {
             mProviderType = provider;
         }
     }
