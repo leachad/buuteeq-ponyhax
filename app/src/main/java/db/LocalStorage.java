@@ -2,6 +2,9 @@ package db;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationManager;
+import android.util.Log;
 
 import java.util.Calendar;
 
@@ -12,6 +15,11 @@ import java.util.Calendar;
  */
 public class LocalStorage {
 
+    /**
+     * Private field to hold a reference to the LocationManager shared by the Lifecycle of the
+     * application.
+     */
+    private static LocationManager mLocationManager;
 
     /**
      * Public static method to put the UserID into the prefs.
@@ -103,15 +111,14 @@ public class LocalStorage {
     }
 
     /**
-     * Public static method to put the flag into the prefs based on the Users existence within the
-     * prefs.
-     *
-     * @param theUserExists is the boolean passed from the calling code.
-     * @param context       is the application context within the lifecycle.
+     * Public static method to put the modified interval rate for the LocationManager. Checks
+     * to ensure that the location manager is not null and instantiates if true.
+     * @param theSampleContext is the current SampleContext enum used to identify the provider context
+     *                        @param context is the application context within the lifecycle.
      */
-    public static void putUserFlag(boolean theUserExists, Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-        sharedPreferences.edit().putBoolean(User.USER_EXISTS, theUserExists).apply();
+    public static Location getLastKnowLocation(SampleContext theSampleContext, Context context) {
+        checkLocationManager(theSampleContext, context);
+        return mLocationManager.getLastKnownLocation(theSampleContext.mProviderType);
     }
 
     /**
@@ -205,16 +212,6 @@ public class LocalStorage {
         return sharedPreferences.getBoolean(User.DB_FLAG, true);
     }
 
-    /**
-     * Public static method to return whether or not the user exists within the prefs.
-     *
-     * @param context is the application context within the lifecycle.
-     * @return theUserExists
-     */
-    public static boolean getUserExists(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-        return sharedPreferences.getBoolean(User.USER_EXISTS, false);
-    }
 
     /**
      * Public static method to return the sampling rate stored in the prefs.
@@ -223,7 +220,6 @@ public class LocalStorage {
      * @return theSamplingRate
      */
     public static int getSelectedSampleRate(Context context) {
-        int DEFAULT_RATE = 10;
         SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
         return sharedPreferences.getInt(User.SAMPLE_RATE, UploadRate.ONCE_DAILY.rateIndex);
     }
@@ -250,6 +246,18 @@ public class LocalStorage {
         sharedPreferences.edit().clear().apply();
     }
 
+    /**
+     * Private method to check the LocationManager and instantiate it if does not exist.
+     */
+    private static void checkLocationManager(SampleContext theProvider, Context context) {
+
+
+        if (mLocationManager == null || !theProvider.mProviderType.matches(mLocationManager.getAllProviders().get(0))) {
+            mLocationManager = (LocationManager) context.getSystemService(theProvider.mProviderType);
+            Log.w("curLocationProvider", mLocationManager.getAllProviders().get(0));
+        }
+    }
+
 
     public enum UploadRate {
         EVERY_HOUR(0), ONCE_DAILY(1), TWICE_DAILY(2), MANUAL(3);
@@ -261,6 +269,16 @@ public class LocalStorage {
         }
 
 
+    }
+
+    public enum SampleContext {
+        GPS(LocationManager.GPS_PROVIDER), PASSIVE(LocationManager.PASSIVE_PROVIDER), NETWORK(LocationManager.NETWORK_PROVIDER);
+
+        public String mProviderType;
+
+        SampleContext(String provider) {
+            mProviderType = provider;
+        }
     }
 
 }
