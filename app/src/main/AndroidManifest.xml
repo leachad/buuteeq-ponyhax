@@ -10,6 +10,22 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <action android:name="android.intent.action.ACTION_DOCK_EVENT"/>
+
+    <receiver
+        android:name=".BatteryLevelReceiver"
+        android:enabled="true"
+        android:exported="true" >
+        <intent-filter>
+            <action android:name="android.intent.action.BATTERY_LOW"/>
+            <action android:name="android.intent.action.BATTERY_OKAY"/>
+            <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+            <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+        </intent-filter>
+    </receiver>
+
 
     <application
         android:allowBackup="true"
