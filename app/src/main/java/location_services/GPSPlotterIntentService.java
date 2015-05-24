@@ -3,6 +3,7 @@ package location_services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationManager;
 import android.util.Log;
 
 import db.LocalStorage;
@@ -40,9 +41,19 @@ public class GPSPlotterIntentService extends IntentService {
      *
      */
     private void grabLocation() {
-        //TODO Current sample context will be derived from the classes that Ed develops
-        Location location = LocalStorage.getLastKnowLocation(LocalStorage.ProviderType.GPS, getApplicationContext());
-        Log.w(LOGGING_KEY, location.toString());
+        Log.w(LOGGING_KEY, "Going to grab location");
+        /**
+         * TODO This method will contain different conditionals based on the values that the Network and
+         * Power class obtains for use in sampling.
+         */
+        Location current = LocalStorage.getLastKnowLocation(LocalStorage.ProviderType.GPS, getApplicationContext());
+        if (current == null) {
+            Log.w(LOGGING_KEY, "Location was NULL");
+        } else {
+            Log.w(LOGGING_KEY, current.toString());
+        }
+
+
 
     }
 

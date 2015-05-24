@@ -1,12 +1,17 @@
 package db;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.util.Log;
 
 import java.util.Calendar;
+
+import location_services.GPSPlotter;
 
 /**
  * Created by leachad on 5/10/2015. Used to statically access and
@@ -15,11 +20,18 @@ import java.util.Calendar;
  */
 public class LocalStorage {
 
+    /** Default variables for the LocationRequests.*/
+    public static final int DEFAULT_INTERVAL = 60;
+    public static final int DEFAULT_MIN_DISTANCE = 0;
+    public static final int TIMESTAMP_MULTIPLIER = 1000;
+
     /**
-     * Private field to hold a reference to the LocationManager shared by the Lifecycle of the
-     * application.
+     * Private field to hold a reference to the LocationManager and its applicable data types
+     * shared by the Lifecycle of the application.
      */
-    private static LocationManager mLocationManager;
+    private static LocationManager mLocationManager = null;
+    private static Location mLastLocation = null;
+    private static ProviderType mProvider = null;
 
     /**
      * Public static method to put the UserID into the prefs.
@@ -118,7 +130,8 @@ public class LocalStorage {
      */
     public static Location getLastKnowLocation(ProviderType theProviderType, Context context) {
         checkLocationManager(theProviderType, context);
-        return mLocationManager.getLastKnownLocation(theProviderType.mProviderType);
+        //return mLocationManager.getLastKnownLocation(theProviderType.mProviderType);
+        return mLastLocation;
     }
 
     /**
@@ -251,11 +264,37 @@ public class LocalStorage {
      */
     private static void checkLocationManager(ProviderType theProvider, Context context) {
 
+        //TODO Fix logic to adjust for change in Provider Types
+        if (mLocationManager == null) {
+            initializeLocationManager(context);
+            storeLastLocation(theProvider);
+            mProvider = theProvider;
 
-        if (mLocationManager == null || !theProvider.mProviderType.matches(mLocationManager.getAllProviders().get(0))) {
-            mLocationManager = (LocationManager) context.getSystemService(theProvider.mProviderType);
-            Log.w("curLocationProvider", mLocationManager.getAllProviders().get(0));
+        } else if (!mProvider.mProviderType.matches(theProvider.mProviderType)){
+            storeLastLocation(theProvider);
+            mProvider = theProvider;
+
+        } else {
+            storeLastLocation(theProvider);
+            mProvider = theProvider;
         }
+    }
+
+    /**
+     * Private method to initialize the location manager.
+     * @param context is the application context.
+     */
+    private static void initializeLocationManager(Context context) {
+        mLocationManager = (LocationManager) context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+    }
+
+    /**
+     * Private method to obtain a single location for the checkLocationManager functions. Uses the newly registered GPSPlotterListener to
+     * return the Location with the correct service.
+     * @param theProvider is the Provider type for requesting location.
+     */
+    private static void storeLastLocation(ProviderType theProvider) {
+        mLocationManager.requestLocationUpdates(theProvider.mProviderType, 0, 0, new GPSPlotterListener(theProvider.mProviderType));
     }
 
 
@@ -278,6 +317,46 @@ public class LocalStorage {
 
         ProviderType(String provider) {
             mProviderType = provider;
+        }
+    }
+
+
+
+    /**
+     * This listener allows for several variations on the same basic Location Listener interface.
+     * Calling code passes in a Static String identifying the provider.
+     *
+     * @author leachad
+     * @version 5.20.15
+     */
+    private static class GPSPlotterListener implements LocationListener {
+
+        /** Private field to hold a tag to the current Provider.*/
+
+        public GPSPlotterListener(final String theProvider) {
+            Log.e(GPSPlotter.class.getName(), "LocationListener " + theProvider);
+            mLastLocation = new Location(theProvider);
+        }
+        @Override
+        public void onLocationChanged(Location location) {
+            Log.e(GPSPlotter.class.getName(), "onLocationChanged: " + location);
+            mLastLocation.set(location);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            Log.e(GPSPlotter.class.getName(), "onStatusChanged: " + provider + ", " + status);
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            Log.e(GPSPlotter.class.getName(), "onProviderEnabled: " + provider);
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            Log.e(GPSPlotter.class.getName(), "onProviderDisabled: " + provider);
         }
     }
 

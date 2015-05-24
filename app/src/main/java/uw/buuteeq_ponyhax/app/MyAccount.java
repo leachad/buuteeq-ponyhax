@@ -111,7 +111,8 @@ public class MyAccount extends ActionBarActivity
             @Override
             public void onClick(View v) {
                 //myLocationManager.startLocationUpdates((android.location.LocationListener) mLocationReceiver);
-                GPSPlotter.beginManagedLocationRequests(getApplicationContext());
+                int selectedSampleRate = 5; //TODO This variable will be set by the power and network management classes
+                GPSPlotter.beginManagedLocationRequests(selectedSampleRate, getApplicationContext());
                 enabledStopButton();
             }
         });
