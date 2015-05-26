@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
+import android.widget.Toast;
 
+import db.Coordinate;
+import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
 
 /**
@@ -50,11 +53,9 @@ public class GPSPlotterIntentService extends IntentService {
         if (current == null) {
             Log.w(LOGGING_KEY, "Location was NULL");
         } else {
-            Log.w(LOGGING_KEY, current.toString());
+            Log.w(LOGGING_KEY, new Coordinate(current, LocalStorage.getUserID(getApplicationContext())).toString());
+            Toast.makeText(getApplicationContext(), new Coordinate(current, LocalStorage.getUserID(getApplicationContext())).toString(), Toast.LENGTH_SHORT).show();
+            new CoordinateStorageDatabaseHelper(getApplicationContext()).insertCoordinate(new Coordinate(current, LocalStorage.getUserID(getApplicationContext())));
         }
-
-
-
     }
-
 }

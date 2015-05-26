@@ -4,6 +4,8 @@
 
 package db;
 
+import android.location.Location;
+
 import java.util.Date;
 
 /**
@@ -93,6 +95,24 @@ public class Coordinate {
         myHeading = theHeading;
         myUserID = theUserID;
         myCoordinatePhoto = theCoordinatePhoto;
+    }
+
+    /**
+     *
+     * Another overloaded constructor that allows calling classes to pass in a location object to create a new
+     * Coordinate Object for use within the context of the application.
+     *
+     * @param theLocation is the location object passed from the calling code.
+     *                    @param theUserID is the current user's UID.
+     */
+    public Coordinate(final Location theLocation, final String theUserID) {
+        myLongitude = theLocation.getLongitude();
+        myLatitude = theLocation.getLatitude();
+        myTimeStamp = theLocation.getTime() / DATE_CONVERSION;
+        mySpeed = theLocation.getSpeed();
+        myHeading = theLocation.getBearing();
+        myUserID = theUserID;
+        myCoordinatePhoto = null;
     }
 
 

@@ -4,10 +4,10 @@
 
 package uw.buuteeq_ponyhax.app;
 
-import android.content.BroadcastReceiver;
-import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -17,9 +17,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -27,63 +28,24 @@ import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
 import location_services.GPSPlotter;
-import location_services.MyLocationManager;
-import location_services.MyLocationReceiver;
 import webservices.WebDriver;
 
 public class MyAccount extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, MyAccountFragment.UIListUpdater {
 
+    private static final int DEFAULT_INTERVAL = 5;
     protected List<Coordinate> coordinates;
-    MyLocationManager myLocationManager;
     /**
      * Used to store the last screen title.
      */
     private CharSequence mTitle;
-    private Button mStartButton;
-    private Button mStopButton;
+    private RadioGroup mRadioGroup;
+    private RadioButton mStartButton;
+    private RadioButton mStopButton;
     private Location mLastLocation;
     private UIUpdater fragment;
     private int publishCounter = 0;
     private CoordinateStorageDatabaseHelper coordHelper;
-    //SETUP RECEIVER WITH INNER CLASS
-    private BroadcastReceiver mLocationReceiver = new MyLocationReceiver() {
-
-
-        @Override
-        public void onLocationChanged(Location location) {
-            LocalStorage.putDBFlag(false, getApplicationContext());
-
-            mLastLocation = location;
-            if (location != null) {
-                //Make new coordinate and insert into coordinate database
-                Coordinate locationCoordinate = new Coordinate(location.getLongitude(), location.getLatitude(), Calendar.getInstance().getTimeInMillis() / 1000,
-                        location.getSpeed(), location.getBearing(), LocalStorage.getUserID(getApplicationContext()));
-
-                coordHelper.insertCoordinate(locationCoordinate); //add to local database
-                publishCounter++;
-
-                addCoordinateToList(locationCoordinate); //add to list
-
-                fragment.update(mLastLocation, coordinates);
-
-            }
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-//            myLocationManager.startLocationUpdates((android.location.LocationListener) mLocationReceiver);
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,48 +66,73 @@ public class MyAccount extends ActionBarActivity
 
         //START location manager setup
         LocalStorage.putDBFlag(true, getApplicationContext());
-        myLocationManager = MyLocationManager.getInstance(getApplicationContext());
+        initializeButtons();
 
-        mStartButton = (Button) findViewById(R.id.startButton);
+    }
+
+
+    /**
+     * Private method to initialize the radio buttons and their associated listeners.
+     */
+    private void initializeButtons() {
+        mStartButton = (RadioButton) findViewById(R.id.startButton);
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //myLocationManager.startLocationUpdates((android.location.LocationListener) mLocationReceiver);
-                int selectedSampleRate = 5; //TODO This variable will be set by the power and network management classes
-                GPSPlotter.beginManagedLocationRequests(selectedSampleRate, getApplicationContext());
-                enabledStopButton();
+                int selectedSampleRate = DEFAULT_INTERVAL; //TODO This variable will be set by the power and network management classes
+                GPSPlotter.beginManagedLocationRequests(LocalStorage.ProviderType.GPS, selectedSampleRate, getApplicationContext());
+
             }
         });
-        mStopButton = (Button) findViewById(R.id.stopButton);
+        mStopButton = (RadioButton) findViewById(R.id.stopButton);
         mStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //myLocationManager.stopLocationUpdates((android.location.LocationListener) mLocationReceiver);
                 GPSPlotter.endManagedLocationRequests(getApplicationContext());
-                enableStartButton();
+
             }
         });
 
-
-        //END location manager setup
-        registerReceiver(mLocationReceiver, new IntentFilter(MyLocationManager.ACTION_LOCATION));
-        enableStartButton();
-//        enabledStopButton();
-//        myLocationManager.startLocationUpdates((android.location.LocationListener) mLocationReceiver);
+        //Set the default clicked Radio Button
+        mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupTracking);
+        mRadioGroup.check(mStopButton.getId());
         setTitle("");
     }
 
-//    @Override
-//    protected void onStop() {
-//        unregisterReceiver(mLocationReceiver);
-//        mStopButton.performClick();
-//        super.onStop();
-//    }
+    /**
+     * Overrides the onRestoreInstanceState and maintains the state of tracking when screen is rotated.
+     *
+     * @param savedInstanceState is the Bundle with saved values to be returned to the current application
+     *                           context.
+     */
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        if (!savedInstanceState.isEmpty()) {
+            if (savedInstanceState.getBoolean(mStartButton.getText().toString())) {
+                mRadioGroup.check(mStartButton.getId());
+            } else {
+                mRadioGroup.check(mStopButton.getId());
+            }
+
+        }
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    /**
+     * Overrides the onRestoreInstanceState and maintains the state of tracking when screen is rotated.
+     *
+     * @param outState           is the Bundle that the transient user-entered variables need to be saved to.
+     * @param outPersistentState is the bundle that persists throughout the application orientation change.
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        outState.putBoolean(mStartButton.getText().toString(), mStartButton.isChecked());
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
 
     @Override
     public void onDestroy() {
-        unregisterReceiver(mLocationReceiver);
-        mStopButton.performClick();
         super.onDestroy();
     }
 
@@ -231,16 +218,6 @@ public class MyAccount extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void enableStartButton() {
-        mStartButton.setEnabled(true);
-        mStopButton.setEnabled(false);
-    }
-
-    private void enabledStopButton() {
-        mStopButton.setEnabled(true);
-        mStartButton.setEnabled(false);
     }
 
     /**

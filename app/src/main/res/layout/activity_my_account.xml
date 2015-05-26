@@ -27,11 +27,12 @@
             android:weightSum="1.0">
 
             <RadioGroup
+                android:id="@+id/radioGroupTracking"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <Button
+                <RadioButton
                     android:id="@+id/startButton"
                     style="@style/buttonTheme"
                     android:layout_width="wrap_content"
@@ -39,7 +40,7 @@
                     android:layout_weight=".5"
                     android:text="@string/startButtonText" />
 
-                <Button
+                <RadioButton
                     android:id="@+id/stopButton"
                     style="@style/buttonTheme"
                     android:layout_width="wrap_content"
