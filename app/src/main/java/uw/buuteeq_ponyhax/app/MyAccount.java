@@ -33,7 +33,7 @@ import webservices.WebDriver;
 public class MyAccount extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, MyAccountFragment.UIListUpdater {
 
-    private static final int DEFAULT_INTERVAL = 5;
+    private static final int DEFAULT_INTERVAL = 60;
     protected List<Coordinate> coordinates;
     /**
      * Used to store the last screen title.
@@ -75,12 +75,13 @@ public class MyAccount extends ActionBarActivity
      * Private method to initialize the radio buttons and their associated listeners.
      */
     private void initializeButtons() {
+        final GPSPlotter pointPlotter = new GPSPlotter(getApplicationContext());
         mStartButton = (RadioButton) findViewById(R.id.startButton);
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int selectedSampleRate = DEFAULT_INTERVAL; //TODO This variable will be set by the power and network management classes
-                GPSPlotter.beginManagedLocationRequests(LocalStorage.ProviderType.GPS, selectedSampleRate, getApplicationContext());
+                pointPlotter.beginManagedLocationRequests(selectedSampleRate, getApplicationContext());
 
             }
         });
@@ -88,7 +89,7 @@ public class MyAccount extends ActionBarActivity
         mStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GPSPlotter.endManagedLocationRequests(getApplicationContext());
+                pointPlotter.endManagedLocationRequests(getApplicationContext());
 
             }
         });

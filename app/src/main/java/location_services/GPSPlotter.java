@@ -1,19 +1,17 @@
 package location_services;
 
-import android.app.AlarmManager;
-import android.app.IntentService;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import db.CoordinateStorageDatabaseHelper;
@@ -24,29 +22,51 @@ import db.LocalStorage;
  * static calls to issue thread requests and set
  * different pertinent variables.
  */
-public class GPSPlotter {
+public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener{
 
-    private static final int DEFAULT_INTERVAL = 5;
-    private static final int TIMESTAMP_MULTIPLIER = 1000;
-    private static AlarmManager mAlarmManager = null;
-    private static GoogleApiClient mGoogleApiClient = null;
-    private static int mIntentInterval = 0;
-    private static Location mCurrentLocation = null;
-    private static CoordinateStorageDatabaseHelper mDbHelper;
+    private final String TAG = "GPSPlotter: ";
+    private final int TIMESTAMP_MULTIPLIER = 1000;
 
+    private GoogleApiClient mGoogleApiClient = null;
+    private FusedLocationListener mLocationListener = null;
+    private int mIntentInterval = 0;
+    private boolean mRequestingLocationUpdates = false;
+    private Location mCurrentLocation = null;
+    private CoordinateStorageDatabaseHelper mDbHelper;
+
+    public GPSPlotter(Context theContext) {
+        buildApiClient();
+        initializeGoogleApiClient(theContext);
+        mGoogleApiClient.connect();
+    }
 
     /**
-     * Private method used to display the current location to the User.
+     * Private method to build the Api Client for use with the LocationServices API.
      */
-    private static void displayCurrentLocation() {
-        if (mGoogleApiClient != null)
-            mGoogleApiClient.connect();
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLastLocation == null) {
-            Log.w("GPSPlotter: ", "bogus coordinate");
-        } else {
-            Log.w("GPSPlotter: ", mLastLocation.toString());
-        }
+    private synchronized void buildApiClient() {
+        Log.w(TAG, "Building Google Api Client...");
+    }
+
+    /**
+     * Private helper method used to generate a LocationRequest which will be used to handle all location updates
+     * within the FusedLocationApi until the Interval is changed.
+     * @return locationRequest
+     */
+    private LocationRequest buildLocationRequest() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setInterval(mIntentInterval * TIMESTAMP_MULTIPLIER);
+        locationRequest.setFastestInterval((mIntentInterval / 2) * TIMESTAMP_MULTIPLIER);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        return locationRequest;
+    }
+
+    /**
+     * Private helper method to return the current location listener to a FusedLocationservices Api
+     * call and build it if it does not exists.
+     * @return theCurrentLocationListener using the android.gms.location Listener API.
+     */
+    private LocationListener getLocationListener() {
+        return this;
     }
 
     /**
@@ -55,89 +75,91 @@ public class GPSPlotter {
      *
      * @param requestedInterval is the polling interval as requested by the user.
      */
-    public static void beginManagedLocationRequests(final LocalStorage.ProviderType theProvider, final int requestedInterval, final Context context) {
+    public void beginManagedLocationRequests(final int requestedInterval, final Context context) {
         //Start the db Helper
         mDbHelper = new CoordinateStorageDatabaseHelper(context);
-
-        if (googlePlayServicesInstalled(context) && mGoogleApiClient == null) {
-            Log.w("GPSPlotter: ", "Play Services Installed");
-            initializeGoogleApiClient(context);
+        mIntentInterval = requestedInterval;
+        if (googlePlayServicesInstalled(context)) {
+            Log.w(TAG, "Play Services Installed");
+            mRequestingLocationUpdates = true;
+            startLocationUpdates();
         }
 
-        issuePendingIntent(requestedInterval, context);
-
 
     }
 
-    private static void initializeGoogleApiClient(Context theContext) {
+    private void startLocationUpdates() {
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), getLocationListener());
+    }
+
+    private void initializeGoogleApiClient(Context theContext) {
         mGoogleApiClient = new GoogleApiClient.Builder(theContext)
-                .addConnectionCallbacks(new LocationCallbackListener())
-                .addOnConnectionFailedListener(new LocationFailedListener())
-                .addApi(LocationServices.API).build();
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+
     }
 
-    private static boolean googlePlayServicesInstalled(Context context) {
+    private boolean googlePlayServicesInstalled(Context context) {
         int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
         if (result != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(result)) {
-                Log.w("GOOGLEPLAY:", "error connecting");
-            } else {
-                Log.w("GOOGLEPLAY:", "device not supported");
-            }
             return false;
+        } else {
+            return true;
         }
-        return true;
     }
 
     /**
      * Public method to end the managed Location Requests.
      */
-    public static void endManagedLocationRequests(final Context theApplicationContext) {
-        killAlarmManager(theApplicationContext);
-        Toast.makeText(theApplicationContext, "KILLED ALARM MANAGER", Toast.LENGTH_SHORT).show();
+    public void endManagedLocationRequests(final Context theApplicationContext) {
+
+        if (mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getLocationListener());
+            mRequestingLocationUpdates = false;
+        }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.w(TAG, "In on Connectd");
+        if (mRequestingLocationUpdates) {
+            startLocationUpdates();
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.w(TAG, "In on Connection Suspended");
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.w(TAG, "In on Connection Failed");
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.w(TAG, "Location changed");
+        mCurrentLocation = location;
     }
 
     /**
-     * Private method that will issue a pending Intent to run the service on a Background
-     * thread.
+     * Private class to implement a FusedLocation Listener.
      *
-     * @param theIntentInterval is the interval with which the AlarmManager will issue requests. This is determined outside
-     *                          of this class by the Network and Power logic.
+     * @author leachad
+     * @version 5.26.15
      */
-    private static void issuePendingIntent(final int theIntentInterval, final Context theApplicationContext) {
-        PendingIntent intent = PendingIntent.getService(theApplicationContext, 0, new Intent(theApplicationContext, GPSPlotterIntentService.class), 0);
+    private class FusedLocationListener implements LocationListener {
 
-        if (mAlarmManager == null) {
-            initializeAlarmManager(theApplicationContext);
-            fireAlarmManager(theIntentInterval, intent);
-            mIntentInterval = theIntentInterval;
-
-        } else if (mIntentInterval != theIntentInterval) {
-            killAlarmManager(theApplicationContext);
-            initializeAlarmManager(theApplicationContext);
-            fireAlarmManager(theIntentInterval, intent);
-            mIntentInterval = theIntentInterval;
-
-        } else {
-            fireAlarmManager(theIntentInterval, intent);
-            mIntentInterval = theIntentInterval;
+        @Override
+        public void onLocationChanged(Location location) {
+            Log.w(TAG, location.toString());
+            mCurrentLocation = location;
         }
-
-    }
-
-    private static void initializeAlarmManager(Context theApplicationContext) {
-        mAlarmManager = (AlarmManager) theApplicationContext.getSystemService(Context.ALARM_SERVICE);
-    }
-
-    private static void fireAlarmManager(int theIntentInterval, PendingIntent theIntent) {
-        long startTime = SystemClock.elapsedRealtime();
-        mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime, theIntentInterval * TIMESTAMP_MULTIPLIER, theIntent);
-    }
-
-    private static void killAlarmManager(Context theApplicationContext) {
-        PendingIntent intent = PendingIntent.getService(theApplicationContext, 0, new Intent(theApplicationContext, GPSPlotterIntentService.class), 0);
-        mAlarmManager = (AlarmManager) theApplicationContext.getSystemService(Context.ALARM_SERVICE);
-        mAlarmManager.cancel(intent);
     }
 
 
@@ -147,11 +169,15 @@ public class GPSPlotter {
      * @author leachad
      * @version 5.26.15
      */
-    private static class LocationCallbackListener implements GoogleApiClient.ConnectionCallbacks {
+    private class LocationCallbackListener implements GoogleApiClient.ConnectionCallbacks {
 
         @Override
         public void onConnected(Bundle bundle) {
-            displayCurrentLocation();
+            Log.w(TAG, "In on Connected");
+            if (mRequestingLocationUpdates) {
+                mGoogleApiClient.connect();
+                startLocationUpdates();
+            }
         }
 
         @Override
@@ -166,62 +192,15 @@ public class GPSPlotter {
      * @author leachad
      * @version 5.26.15
      */
-    private static class LocationFailedListener implements GoogleApiClient.OnConnectionFailedListener {
+    private class LocationFailedListener implements GoogleApiClient.OnConnectionFailedListener {
 
         /**
          * @param connectionResult
          */
         @Override
-        public void onConnectionFailed(ConnectionResult connectionResult) {
-            Log.i("GPSPlotter: ", "Connection to Api Client Failed -- " + connectionResult.getErrorCode());
+        public synchronized void onConnectionFailed(ConnectionResult connectionResult) {
+            Log.i(TAG, "Connection to Api Client Failed -- " + connectionResult.getErrorCode());
         }
     }
-
-
-    /**
-     * IntentService to issue a new Request for Location and to obtain the Location
-     * update.
-     *
-     * @author leachad
-     * @version 5.20.15
-     */
-    public static class GPSPlotterIntentService extends IntentService {
-
-        /**
-         * Unique String identifier for Logging purposes.
-         */
-        private final String LOGGING_KEY = GPSPlotterIntentService.this.getClass().getName();
-
-        public GPSPlotterIntentService() {
-            super("GPSPlotterIntentService");
-        }
-
-        @Override
-        protected void onHandleIntent(Intent intent) {
-            if (intent != null) {
-                Log.w(LOGGING_KEY, "Got an Intent! Grabbing coordinate");
-                grabLocation();
-
-            }
-        }
-
-
-        /**
-         * Private helper method to grab the current location using the GooglePlayServices
-         * API.
-         */
-        private void grabLocation() {
-            Log.w(LOGGING_KEY, "Going to grab location");
-            /**
-             * TODO This method will contain different conditionals based on the values that the Network and
-             * Power class obtains for use in sampling.
-             */
-
-
-            displayCurrentLocation();
-
-        }
-    }
-
 
 }
