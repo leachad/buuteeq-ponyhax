@@ -14,6 +14,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
 
@@ -27,18 +28,34 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     private final String TAG = "GPSPlotter: ";
     private final int TIMESTAMP_MULTIPLIER = 1000;
 
-    private GoogleApiClient mGoogleApiClient = null;
-    private FusedLocationListener mLocationListener = null;
-    private int mIntentInterval = 0;
-    private boolean mRequestingLocationUpdates = false;
-    private Location mCurrentLocation = null;
+    private GoogleApiClient mGoogleApiClient;
+    private Location mCurrentLocation;
     private CoordinateStorageDatabaseHelper mDbHelper;
+    private String mUserID;
+    private int mIntentInterval;
+    private boolean mRequestingLocationUpdates;
+
 
     public GPSPlotter(Context theContext) {
+        initializeFields(theContext);
         buildApiClient();
         initializeGoogleApiClient(theContext);
         mGoogleApiClient.connect();
     }
+
+    /**
+     * Private method to initialize the fields of the GPS Plotter class.
+     * @param theContext is the application context.
+     */
+    private void initializeFields(Context theContext) {
+        mGoogleApiClient = null;
+        mCurrentLocation = null;
+        mDbHelper = new CoordinateStorageDatabaseHelper(theContext);
+        mUserID = LocalStorage.getUserID(theContext);
+        mIntentInterval = 0;
+        mRequestingLocationUpdates = false;
+    }
+
 
     /**
      * Private method to build the Api Client for use with the LocationServices API.
@@ -76,9 +93,8 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      * @param requestedInterval is the polling interval as requested by the user.
      */
     public void beginManagedLocationRequests(final int requestedInterval, final Context context) {
-        //Start the db Helper
-        mDbHelper = new CoordinateStorageDatabaseHelper(context);
         mIntentInterval = requestedInterval;
+        
         if (googlePlayServicesInstalled(context)) {
             Log.w(TAG, "Play Services Installed");
             mRequestingLocationUpdates = true;
@@ -138,13 +154,14 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.w(TAG, "In on Connection Failed");
+        Log.w(TAG, "Connection Failed!");
     }
 
     @Override
     public void onLocationChanged(Location location) {
         Log.w(TAG, "Location changed");
         mCurrentLocation = location;
+        mDbHelper.insertCoordinate(new Coordinate(location, mUserID));
     }
 
     /**
