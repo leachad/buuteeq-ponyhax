@@ -138,8 +138,8 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
 
         while (cursor.moveToNext()) {
 
-            Coordinate coordinate = new Coordinate(cursor.getDouble(cursor.getColumnIndex(COLUMN_LONGITUDE)),
-                    cursor.getDouble(cursor.getColumnIndex(COLUMN_LATITUDE)),
+            Coordinate coordinate = new Coordinate(cursor.getDouble(cursor.getColumnIndex(COLUMN_LATITUDE)),
+                    cursor.getDouble(cursor.getColumnIndex(COLUMN_LONGITUDE)),
                     cursor.getLong(cursor.getColumnIndex(COLUMN_TIME_STAMP)),
                     cursor.getDouble(cursor.getColumnIndex(COLUMN_USER_SPEED)),
                     cursor.getDouble(cursor.getColumnIndex(COLUMN_USER_HEADING)),

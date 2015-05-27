@@ -32,14 +32,14 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     private String mUserID;
     private Context mContext;
     private int mIntentInterval;
-    private boolean mRequestingLocationUpdates;
+    private boolean mRequestingForegroundUpdates;
+    private boolean mRequestingBackgroundUpdates;
 
 
     public GPSPlotter(Context theContext) {
         initializeFields(theContext);
         buildApiClient();
-
-        mGoogleApiClient.connect();
+        mGoogleApiClient.connect(); //This connect is issued early to establish connection.
     }
 
     /**
@@ -53,7 +53,8 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         mUserID = LocalStorage.getUserID(theContext);
         mContext = theContext;
         mIntentInterval = 0;
-        mRequestingLocationUpdates = false;
+        mRequestingForegroundUpdates = false;
+        mRequestingBackgroundUpdates = false;
     }
 
 
@@ -98,7 +99,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
         if (googlePlayServicesInstalled()) {
             Log.w(TAG, "Play Services Installed");
-            mRequestingLocationUpdates = true;
+            mRequestingForegroundUpdates = true;
             startLocationUpdates();
         }
 
@@ -112,11 +113,11 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
         if (mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getLocationListener());
-            mRequestingLocationUpdates = false;
+            mRequestingForegroundUpdates = false;
         } else {
             mGoogleApiClient.connect();
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getLocationListener());
-            mRequestingLocationUpdates = false;
+            mRequestingForegroundUpdates = false;
         }
     }
 
@@ -159,15 +160,19 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.w(TAG, "In on Connectd");
-        if (mRequestingLocationUpdates) {
-            startLocationUpdates();
+        Log.w(TAG, "Connected. Starting location updates");
+        if (mRequestingForegroundUpdates) {
+            //startLocationUpdates();
+        } else if (mRequestingBackgroundUpdates) {
+            //Construct a Pending intent...
+            //TODO This logic should probably fired by another method rather than wait
+            //for onConnected to trigger.
         }
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.w(TAG, "In on Connection Suspended");
+        Log.w(TAG, "Connection Suspended");
         mGoogleApiClient.connect();
     }
 
