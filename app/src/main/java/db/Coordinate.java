@@ -63,8 +63,8 @@ public class Coordinate {
      */
 
     public Coordinate(final double theLatitude, final double theLongitude, final long theTimeStamp, final double theSpeed, final double theHeading, final String theUserID) {
-        myLongitude = theLongitude;
         myLatitude = theLatitude;
+        myLongitude = theLongitude;
         myTimeStamp = theTimeStamp;
         mySpeed = theSpeed;
         myHeading = theHeading;
@@ -88,8 +88,8 @@ public class Coordinate {
 
     public Coordinate(final double theLatitude, final double theLongitude, final long theTimeStamp,
                       final double theSpeed, final double theHeading, final String theUserID, final byte[] theCoordinatePhoto) {
-        myLongitude = theLongitude;
         myLatitude = theLatitude;
+        myLongitude = theLongitude;
         myTimeStamp = theTimeStamp;
         mySpeed = theSpeed;
         myHeading = theHeading;
@@ -106,8 +106,8 @@ public class Coordinate {
      *                    @param theUserID is the current user's UID.
      */
     public Coordinate(final Location theLocation, final String theUserID) {
-        myLongitude = theLocation.getLongitude();
         myLatitude = theLocation.getLatitude();
+        myLongitude = theLocation.getLongitude();
         myTimeStamp = theLocation.getTime() / DATE_CONVERSION;
         mySpeed = theLocation.getSpeed();
         myHeading = theLocation.getBearing();
@@ -146,7 +146,7 @@ public class Coordinate {
 
     @Override
     public String toString() {
-        return LONG_TITLE + SEPARATOR + myLongitude + LAT_TITLE + SEPARATOR + myLatitude + TIME_TITLE + SEPARATOR + new Date(myTimeStamp * DATE_CONVERSION).toString()
+        return LAT_TITLE + SEPARATOR + myLatitude + LONG_TITLE + SEPARATOR + myLongitude + TIME_TITLE + SEPARATOR + new Date(myTimeStamp * DATE_CONVERSION).toString()
                 + SPEED_TITLE + SEPARATOR + mySpeed + SPEED_UNITS + HEADING_TITLE + SEPARATOR + myHeading;
     }
 }

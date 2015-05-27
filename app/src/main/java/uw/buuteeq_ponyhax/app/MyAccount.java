@@ -81,7 +81,7 @@ public class MyAccount extends ActionBarActivity
             @Override
             public void onClick(View v) {
                 int selectedSampleRate = DEFAULT_INTERVAL; //TODO This variable will be set by the power and network management classes
-                pointPlotter.beginManagedLocationRequests(selectedSampleRate, getApplicationContext());
+                pointPlotter.beginManagedLocationRequests(selectedSampleRate);
 
             }
         });
@@ -89,7 +89,7 @@ public class MyAccount extends ActionBarActivity
         mStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pointPlotter.endManagedLocationRequests(getApplicationContext());
+                pointPlotter.endManagedLocationRequests();
 
             }
         });
@@ -245,6 +245,7 @@ public class MyAccount extends ActionBarActivity
             if (theList != null) {
 //                Toast.makeText(getApplicationContext(), "Web Driver list length " + theList.size(), Toast.LENGTH_SHORT).show();
                 for (Coordinate c : theList) {
+                    Log.w("UPDATE COORDINATE: ", c.toString());
                     coordinates.add(c);
                 }
             }

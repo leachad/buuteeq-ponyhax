@@ -124,18 +124,6 @@ public class LocalStorage {
         sharedPreferences.edit().putInt(User.UPLOAD_RATE, theUploadRate.rateIndex).apply();
     }
 
-    /**
-     * Public static method to put the modified interval rate for the LocationManager. Checks
-     * to ensure that the location manager is not null and instantiates if true.
-     *
-     * @param theProviderType is the current SampleContext enum used to identify the provider context
-     * @param context         is the application context within the lifecycle.
-     */
-    public static Location getLastKnowLocation(ProviderType theProviderType, Context context) {
-        checkLocationManager(theProviderType, context);
-        return mCurrentLocation;
-
-    }
 
     /**
      * Public static method to get the User ID from the prefs. Returns null if does not exist.
@@ -263,44 +251,6 @@ public class LocalStorage {
     }
 
 
-    /**
-     * Private method to check the LocationManager and instantiate it if does not exist.
-     */
-    private static void checkLocationManager(ProviderType theProvider, Context context) {
-        if (mLocationManager == null) {
-            initializeLocationManager(context);
-            storeLastKnownLocation(theProvider);
-            mProvider = theProvider;
-
-        } else if (!mProvider.mProviderType.matches(theProvider.mProviderType)) {
-            storeLastKnownLocation(theProvider);
-            mProvider = theProvider;
-
-        } else {
-            storeLastKnownLocation(theProvider);
-            mProvider = theProvider;
-        }
-    }
-
-    /**
-     * Private method to initialize the location manager.
-     *
-     * @param context is the application context.
-     */
-    private static void initializeLocationManager(Context context) {
-        mLocationManager = (LocationManager) context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-    }
-
-    /**
-     * Private method to obtain a single location for the checkLocationManager functions. Uses the newly registered GPSPlotterListener to
-     * return the Location with the correct service.
-     *
-     * @param theProvider is the Provider type for requesting location.
-     */
-    private static void storeLastKnownLocation(ProviderType theProvider) {
-        mCurrentLocation = mLocationManager.getLastKnownLocation(theProvider.mProviderType);
-
-    }
 
 
     public enum UploadRate {

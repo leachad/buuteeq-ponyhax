@@ -8,8 +8,6 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -32,6 +30,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     private Location mCurrentLocation;
     private CoordinateStorageDatabaseHelper mDbHelper;
     private String mUserID;
+    private Context mContext;
     private int mIntentInterval;
     private boolean mRequestingLocationUpdates;
 
@@ -39,7 +38,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     public GPSPlotter(Context theContext) {
         initializeFields(theContext);
         buildApiClient();
-        initializeGoogleApiClient(theContext);
+
         mGoogleApiClient.connect();
     }
 
@@ -52,6 +51,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         mCurrentLocation = null;
         mDbHelper = new CoordinateStorageDatabaseHelper(theContext);
         mUserID = LocalStorage.getUserID(theContext);
+        mContext = theContext;
         mIntentInterval = 0;
         mRequestingLocationUpdates = false;
     }
@@ -62,6 +62,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      */
     private synchronized void buildApiClient() {
         Log.w(TAG, "Building Google Api Client...");
+        initializeGoogleApiClient();
     }
 
     /**
@@ -92,10 +93,10 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      *
      * @param requestedInterval is the polling interval as requested by the user.
      */
-    public void beginManagedLocationRequests(final int requestedInterval, final Context context) {
+    public void beginManagedLocationRequests(final int requestedInterval) {
         mIntentInterval = requestedInterval;
-        
-        if (googlePlayServicesInstalled(context)) {
+
+        if (googlePlayServicesInstalled()) {
             Log.w(TAG, "Play Services Installed");
             mRequestingLocationUpdates = true;
             startLocationUpdates();
@@ -104,12 +105,34 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     }
 
+    /**
+     * Public method to end the managed Location Requests.
+     */
+    public void endManagedLocationRequests() {
+
+        if (mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getLocationListener());
+            mRequestingLocationUpdates = false;
+        } else {
+            mGoogleApiClient.connect();
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getLocationListener());
+            mRequestingLocationUpdates = false;
+        }
+    }
+
+    /**
+     * Private method to start the Location Updates using the FusedLocation API.
+     */
     private void startLocationUpdates() {
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), getLocationListener());
     }
 
-    private void initializeGoogleApiClient(Context theContext) {
-        mGoogleApiClient = new GoogleApiClient.Builder(theContext)
+    /**
+     * Private helper method to initialize the Google Api Client with the
+     * LocationServices Api and Build it for use.
+     */
+    private void initializeGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -118,8 +141,13 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     }
 
-    private boolean googlePlayServicesInstalled(Context context) {
-        int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+    /**
+     * Private helper method to determine whether or not GooglePlayServices
+     * are installed on the local system.
+     * @return services are installed.
+     */
+    private boolean googlePlayServicesInstalled() {
+        int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mContext);
         if (result != ConnectionResult.SUCCESS) {
             return false;
         } else {
@@ -127,16 +155,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         }
     }
 
-    /**
-     * Public method to end the managed Location Requests.
-     */
-    public void endManagedLocationRequests(final Context theApplicationContext) {
 
-        if (mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getLocationListener());
-            mRequestingLocationUpdates = false;
-        }
-    }
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -159,65 +178,9 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.w(TAG, "Location changed");
+        Log.w(TAG, "Location obtained is: " + location.toString());
         mCurrentLocation = location;
         mDbHelper.insertCoordinate(new Coordinate(location, mUserID));
-    }
-
-    /**
-     * Private class to implement a FusedLocation Listener.
-     *
-     * @author leachad
-     * @version 5.26.15
-     */
-    private class FusedLocationListener implements LocationListener {
-
-        @Override
-        public void onLocationChanged(Location location) {
-            Log.w(TAG, location.toString());
-            mCurrentLocation = location;
-        }
-    }
-
-
-    /**
-     * Private class to implement a ConnectionCallback Listener.
-     *
-     * @author leachad
-     * @version 5.26.15
-     */
-    private class LocationCallbackListener implements GoogleApiClient.ConnectionCallbacks {
-
-        @Override
-        public void onConnected(Bundle bundle) {
-            Log.w(TAG, "In on Connected");
-            if (mRequestingLocationUpdates) {
-                mGoogleApiClient.connect();
-                startLocationUpdates();
-            }
-        }
-
-        @Override
-        public void onConnectionSuspended(int i) {
-            mGoogleApiClient.connect();
-        }
-    }
-
-    /**
-     * Private class to implement an OnConnectionFailedListener.
-     *
-     * @author leachad
-     * @version 5.26.15
-     */
-    private class LocationFailedListener implements GoogleApiClient.OnConnectionFailedListener {
-
-        /**
-         * @param connectionResult
-         */
-        @Override
-        public synchronized void onConnectionFailed(ConnectionResult connectionResult) {
-            Log.i(TAG, "Connection to Api Client Failed -- " + connectionResult.getErrorCode());
-        }
     }
 
 }
