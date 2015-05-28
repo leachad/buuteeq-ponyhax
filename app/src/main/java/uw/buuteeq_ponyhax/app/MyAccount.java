@@ -56,7 +56,7 @@ public class MyAccount extends ActionBarActivity
     private RadioButton mStartButton;
     private RadioButton mStopButton;
     private Location mLastLocation;
-    private UIUpdater fragment;
+    public UIUpdater fragment;
     private int publishCounter = 0;
     private CoordinateStorageDatabaseHelper coordHelper;
 
@@ -90,7 +90,7 @@ public class MyAccount extends ActionBarActivity
      * Private method to initialize the radio buttons and their associated listeners.
      */
     private void initializeButtons() {
-        final GPSPlotter pointPlotter = new GPSPlotter(getApplicationContext());
+        final GPSPlotter pointPlotter = new GPSPlotter(getApplicationContext(), this);
         mStartButton = (RadioButton) findViewById(R.id.startButton);
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +98,7 @@ public class MyAccount extends ActionBarActivity
                 //coordHelper.wipeTable();
                 //Log.w("My Account: Table Wiped", Integer.toString(coordHelper.getAllCoordinates(LocalStorage.getUserID(getApplicationContext())).size()));
                 int selectedSampleRate = DEFAULT_INTERVAL; //TODO This variable will be set by the power and network management classes
-                pointPlotter.beginManagedLocationRequests(selectedSampleRate);
+                pointPlotter.beginManagedLocationRequests(selectedSampleRate, GPSPlotter.ServiceType.FOREGROUND);
 
             }
         });
@@ -271,7 +271,7 @@ public class MyAccount extends ActionBarActivity
         }
     }
 
-    private void addCoordinateToList(Coordinate coord) {
+    public void addCoordinateToList(Coordinate coord) {
         coordinates.add(coord);
 
         if (publishCounter == 5) {
