@@ -16,7 +16,7 @@
     <action android:name="android.intent.action.ACTION_DOCK_EVENT"/>
 
     <receiver
-        android:name=".BatteryLevelReceiver"
+        android:name=".Receive"
         android:enabled="true"
         android:exported="true" >
         <intent-filter>
