@@ -98,7 +98,7 @@ public class MyAccount extends ActionBarActivity
                 //coordHelper.wipeTable();
                 //Log.w("My Account: Table Wiped", Integer.toString(coordHelper.getAllCoordinates(LocalStorage.getUserID(getApplicationContext())).size()));
                 int selectedSampleRate = DEFAULT_INTERVAL; //TODO This variable will be set by the power and network management classes
-                pointPlotter.beginManagedLocationRequests(selectedSampleRate, GPSPlotter.ServiceType.FOREGROUND);
+                pointPlotter.beginManagedLocationRequests(selectedSampleRate, GPSPlotter.ServiceType.BACKGROUND);
 
             }
         });

@@ -12,6 +12,7 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -95,8 +96,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      * @return pendingIntent
      */
     private PendingIntent buildPendingIntent() {
-        Intent intent = new Intent(mContext, GPSPlotter.class);
-        return PendingIntent.getService(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getService(mContext, 1, new Intent(mContext, GPSService.class), 0);
     }
 
     /**
@@ -118,7 +118,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         mIntentInterval = requestedInterval;
 
         if (googlePlayServicesInstalled() && serviceType.equals(ServiceType.FOREGROUND)) {
-            Log.w(TAG, "Play Services Installed");
             mRequestingForegroundUpdates = true;
             startForegroundUpdates();
         } else if (googlePlayServicesInstalled() && serviceType.equals(ServiceType.BACKGROUND)) {
@@ -139,13 +138,13 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         //TODO Implement variation requests depending on whether
         // or not the service is background or foreground
 
-        if (mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient.isConnected() && mRequestingForegroundUpdates) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getLocationListener());
             mRequestingForegroundUpdates = false;
-        } else {
-            mGoogleApiClient.connect();
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getLocationListener());
-            mRequestingForegroundUpdates = false;
+        } else if (mGoogleApiClient.isConnected() && mRequestingBackgroundUpdates) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, buildPendingIntent());
+            mRequestingBackgroundUpdates = false;
+
         }
     }
 
@@ -196,7 +195,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.w(TAG, "Connected. Starting location updates");
+        Log.w(TAG, "Connected. Ready to Go!");
         if (mRequestingForegroundUpdates) {
             //Do something here
         } else if (mRequestingBackgroundUpdates) {
@@ -223,20 +222,10 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         mCurrentLocation = location;
         mDbHelper.insertCoordinate(new Coordinate(mCurrentLocation, mUserID));
         mParentActivity.addCoordinateToList(new Coordinate(mCurrentLocation, mUserID));
-        List<Coordinate> list = new ArrayList<Coordinate>();
+        List<Coordinate> list = mParentActivity.getList();
         list.add(new Coordinate(mCurrentLocation, mUserID));
         mParentActivity.fragment.update(mCurrentLocation, list);
 
-    }
-
-
-
-    /**
-     * Public Static Class to contain Enumerated Types useful for
-     * articulating service preferences from the User's selected background processes.
-     */
-    public enum ServiceType {
-        BACKGROUND, FOREGROUND;
     }
 
     /**
@@ -245,7 +234,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      * @version 5.27.15
      *
      */
-    public class GPSService extends IntentService {
+    public static class GPSService extends IntentService {
 
         /**
          * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -253,13 +242,25 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
          *  Used to name the worker thread, important only for debugging.
          */
         public GPSService() {
-            super("test");
+            super(GPSService.class.getName());
         }
 
         @Override
         protected void onHandleIntent(Intent intent) {
-            Log.w(TAG, "I heard an Intent!");
+            Log.w("GPS SERVICE", "I heard an Intent!");
+            Location current = intent.getParcelableExtra(FusedLocationProviderApi.KEY_LOCATION_CHANGED);
+            if (current != null) {
+                Log.w("GPS SERVICE" + "cur-Loc:", current.toString());
+            }
         }
+    }
+
+    /**
+     * Public Static Class to contain Enumerated Types useful for
+     * articulating service preferences from the User's selected background processes.
+     */
+    public enum ServiceType {
+        BACKGROUND, FOREGROUND;
     }
 
 }
