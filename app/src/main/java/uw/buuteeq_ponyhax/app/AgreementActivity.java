@@ -7,6 +7,8 @@ package uw.buuteeq_ponyhax.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,26 +29,7 @@ public class AgreementActivity extends Activity {
         setContentView(R.layout.activity_agreement);
         setTitle("");
         TextView agreement = (TextView) findViewById(R.id.userAgreementView);
-
-        String agreementText = LocalStorage.getUserAgreement(getApplicationContext());
-        if (agreementText != null) {
-            agreementText = agreementText.replace("<h2>", "");
-            agreementText = agreementText.replace("</h2>", "");
-            agreementText = agreementText.replace("<h3>", "");
-            agreementText = agreementText.replace("</h3>", "");
-            agreementText = agreementText.replace("<p>", "");
-            agreementText = agreementText.replace("</p>", "");
-            agreementText = agreementText.replace("<ol type=\"a\">", "");
-            agreementText = agreementText.replace("<li>", "");
-            agreementText = agreementText.replace("<ol type=\"i\">", "");
-            agreementText = agreementText.replace("</li>", "");
-            agreementText = agreementText.replace("</ol>", "");
-            agreementText = agreementText.replace("<ul>", "");
-            agreementText = agreementText.replace("</ul>", "");
-
-            agreement.setText(agreementText);
-        }
-
+        agreement.setText(LocalStorage.getUserAgreement(getApplicationContext()));
 
         Button agreeButton = (Button) findViewById(R.id.agreeButton);
         agreeButton.setOnClickListener(new View.OnClickListener() {

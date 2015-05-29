@@ -87,7 +87,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
 //        }
 
         List<Coordinate> coordinates = mCallBackActivity.getList();
-        Log.w("CALLBACK LIST:mymap", coordinates.get(0).toString());
+        //Log.w("CALLBACK LIST:mymap", coordinates.get(0).toString());
         update(null, coordinates);
     }
 

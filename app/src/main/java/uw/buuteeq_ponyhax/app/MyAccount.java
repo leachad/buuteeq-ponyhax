@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +41,12 @@ public class MyAccount extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, MyAccountFragment.UIListUpdater {
 
     public static final String TAG = "Basic Network Demo";
+    public static final String API_ERROR = "Try again soon. Api client currently disconnected.";
     // Whether there is a Wi-Fi connection.
     public static boolean wifiConnected = false;
     // Whether there is a mobile connection.
     public static boolean mobileConnected = false;
-
-
+    private int mSelectedSampleRate = 0;
     private static final int DEFAULT_INTERVAL = 60;
     protected List<Coordinate> coordinates;
     /**
@@ -79,12 +80,26 @@ public class MyAccount extends ActionBarActivity
 
         //START location manager setup
         LocalStorage.putDBFlag(true, getApplicationContext());
+
+       // mSelectedSampleRate = some_var -- TODO This variable will be set by the power and network management classes
+
         initializeButtons();
 
-        checkNetworkConnection();
-        checkPowerConnection();
+
+//        TODO Comment these two lines below back in
+//        checkNetworkConnection();
+//        checkPowerConnection();
     }
 
+    private void checkStartButton() {
+        mRadioGroup.clearCheck();
+        mRadioGroup.check(mStartButton.getId());
+    }
+
+    private void checkStopButton() {
+        mRadioGroup.clearCheck();
+        mRadioGroup.check(mStopButton.getId());
+    }
 
     /**
      * Private method to initialize the radio buttons and their associated listeners.
@@ -95,10 +110,18 @@ public class MyAccount extends ActionBarActivity
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //coordHelper.wipeTable();
-                //Log.w("My Account: Table Wiped", Integer.toString(coordHelper.getAllCoordinates(LocalStorage.getUserID(getApplicationContext())).size()));
-                int selectedSampleRate = DEFAULT_INTERVAL; //TODO This variable will be set by the power and network management classes
-                pointPlotter.beginManagedLocationRequests(selectedSampleRate, GPSPlotter.ServiceType.BACKGROUND);
+                if (pointPlotter.hasApiClientConnectivity() && mStartButton.isChecked()) {
+                    pointPlotter.beginManagedLocationRequests(mSelectedSampleRate, GPSPlotter.ServiceType.FOREGROUND);
+                } else if (pointPlotter.hasApiClientConnectivity() && !mStartButton.isChecked()
+                        || !pointPlotter.hasApiClientConnectivity() && !mStartButton.isChecked()){
+                    checkStartButton();
+                    Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
+                } else if (!pointPlotter.hasApiClientConnectivity() && mStartButton.isChecked()) {
+                    checkStopButton();
+                    Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
+                }
+
+
 
             }
         });
@@ -106,14 +129,23 @@ public class MyAccount extends ActionBarActivity
         mStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pointPlotter.endManagedLocationRequests();
+                if (pointPlotter.hasApiClientConnectivity() && mStopButton.isChecked()) {
+                    pointPlotter.beginManagedLocationRequests(mSelectedSampleRate, GPSPlotter.ServiceType.FOREGROUND);
+                } else if (pointPlotter.hasApiClientConnectivity() && !mStopButton.isChecked()
+                        || !pointPlotter.hasApiClientConnectivity() && !mStopButton.isChecked()){
+                    checkStartButton();
+                    Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
+                } else if (!pointPlotter.hasApiClientConnectivity() && mStopButton.isChecked()) {
+                    checkStopButton();
+                    Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
 
         //Set the default clicked Radio Button
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupTracking);
-        mRadioGroup.check(mStopButton.getId());
+        checkStopButton();
         setTitle("");
     }
 

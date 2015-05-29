@@ -7,6 +7,7 @@ package uw.buuteeq_ponyhax.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 
 import java.util.concurrent.ExecutionException;
 
@@ -55,7 +56,7 @@ public class SplashActivity extends Activity {
         Intent myIntent;
         try {
             String agreement = WebDriver.getUserAgreement();
-            LocalStorage.putUserAgreement(agreement, getApplicationContext());
+            LocalStorage.putUserAgreement(Html.fromHtml(agreement).toString(), getApplicationContext());
 
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();

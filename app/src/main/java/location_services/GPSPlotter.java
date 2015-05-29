@@ -49,8 +49,54 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     public GPSPlotter(Context theContext, MyAccount theParentActivity) {
         initializeFields(theContext, theParentActivity);
         buildApiClient();
-        mGoogleApiClient.connect(); //This connect is issued early to establish connection.
+        connectClient();
     }
+
+    /**
+     * Private method to start the Location Updates using the FusedLocation API in .the foreground.
+     */
+    private void startForegroundUpdates() {
+        Log.w(TAG, "Starting foreground updates");
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), getLocationListener());
+    }
+
+    /**
+     * Private method to start the Location Updates using the FusedLocation API in the background.
+     */
+    private void startBackgroundUpdates() {
+        Log.w(TAG, "Starting background updates");
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), buildPendingIntent());
+    }
+
+
+    /**
+     * Private helper method to initialize the Google Api Client with the
+     * LocationServices Api and Build it for use.
+     */
+    private void initializeGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+
+    }
+
+    /**
+     * Private helper method to determine whether or not GooglePlayServices
+     * are installed on the local system.
+     * @return services are installed.
+     */
+    private boolean googlePlayServicesInstalled() {
+        int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mContext);
+        if (result != ConnectionResult.SUCCESS) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 
     /**
      * Private method to initialize the fields of the GPS Plotter class.
@@ -75,6 +121,14 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     private synchronized void buildApiClient() {
         Log.w(TAG, "Building Google Api Client...");
         initializeGoogleApiClient();
+    }
+
+    /**
+     * Private method used to connect the ApiClient to the Api hosted by Google for
+     * Accessing Locations.
+     */
+    private void connectClient() {
+        mGoogleApiClient.connect();
     }
 
     /**
@@ -123,8 +177,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         } else if (googlePlayServicesInstalled() && serviceType.equals(ServiceType.BACKGROUND)) {
             mRequestingBackgroundUpdates = true;
             startBackgroundUpdates();
-        } else {
-            Log.w(TAG, "Google Play Services unavailable");
         }
 
 
@@ -133,15 +185,15 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     /**
      * Public method to end the managed Location Requests.
      */
-    public void endManagedLocationRequests() {
+    public void endManagedLocationRequests(final int requestedInterval, ServiceType serviceType) {
 
         //TODO Implement variation requests depending on whether
         // or not the service is background or foreground
 
-        if (mGoogleApiClient.isConnected() && mRequestingForegroundUpdates) {
+        if (serviceType.equals(ServiceType.FOREGROUND)) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getLocationListener());
             mRequestingForegroundUpdates = false;
-        } else if (mGoogleApiClient.isConnected() && mRequestingBackgroundUpdates) {
+        } else if (serviceType.equals(ServiceType.BACKGROUND)) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, buildPendingIntent());
             mRequestingBackgroundUpdates = false;
 
@@ -149,47 +201,13 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     }
 
     /**
-     * Private method to start the Location Updates using the FusedLocation API in .the foreground.
+     * Public method to determine if the google api client is indeed connected.
+     * @return isConnected
      */
-    private void startForegroundUpdates() {
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), getLocationListener());
+    public boolean hasApiClientConnectivity() {
+        return mGoogleApiClient.isConnected();
     }
 
-    /**
-     * Private method to start the Location Updates using the FusedLocation API in the background.
-     */
-    private void startBackgroundUpdates() {
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), buildPendingIntent());
-    }
-
-
-    /**
-     * Private helper method to initialize the Google Api Client with the
-     * LocationServices Api and Build it for use.
-     */
-    private void initializeGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-
-
-    }
-
-    /**
-     * Private helper method to determine whether or not GooglePlayServices
-     * are installed on the local system.
-     * @return services are installed.
-     */
-    private boolean googlePlayServicesInstalled() {
-        int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mContext);
-        if (result != ConnectionResult.SUCCESS) {
-            return false;
-        } else {
-            return true;
-        }
-    }
 
 
 

@@ -12,6 +12,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -104,8 +105,17 @@ public class WebDriver {
         String agreement = new GetUserAgreement().execute().get();
 
         try {
-            JSONObject json = new JSONObject(agreement);
-            agreement = json.getString(JsonBuilder.KEY_AGREEMENT);
+            //JSONObject json = new JSONObject(agreement);
+            //agreement = json.getString(JsonBuilder.KEY_AGREEMENT);
+            JSONArray json = new JSONArray(agreement);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < json.length(); i++) {
+                JSONObject string = (JSONObject) json.get(i);
+                sb.append(string.getString(JsonBuilder.KEY_AGREEMENT));
+            }
+            agreement = sb.toString();
+            Log.w("WEBDRIVER-AGR", agreement);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -254,6 +264,7 @@ public class WebDriver {
         protected String doInBackground(Void... params) {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(requestBuilder.getUserAgreementRequest());
+            Log.w("AgreementRequest", httpPost.getURI().toString());
             String result;
             String agreement = null;
 
