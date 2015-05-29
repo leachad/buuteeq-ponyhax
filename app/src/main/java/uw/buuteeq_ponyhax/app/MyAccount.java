@@ -130,7 +130,7 @@ public class MyAccount extends ActionBarActivity
             @Override
             public void onClick(View v) {
                 if (pointPlotter.hasApiClientConnectivity() && mStopButton.isChecked()) {
-                    pointPlotter.beginManagedLocationRequests(mSelectedSampleRate, GPSPlotter.ServiceType.FOREGROUND);
+                    pointPlotter.endManagedLocationRequests(mSelectedSampleRate, GPSPlotter.ServiceType.FOREGROUND);
                 } else if (pointPlotter.hasApiClientConnectivity() && !mStopButton.isChecked()
                         || !pointPlotter.hasApiClientConnectivity() && !mStopButton.isChecked()){
                     checkStartButton();
