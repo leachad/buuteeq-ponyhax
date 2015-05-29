@@ -3,33 +3,39 @@ package NetworkAndPower;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.BatteryManager;
+import android.util.Log;
 
 /**
  * Created by eduard_prokhor on 5/20/15.
  */
 public class Receive extends BroadcastReceiver{
 
-//    1) To check for connectivity, use the Android's CONNECTIVITY_SERVICE.
-//    mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    private static final String TAG = "BatteryLevelReceiver";
 
-//    2) Check if network is available or not.
-//            NetworkInfo activeNetwork = mConnectivityManager.getActiveNetworkInfo();
-//    boolean isConnected = activeNetwork != null &&
-//            activeNetwork.isConnectedOrConnecting();
-//    Log.i(TAG, "Network connectivity: " + Boolean.toString(isConnected));
+    public Receive() {
 
-//    Example at https://github.com/mmuppa/BatteryAndNetworkManagementExample (Links to an external site.)
-//
-//
-//
-//    Sources:
-//
-//    https://developer.android.com/reference/android/os/BatteryManager.html (Links to an external site.)  (Links to an external site.)
-//
-//    https://developer.android.com/training/monitoring-device-state/index.html (Links to an external site.)
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.i(TAG, "onReceive" + intent.getAction().toString());
 
+        int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+        boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                status == BatteryManager.BATTERY_STATUS_FULL;
+
+        if(isCharging) Log.i("IsThePhoneBeingCharged?", "Heck Yeah");
+
+
+        int chargePlug = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+        boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
+        boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
+
+        if(usbCharge) Log.i("YOu are hooked up by a ", " @@@@ Damn usb @@@");
+
+        if(acCharge) Log.i("You are hooked up by a ", " @@@ the wall");
     }
 }
