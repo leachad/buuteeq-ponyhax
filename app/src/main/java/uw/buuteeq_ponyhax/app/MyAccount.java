@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import NetworkAndPower.DeviceMonitor;
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
@@ -85,10 +86,8 @@ public class MyAccount extends ActionBarActivity
 
         initializeButtons();
 
-
-//        TODO Comment these two lines below back in
-//        checkNetworkConnection();
-//        checkPowerConnection();
+        checkNetworkConnection();
+        checkPowerConnection();
     }
 
     private void checkStartButton() {
@@ -348,23 +347,25 @@ public class MyAccount extends ActionBarActivity
      * This checks the power connection.
      */
     private void checkPowerConnection(){
-        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        Intent batteryStatus = getApplicationContext().registerReceiver(null, ifilter);
-
-        // Are we charging / charged?
-        int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-        boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                status == BatteryManager.BATTERY_STATUS_FULL;
-
-        if(isCharging) Log.i("IsThePhoneBeingCharged?", "Heck Yeah");
-
-        // How are we charging?
-        int chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
-        boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
-        boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
-
-        if(usbCharge) Log.i("YOu are hooked up by a ", " @@@@ Damn usb @@@");
-        if(acCharge) Log.i("You are hooked up by a ", " @@@ the wall");
+        DeviceMonitor.BatteryLevel current = DeviceMonitor.getBatteryLevel(getApplicationContext());
+        Log.w("Battery", current.toString());
+//        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+//        Intent batteryStatus = getApplicationContext().registerReceiver(null, ifilter);
+//
+//        // Are we charging / charged?
+//        int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+//        boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+//                status == BatteryManager.BATTERY_STATUS_FULL;
+//
+//        if(isCharging) Log.i("IsThePhoneBeingCharged?", "Heck Yeah");
+//
+//        // How are we charging?
+//        int chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+//        boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
+//        boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
+//
+//        if(usbCharge) Log.i("YOu are hooked up by a ", " @@@@ Damn usb @@@");
+//        if(acCharge) Log.i("You are hooked up by a ", " @@@ the wall");
 
     }
 
