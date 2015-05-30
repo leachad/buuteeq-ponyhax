@@ -22,7 +22,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -31,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import NetworkAndPower.DeviceMonitor;
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
@@ -50,6 +48,7 @@ public class MyAccount extends ActionBarActivity
     public int publishCounter = 0;
     private static final int DEFAULT_INTERVAL = 60;
     private int mSelectedSampleRate = DEFAULT_INTERVAL;
+    private GPSPlotter.ServiceType mServiceType = GPSPlotter.ServiceType.BACKGROUND;
     protected List<Coordinate> coordinates;
     /**
      * Used to store the last screen title.
@@ -101,6 +100,32 @@ public class MyAccount extends ActionBarActivity
         mRadioGroup.check(mStopButton.getId());
     }
 
+    private void startCheckedAction(GPSPlotter thePlotter) {
+        if (thePlotter.hasApiClientConnectivity() && mStartButton.isChecked()) {
+            thePlotter.beginManagedLocationRequests(mSelectedSampleRate, mServiceType);
+        } else if (thePlotter.hasApiClientConnectivity() && !mStartButton.isChecked()
+                || !thePlotter.hasApiClientConnectivity() && !mStartButton.isChecked()){
+            checkStartButton();
+            Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
+        } else if (!thePlotter.hasApiClientConnectivity() && mStartButton.isChecked()) {
+            checkStopButton();
+            Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void stopCheckedAction(GPSPlotter thePlotter) {
+        if (thePlotter.hasApiClientConnectivity() && mStopButton.isChecked()) {
+            thePlotter.endManagedLocationRequests(mSelectedSampleRate, mServiceType);
+        } else if (thePlotter.hasApiClientConnectivity() && !mStopButton.isChecked()
+                || !thePlotter.hasApiClientConnectivity() && !mStopButton.isChecked()){
+            checkStartButton();
+            Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
+        } else if (!thePlotter.hasApiClientConnectivity() && mStopButton.isChecked()) {
+            checkStopButton();
+            Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     /**
      * Private method to initialize the radio buttons and their associated listeners.
      */
@@ -110,42 +135,26 @@ public class MyAccount extends ActionBarActivity
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pointPlotter.hasApiClientConnectivity() && mStartButton.isChecked()) {
-                    pointPlotter.beginManagedLocationRequests(mSelectedSampleRate, GPSPlotter.ServiceType.FOREGROUND);
-                } else if (pointPlotter.hasApiClientConnectivity() && !mStartButton.isChecked()
-                        || !pointPlotter.hasApiClientConnectivity() && !mStartButton.isChecked()){
-                    checkStartButton();
-                    Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
-                } else if (!pointPlotter.hasApiClientConnectivity() && mStartButton.isChecked()) {
-                    checkStopButton();
-                    Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
-                }
-
-
-
+                startCheckedAction(pointPlotter);
             }
         });
         mStopButton = (RadioButton) findViewById(R.id.stopButton);
         mStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pointPlotter.hasApiClientConnectivity() && mStopButton.isChecked()) {
-                    pointPlotter.endManagedLocationRequests(mSelectedSampleRate, GPSPlotter.ServiceType.FOREGROUND);
-                } else if (pointPlotter.hasApiClientConnectivity() && !mStopButton.isChecked()
-                        || !pointPlotter.hasApiClientConnectivity() && !mStopButton.isChecked()){
-                    checkStartButton();
-                    Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
-                } else if (!pointPlotter.hasApiClientConnectivity() && mStopButton.isChecked()) {
-                    checkStopButton();
-                    Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
-                }
-
+                stopCheckedAction(pointPlotter);
             }
         });
 
         //Set the default clicked Radio Button
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupTracking);
-        checkStopButton();
+
+        if (pointPlotter.isRunningLocationUpdates()) {
+            checkStartButton();
+        } else {
+            checkStopButton();
+        }
+
         setTitle("");
     }
 
@@ -348,25 +357,24 @@ public class MyAccount extends ActionBarActivity
      * This checks the power connection.
      */
     private void checkPowerConnection(){
-        DeviceMonitor.BatteryLevel current = DeviceMonitor.getBatteryLevel(getApplicationContext());
-        if (current != null) Log.w("Battery", current.toString());
-//        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-//        Intent batteryStatus = getApplicationContext().registerReceiver(null, ifilter);
-//
-//        // Are we charging / charged?
-//        int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-//        boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-//                status == BatteryManager.BATTERY_STATUS_FULL;
-//
-//        if(isCharging) Log.i("IsThePhoneBeingCharged?", "Heck Yeah");
-//
-//        // How are we charging?
-//        int chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
-//        boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
-//        boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
-//
-//        if(usbCharge) Log.i("YOu are hooked up by a ", " @@@@ Damn usb @@@");
-//        if(acCharge) Log.i("You are hooked up by a ", " @@@ the wall");
+
+        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        Intent batteryStatus = getApplicationContext().registerReceiver(null, ifilter);
+
+        // Are we charging / charged?
+        int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+        boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                status == BatteryManager.BATTERY_STATUS_FULL;
+
+        if(isCharging) Log.i("IsThePhoneBeingCharged?", "Heck Yeah");
+
+        // How are we charging?
+        int chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+        boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
+        boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
+
+        if(usbCharge) Log.i("YOu are hooked up by a ", " @@@@ Damn usb @@@");
+        if(acCharge) Log.i("You are hooked up by a ", " @@@ the wall");
 
     }
 

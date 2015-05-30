@@ -176,6 +176,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
             startForegroundUpdates();
         } else if (googlePlayServicesInstalled() && serviceType.equals(ServiceType.BACKGROUND)) {
             mRequestingBackgroundUpdates = true;
+            LocalStorage.putLocationRequestStatus(true, mContext);
             startBackgroundUpdates();
         }
 
@@ -187,15 +188,13 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      */
     public void endManagedLocationRequests(final int requestedInterval, ServiceType serviceType) {
 
-        //TODO Implement variation requests depending on whether
-        // or not the service is background or foreground
-
         if (serviceType.equals(ServiceType.FOREGROUND)) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getLocationListener());
             mRequestingForegroundUpdates = false;
         } else if (serviceType.equals(ServiceType.BACKGROUND)) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, buildPendingIntent());
             mRequestingBackgroundUpdates = false;
+            LocalStorage.putLocationRequestStatus(false, mContext);
 
         }
     }
@@ -206,6 +205,14 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      */
     public boolean hasApiClientConnectivity() {
         return mGoogleApiClient.isConnected();
+    }
+
+    /**
+     * Public method to determine if location updates are currently running in the background.
+     * @return isRunningUpdates
+     */
+    public boolean isRunningLocationUpdates() {
+        return LocalStorage.getLocationRequestStatus(mContext);
     }
 
 
