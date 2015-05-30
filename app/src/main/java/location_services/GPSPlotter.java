@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -39,6 +40,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     private static CoordinateStorageDatabaseHelper mDbHelper;
     private static String mUserID;
     private static MyAccount mParentActivity;
+    private static IntentFilter mIntentFilter;
 
 
     private GoogleApiClient mGoogleApiClient;

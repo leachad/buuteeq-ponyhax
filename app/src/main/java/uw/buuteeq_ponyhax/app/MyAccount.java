@@ -92,7 +92,7 @@ public class MyAccount extends ActionBarActivity
         // network stuff
         checkNetworkConnection();
         NetworkReceiver mNetworkReceiver = new NetworkReceiver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mNetworkReceiver, null);
+        //LocalBroadcastManager.getInstance(this).registerReceiver(mNetworkReceiver, null);
 
 
         //checkPowerConnection();
