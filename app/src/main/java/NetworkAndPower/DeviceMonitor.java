@@ -14,6 +14,14 @@ import android.util.Log;
  */
 public class DeviceMonitor {
 
+    /** Private variables used to determine state of the battery level.*/
+    private static final float EMPTY = (float)0.0;
+    private static final float TWENTY_PERCENT = (float)0.20;
+    private static final float FORTY_PERCENT = (float)0.20;
+    private static final float SIXTY_PERCENT = (float)0.20;
+    private static final float EIGHTY_PERCENT = (float)0.20;
+    private static final float FULL = (float)0.20;
+
     public static BatteryLevel getBatteryLevel(Context theAppContext) {
         IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         Intent batteryStatus = theAppContext.registerReceiver(null, filter);
@@ -29,15 +37,15 @@ public class DeviceMonitor {
 
     private static BatteryLevel getGeneralLevel(float thePercentage) {
         BatteryLevel current = null;
-        if (thePercentage >= 0 && thePercentage < .20) {
+        if (thePercentage >= EMPTY && thePercentage < TWENTY_PERCENT) {
             current = BatteryLevel.LOW;
-        } else if (thePercentage >= .20 && thePercentage < .40) {
+        } else if (thePercentage >= TWENTY_PERCENT && thePercentage < FORTY_PERCENT) {
             current = BatteryLevel.MID_LOW;
-        } else if (thePercentage >= .40 && thePercentage < .60) {
+        } else if (thePercentage >= FORTY_PERCENT && thePercentage < SIXTY_PERCENT) {
             current = BatteryLevel.MID;
-        } else if (thePercentage >= .60 && thePercentage < .80) {
+        } else if (thePercentage >= SIXTY_PERCENT && thePercentage < EIGHTY_PERCENT) {
             current = BatteryLevel.MID_HIGH;
-        } else if (thePercentage >= .80 && thePercentage < .100) {
+        } else if (thePercentage >= EIGHTY_PERCENT && thePercentage < FULL) {
             current = BatteryLevel.FULL;
         }
         return  current;

@@ -239,10 +239,11 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         Log.w(TAG, "Location obtained is: " + location.toString());
         mCurrentLocation = location;
         mDbHelper.insertCoordinate(new Coordinate(mCurrentLocation, mUserID));
-        mParentActivity.addCoordinateToList(new Coordinate(mCurrentLocation, mUserID));
+        //mParentActivity.addCoordinateToList(new Coordinate(mCurrentLocation, mUserID));
         List<Coordinate> list = mParentActivity.getList();
         list.add(new Coordinate(mCurrentLocation, mUserID));
         mParentActivity.fragment.update(mCurrentLocation, list);
+
 
     }
 

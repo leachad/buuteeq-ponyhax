@@ -47,8 +47,9 @@ public class MyAccount extends ActionBarActivity
     public static boolean wifiConnected = false;
     // Whether there is a mobile connection.
     public static boolean mobileConnected = false;
-    private int mSelectedSampleRate = 0;
+    public int publishCounter = 0;
     private static final int DEFAULT_INTERVAL = 60;
+    private int mSelectedSampleRate = DEFAULT_INTERVAL;
     protected List<Coordinate> coordinates;
     /**
      * Used to store the last screen title.
@@ -59,7 +60,7 @@ public class MyAccount extends ActionBarActivity
     private RadioButton mStopButton;
     private Location mLastLocation;
     public UIUpdater fragment;
-    private int publishCounter = 0;
+
     private CoordinateStorageDatabaseHelper coordHelper;
 
     @Override
@@ -348,7 +349,7 @@ public class MyAccount extends ActionBarActivity
      */
     private void checkPowerConnection(){
         DeviceMonitor.BatteryLevel current = DeviceMonitor.getBatteryLevel(getApplicationContext());
-        Log.w("Battery", current.toString());
+        if (current != null) Log.w("Battery", current.toString());
 //        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 //        Intent batteryStatus = getApplicationContext().registerReceiver(null, ifilter);
 //
