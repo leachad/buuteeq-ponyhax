@@ -102,25 +102,7 @@ public class WebDriver {
     }
 
     public static String getUserAgreement() throws ExecutionException, InterruptedException {
-        String agreement = new GetUserAgreement().execute().get();
-
-        try {
-            //JSONObject json = new JSONObject(agreement);
-            //agreement = json.getString(JsonBuilder.KEY_AGREEMENT);
-            JSONArray json = new JSONArray(agreement);
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < json.length(); i++) {
-                JSONObject string = (JSONObject) json.get(i);
-                sb.append(string.getString(JsonBuilder.KEY_AGREEMENT));
-            }
-            agreement = sb.toString();
-            Log.w("WEBDRIVER-AGR", agreement);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return agreement;
+        return new GetUserAgreement().execute().get();
     }
 
 

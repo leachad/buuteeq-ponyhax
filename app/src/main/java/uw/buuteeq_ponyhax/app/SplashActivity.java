@@ -56,8 +56,9 @@ public class SplashActivity extends Activity {
         Intent myIntent;
         try {
             String agreement = WebDriver.getUserAgreement();
-            LocalStorage.putUserAgreement(Html.fromHtml(agreement).toString(), getApplicationContext());
-
+            if (agreement != null) {
+                LocalStorage.putUserAgreement(Html.fromHtml(agreement).toString(), getApplicationContext());
+            }
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

@@ -29,6 +29,7 @@ public class User {
     public static final String SAMPLE_RATE = "sampleRate";
     public static final String UPLOAD_RATE = "uploadRate";
     public static final String REQUESTING_LOCATION = "requestingLocation";
+    public static final String DESTROYED_STATE = "destroyedState";
 
 
     /**

@@ -48,7 +48,7 @@ public class MyAccount extends ActionBarActivity
     public int publishCounter = 0;
     private static final int DEFAULT_INTERVAL = 60;
     private int mSelectedSampleRate = DEFAULT_INTERVAL;
-    private GPSPlotter.ServiceType mServiceType = GPSPlotter.ServiceType.BACKGROUND;
+    private GPSPlotter.ServiceType mServiceType = GPSPlotter.ServiceType.FOREGROUND;
     protected List<Coordinate> coordinates;
     /**
      * Used to store the last screen title.

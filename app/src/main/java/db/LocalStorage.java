@@ -107,6 +107,17 @@ public class LocalStorage {
     }
 
     /**
+     * Public static method to set the destroyed state in the local storage.
+     *
+     * @param theFlag is the boolean passed from the calling code.
+     * @param context is the application context within the lifecycle.
+     */
+    public static void putDestroyedState(boolean theFlag, Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putBoolean(User.DESTROYED_STATE, theFlag).apply();
+    }
+
+    /**
      * Public static method to set the sampling rate selected by the user (Between 10 and 300 seconds)
      *
      * @param theSamplingRate is the user selected sampling rate.
@@ -230,6 +241,17 @@ public class LocalStorage {
     public static boolean getLocationRequestStatus(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
         return sharedPreferences.getBoolean(User.REQUESTING_LOCATION, false);
+    }
+
+    /**
+     * Public method to return the destroyed state to the calling code.
+     *
+     * @param context is the application context.
+     *                   @return theDestroyedState
+     */
+    public static boolean getDestroyedState(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(User.DESTROYED_STATE, true);
     }
 
 

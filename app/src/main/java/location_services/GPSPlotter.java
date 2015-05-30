@@ -1,12 +1,12 @@
 package location_services;
 
-import android.app.Activity;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -17,7 +17,6 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import db.Coordinate;
@@ -30,17 +29,20 @@ import uw.buuteeq_ponyhax.app.MyAccount;
  * static calls to issue thread requests and set
  * different pertinent variables.
  */
-public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener{
+public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    private final String TAG = "GPSPlotter: ";
-    private final int TIMESTAMP_MULTIPLIER = 1000;
+    /**
+     * Static fields used in both Background and Foreground Location Updates.
+     */
+    private static final String TAG = "GPSPlotter: ";
+    private static Location mCurrentLocation;
+    private static CoordinateStorageDatabaseHelper mDbHelper;
+    private static String mUserID;
+    private static MyAccount mParentActivity;
+
 
     private GoogleApiClient mGoogleApiClient;
-    private Location mCurrentLocation;
-    private CoordinateStorageDatabaseHelper mDbHelper;
-    private String mUserID;
     private Context mContext;
-    private MyAccount mParentActivity;
     private int mIntentInterval;
     private boolean mRequestingForegroundUpdates;
     private boolean mRequestingBackgroundUpdates;
@@ -86,6 +88,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     /**
      * Private helper method to determine whether or not GooglePlayServices
      * are installed on the local system.
+     *
      * @return services are installed.
      */
     private boolean googlePlayServicesInstalled() {
@@ -100,6 +103,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     /**
      * Private method to initialize the fields of the GPS Plotter class.
+     *
      * @param theContext is the application context.
      */
     private void initializeFields(Context theContext, MyAccount theParentActivity) {
@@ -134,19 +138,37 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     /**
      * Private helper method used to generate a LocationRequest which will be used to handle all location updates
      * within the FusedLocationApi until the Interval is changed.
+     *
      * @return locationRequest
      */
     private LocationRequest buildLocationRequest() {
+        int dateConversion = 1000;
         LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setInterval(mIntentInterval * TIMESTAMP_MULTIPLIER);
-        locationRequest.setFastestInterval((mIntentInterval / 2) * TIMESTAMP_MULTIPLIER);
+        locationRequest.setInterval(mIntentInterval * dateConversion);
+        locationRequest.setFastestInterval((mIntentInterval / 2) * dateConversion);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         return locationRequest;
     }
 
     /**
+     * Private method used to add the coordinates to the display (map and overview).
+     *
+     * @param location is the current obtained location.
+     */
+    private void addLocationToView(Location location) {
+        Log.w(TAG, "Location obtained is: " + location.toString());
+        mCurrentLocation = location;
+        mDbHelper.insertCoordinate(new Coordinate(mCurrentLocation, mUserID));
+        //mParentActivity.addCoordinateToList(new Coordinate(mCurrentLocation, mUserID));
+        List<Coordinate> list = mParentActivity.getList();
+        list.add(new Coordinate(mCurrentLocation, mUserID));
+        mParentActivity.fragment.update(mCurrentLocation, list);
+    }
+
+    /**
      * Private helper method used to generate a PendingIntent for use when the User requests background service
      * within the FusedLocationApi until the Interval is changed.
+     *
      * @return pendingIntent
      */
     private PendingIntent buildPendingIntent() {
@@ -156,6 +178,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     /**
      * Private helper method to return the current location listener to a FusedLocationservices Api
      * call and build it if it does not exists.
+     *
      * @return theCurrentLocationListener using the android.gms.location Listener API.
      */
     private LocationListener getLocationListener() {
@@ -201,6 +224,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     /**
      * Public method to determine if the google api client is indeed connected.
+     *
      * @return isConnected
      */
     public boolean hasApiClientConnectivity() {
@@ -209,13 +233,12 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     /**
      * Public method to determine if location updates are currently running in the background.
+     *
      * @return isRunningUpdates
      */
     public boolean isRunningLocationUpdates() {
         return LocalStorage.getLocationRequestStatus(mContext);
     }
-
-
 
 
     @Override
@@ -243,29 +266,22 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.w(TAG, "Location obtained is: " + location.toString());
-        mCurrentLocation = location;
-        mDbHelper.insertCoordinate(new Coordinate(mCurrentLocation, mUserID));
-        //mParentActivity.addCoordinateToList(new Coordinate(mCurrentLocation, mUserID));
-        List<Coordinate> list = mParentActivity.getList();
-        list.add(new Coordinate(mCurrentLocation, mUserID));
-        mParentActivity.fragment.update(mCurrentLocation, list);
-
+        addLocationToView(location);
 
     }
 
     /**
      * Public class to create an IntentService that will run in a background thread.
+     *
      * @author leachad
      * @version 5.27.15
-     *
      */
     public static class GPSService extends IntentService {
 
         /**
          * Creates an IntentService.  Invoked by your subclass's constructor.
-         *
-         *  Used to name the worker thread, important only for debugging.
+         * <p/>
+         * Used to name the worker thread, important only for debugging.
          */
         public GPSService() {
             super(GPSService.class.getName());
@@ -274,10 +290,38 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         @Override
         protected void onHandleIntent(Intent intent) {
             Log.w("GPS SERVICE", "I heard an Intent!");
-            Location current = intent.getParcelableExtra(FusedLocationProviderApi.KEY_LOCATION_CHANGED);
+            final Location current = intent.getParcelableExtra(FusedLocationProviderApi.KEY_LOCATION_CHANGED);
             if (current != null) {
-                Log.w("GPS SERVICE" + "cur-Loc:", current.toString());
+
+                android.os.Handler handler = new android.os.Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.w("GPS SERVICE" + "cur-Loc:", current.toString());
+                        addBackgroundLocationToView(current);
+                    }
+                });
+
+
             }
+        }
+
+        /**
+         * Private method used to add location to view from within an IntentService.
+         *
+         * @param location is the current location.
+         */
+        private void addBackgroundLocationToView(Location location) {
+            Log.w("GPS Background", "Location obtained is: " + location.toString());
+
+//            mCurrentLocation = location;
+//            mDbHelper.insertCoordinate(new Coordinate(mCurrentLocation, mUserID));
+//            List<Coordinate> list = mParentActivity.getList();
+//            list.add(new Coordinate(mCurrentLocation, mUserID));
+//            mParentActivity.fragment.update(mCurrentLocation, list);
+            //TODO _Figure out how to execute this in the background or at least store so it can
+            //be executed on startup.
+
         }
     }
 

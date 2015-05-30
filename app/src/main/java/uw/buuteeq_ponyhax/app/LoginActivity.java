@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.net.InetAddress;
 import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 
@@ -113,13 +114,13 @@ public class LoginActivity extends Activity {
                 LocalStorage.putStartTime(0, getApplicationContext());
                 LocalStorage.putEndTime(Calendar.getInstance().getTimeInMillis() / TIMESTAMP_DIVISOR, getApplicationContext());
                 LocalStorage.putLocationRequestStatus(false, getApplicationContext());
+                LocalStorage.putDestroyedState(false, getApplicationContext());
 
             }
         }
         return toRet;
 
     }
-
 
     /**
      * Private class to implement a LoginListener
@@ -139,19 +140,18 @@ public class LoginActivity extends Activity {
 
         @Override
         public void onClick(View v) {
-            if (checkUserCredentials()) {
-                Intent intent;
-                intent = new Intent(LoginActivity.this, MyAccount.class);
-                startActivity(intent);
-                finish();
-            } else {
-                ((EditText) findViewById(R.id.email_field)).setText("");
-                ((EditText) findViewById(R.id.password_field)).setText("");
-                (findViewById(R.id.email_field)).requestFocus();
-                makeMissingUserToast();
+                if (checkUserCredentials()) {
+                    Intent intent;
+                    intent = new Intent(LoginActivity.this, MyAccount.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    ((EditText) findViewById(R.id.email_field)).setText("");
+                    ((EditText) findViewById(R.id.password_field)).setText("");
+                    (findViewById(R.id.email_field)).requestFocus();
+                    makeMissingUserToast();
 
-            }
-
+                }
         }
     }
 }
