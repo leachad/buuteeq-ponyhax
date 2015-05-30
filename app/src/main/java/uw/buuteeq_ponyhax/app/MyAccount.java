@@ -13,9 +13,11 @@ import android.net.NetworkInfo;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import NetworkAndPower.NetworkReceiver;
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
@@ -86,8 +89,13 @@ public class MyAccount extends ActionBarActivity
 
         initializeButtons();
 
+        // network stuff
         checkNetworkConnection();
-        checkPowerConnection();
+        NetworkReceiver mNetworkReceiver = new NetworkReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mNetworkReceiver, null);
+
+
+        //checkPowerConnection();
     }
 
     private void checkStartButton() {
@@ -350,33 +358,33 @@ public class MyAccount extends ActionBarActivity
 
     }
 
-    /**
-     * @author Eduard Prokhor
-     * @author Google api
-     *
-     * This checks the power connection.
-     */
-    private void checkPowerConnection(){
-
-        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        Intent batteryStatus = getApplicationContext().registerReceiver(null, ifilter);
-
-        // Are we charging / charged?
-        int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-        boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                status == BatteryManager.BATTERY_STATUS_FULL;
-
-        if(isCharging) Log.i("IsThePhoneBeingCharged?", "Heck Yeah");
-
-        // How are we charging?
-        int chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
-        boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
-        boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
-
-        if(usbCharge) Log.i("YOu are hooked up by a ", " @@@@ Damn usb @@@");
-        if(acCharge) Log.i("You are hooked up by a ", " @@@ the wall");
-
-    }
+//    /**
+//     * @author Eduard Prokhor
+//     * @author Google api
+//     *
+//     * This checks the power connection.
+//     */
+//    private void checkPowerConnection(){
+//
+//        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+//        Intent batteryStatus = getApplicationContext().registerReceiver(null, ifilter);
+//
+//        // Are we charging / charged?
+//        int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+//        boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+//                status == BatteryManager.BATTERY_STATUS_FULL;
+//
+//        if(isCharging) Log.i("IsThePhoneBeingCharged?", "Heck Yeah");
+//
+//        // How are we charging?
+//        int chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+//        boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
+//        boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
+//
+//        if(usbCharge) Log.i("YOu are hooked up by a ", " @@@@ Damn usb @@@");
+//        if(acCharge) Log.i("You are hooked up by a ", " @@@ the wall");
+//
+//    }
 
 
     @Override
