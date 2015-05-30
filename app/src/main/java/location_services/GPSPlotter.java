@@ -2,12 +2,14 @@ package location_services;
 
 import android.app.IntentService;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -41,10 +43,10 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     private static String mUserID;
     private static MyAccount mParentActivity;
     private static IntentFilter mIntentFilter;
-
+    private static LocalBroadcastManager mBroadcastManager;
 
     private GoogleApiClient mGoogleApiClient;
-    private Context mContext;
+    private static Context mContext;
     private int mIntentInterval;
     private boolean mRequestingForegroundUpdates;
     private boolean mRequestingBackgroundUpdates;
@@ -72,7 +74,21 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), buildPendingIntent());
     }
 
+    /**
+     * Private method to end foreground updates.
+     */
+    private void endForegroundUpdates() {
+        Log.w(TAG, "Ending foreground updates");
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getLocationListener());
+    }
 
+    /**
+     * Private method to end background updates.
+     */
+    private void endBackgroundUpdates() {
+        Log.w(TAG, "Ending background updates");
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, buildPendingIntent());
+    }
     /**
      * Private helper method to initialize the Google Api Client with the
      * LocationServices Api and Build it for use.
@@ -118,6 +134,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         mIntentInterval = 0;
         mRequestingForegroundUpdates = false;
         mRequestingBackgroundUpdates = false;
+        mBroadcastManager = LocalBroadcastManager.getInstance(mContext);
     }
 
 
@@ -149,6 +166,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         locationRequest.setInterval(mIntentInterval * dateConversion);
         locationRequest.setFastestInterval((mIntentInterval / 2) * dateConversion);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        Log.w(TAG, "Building location request");
         return locationRequest;
     }
 
@@ -174,6 +192,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      * @return pendingIntent
      */
     private PendingIntent buildPendingIntent() {
+        Log.w(TAG, "building pending intent");
         return PendingIntent.getService(mContext, 1, new Intent(mContext, GPSService.class), 0);
     }
 
@@ -203,6 +222,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
             mRequestingBackgroundUpdates = true;
             LocalStorage.putLocationRequestStatus(true, mContext);
             startBackgroundUpdates();
+
         }
 
 
@@ -214,13 +234,26 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     public void endManagedLocationRequests(final int requestedInterval, ServiceType serviceType) {
 
         if (serviceType.equals(ServiceType.FOREGROUND)) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getLocationListener());
+            endForegroundUpdates();
             mRequestingForegroundUpdates = false;
         } else if (serviceType.equals(ServiceType.BACKGROUND)) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, buildPendingIntent());
+            endBackgroundUpdates();
             mRequestingBackgroundUpdates = false;
             LocalStorage.putLocationRequestStatus(false, mContext);
 
+        }
+    }
+
+    public void changeRequestIntervals(int theInterval, ServiceType theserviceType) {
+        mIntentInterval = theInterval;
+        if (theserviceType.equals(ServiceType.FOREGROUND)) {
+            mRequestingForegroundUpdates = true;
+            endForegroundUpdates();
+            startForegroundUpdates();
+        } else if (theserviceType.equals(ServiceType.BACKGROUND)) {
+            mRequestingBackgroundUpdates = true;
+            endForegroundUpdates();
+            startForegroundUpdates();
         }
     }
 
@@ -246,13 +279,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     @Override
     public void onConnected(Bundle bundle) {
         Log.w(TAG, "Connected. Ready to Go!");
-        if (mRequestingForegroundUpdates) {
-            //Do something here
-        } else if (mRequestingBackgroundUpdates) {
-            //Construct a Pending intent...
-            //TODO This logic should probably fired by another method rather than wait
-            //for onConnected to trigger.
-        }
     }
 
     @Override
@@ -293,38 +319,9 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         protected void onHandleIntent(Intent intent) {
             Log.w("GPS SERVICE", "I heard an Intent!");
             final Location current = intent.getParcelableExtra(FusedLocationProviderApi.KEY_LOCATION_CHANGED);
-            if (current != null) {
-
-                android.os.Handler handler = new android.os.Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.w("GPS SERVICE" + "cur-Loc:", current.toString());
-                        addBackgroundLocationToView(current);
-                    }
-                });
-
-
-            }
+            Log.w("GPS SERVICE", new Coordinate(current, mUserID).toString());
         }
 
-        /**
-         * Private method used to add location to view from within an IntentService.
-         *
-         * @param location is the current location.
-         */
-        private void addBackgroundLocationToView(Location location) {
-            Log.w("GPS Background", "Location obtained is: " + location.toString());
-
-//            mCurrentLocation = location;
-//            mDbHelper.insertCoordinate(new Coordinate(mCurrentLocation, mUserID));
-//            List<Coordinate> list = mParentActivity.getList();
-//            list.add(new Coordinate(mCurrentLocation, mUserID));
-//            mParentActivity.fragment.update(mCurrentLocation, list);
-            //TODO _Figure out how to execute this in the background or at least store so it can
-            //be executed on startup.
-
-        }
     }
 
     /**
