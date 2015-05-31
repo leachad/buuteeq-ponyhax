@@ -142,6 +142,8 @@
     <string name="queryDateRange">Query Date Range</string>
     <string name="storeChosenTimes">SAVE</string>
     <string name="cancelChosenTimes">@android:string/cancel</string>
+    <string name="gps_sampling_text">Set GPS sampling frequency</string>
+    <string name="every_x_minutes">Every x minutes</string>
 
 
 </resources>

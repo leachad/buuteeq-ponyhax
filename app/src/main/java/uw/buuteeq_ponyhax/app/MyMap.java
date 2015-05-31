@@ -23,17 +23,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 
 import db.Coordinate;
-import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
-import db.User;
-import webservices.WebDriver;
 
 /**
  * MapFragment used to ease the transition between NavigationDrawer submenus

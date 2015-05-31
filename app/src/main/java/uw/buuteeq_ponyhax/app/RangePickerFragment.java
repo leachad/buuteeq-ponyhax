@@ -5,6 +5,7 @@
 package uw.buuteeq_ponyhax.app;
 
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -17,7 +18,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -28,16 +31,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import db.Coordinate;
 import db.LocalStorage;
+import location_services.GPSPlotter;
+import webservices.JsonBuilder;
+import webservices.WebDriver;
 
 
-public class RangePickerFragment extends android.support.v4.app.Fragment implements UIUpdater  {
+public class RangePickerFragment extends android.support.v4.app.Fragment implements UIUpdater {
 
 
-    /** Static fields for maintaining
-     *  data integrity dependent of the actions.
+    /**
+     * Static fields for maintaining
+     * data integrity dependent of the actions.
      */
     public static final String START_RANGE = "start";
     public static final String END_RANGE = "end";
@@ -45,7 +53,7 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     public static final int TIMESTAMP_DIVISOR = 1000;
 
     /**
-     *  Backend calendars used for maintaining the correct date format.
+     * Backend calendars used for maintaining the correct date format.
      */
     private Calendar mCalendar = GregorianCalendar.getInstance();
     private Calendar mStartCalendar;
@@ -58,6 +66,24 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     private TextView mStartTime;
     private TextView mEndDate;
     private TextView mEndTime;
+
+    /**
+     * Forget password settings
+     */
+    private static final String RESET_PROMPT = "Your password can be reset with the link sent to: ";
+    private static final String RESET_FAILED = "Unable to execute reset request. Please try again later.";
+    Button resetPassword;
+
+    /**
+     * Callback fields
+     */
+    MyAccountFragment.UIListUpdater mCallBackActivity;
+
+    /**
+     * Frequency fields
+     */
+    private TextView frequencyText;
+    private SeekBar frequencyBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,6 +135,37 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
         mEndDate.setOnTouchListener(new FieldSelectedListener());
         mEndTime.setOnTouchListener(new FieldSelectedListener());
 
+        //Setup reset password
+        resetPassword = (Button) getActivity().findViewById(R.id.resetPasswordSettings);
+        resetPassword.setOnClickListener(new ResetPasswordListener());
+
+        //Grab the current gps frequency value
+        frequencyText = (TextView) getActivity().findViewById(R.id.gps_sampling_seconds);
+        frequencyBar = (SeekBar) getActivity().findViewById(R.id.gps_sampling_seek_bar);
+
+        int currentGPSInterval = mCallBackActivity.getGPSPlotter().getInterval();
+        changeIntervalText(currentGPSInterval);
+        frequencyBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                int frequency = progress + 1;
+                changeIntervalText(frequency);
+                mCallBackActivity.getGPSPlotter().changeRequestIntervals(frequency * 60, GPSPlotter.ServiceType.FOREGROUND);
+                Log.d("Progress Bar Test", "The seekbar value is at " + frequency);
+                Log.d("Progress Bar Test", "The GPSPlotter value is at " + mCallBackActivity.getGPSPlotter().getInterval());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
         /**
          * Updates all fields from shared prefs using the static methods in the LocalStorage
          * class.
@@ -116,9 +173,24 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
         updateAllFields();
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        mCallBackActivity = (MyAccountFragment.UIListUpdater) activity;
+        super.onAttach(activity);
+    }
+
+    private void changeIntervalText(int inputSeconds) {
+        if (inputSeconds > 1) {
+            frequencyText.setText("Every " + inputSeconds + " minutes");
+        } else {
+            frequencyText.setText("Every " + inputSeconds + " minute");
+        }
+    }
+
     /**
      * Uses the InputMethodManager to suppress the display of the soft keyboard.
-     * @param context is the Application Context
+     *
+     * @param context     is the Application Context
      * @param windowToken is the window where the keyboard should be suppressed
      */
     private void closeKeyboard(Context context, IBinder windowToken) {
@@ -145,6 +217,7 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     /**
      * Returns a formatted time String based on the Date passed
      * as a parameter.
+     *
      * @param theNewDate is the Date object with the date needed to display
      * @return a formatted time display
      */
@@ -156,6 +229,7 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     /**
      * Returns a formatted date String based on the Date passed
      * as a parameter.
+     *
      * @param theNewDate is the Date object with the date needed to display
      * @return a formatted Date Display
      */
@@ -168,6 +242,7 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
      * Returns a formatted Unix time stamp as a long based
      * on the date stored in the backing Calendars and divided
      * by 1000 to obtain the correct date.
+     *
      * @param theBoundary is the START_RANGE or the END_RANGE
      * @return a unix time stamp as a long
      */
@@ -181,6 +256,7 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
 
     /**
      * Method to determine if the selected Date/Combos are in order.
+     *
      * @return datesAreOrdered
      */
     private boolean selectedDatesOrdered() {
@@ -189,8 +265,9 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
 
     /**
      * Do nothing method that mimics a callback for updating view.
+     *
      * @param currentLocation is theCurrentLocation
-     * @param locations is the list of Locations
+     * @param locations       is the list of Locations
      */
     @Override
     public void update(Location currentLocation, List<Coordinate> locations) {
@@ -246,6 +323,7 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     /**
      * Private class to implement an OnDateSetListener. Determines the behavior for Display after
      * the user selects a Date from the DatePicker widget in the Android Library.
+     *
      * @author leachad
      * @version 5.7.15
      */
@@ -257,14 +335,13 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
         }
 
         /**
-         *
          * OnDateset updates the prefs, textview displays, and backside calendars using
          * the year month and day selected by the user.
          *
-         * @param view is the DatePicker widget
-         * @param year is the selected year
+         * @param view        is the DatePicker widget
+         * @param year        is the selected year
          * @param monthOfYear is the selected month
-         * @param dayOfMonth is the selected day
+         * @param dayOfMonth  is the selected day
          */
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -289,6 +366,7 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
     /**
      * Private class to implement an OnTimeSetListener. Determines the behavior for Display after
      * the user selects a Time from the TimePicker widget in the Android Library.
+     *
      * @author leachad
      * @version 5.7.15
      */
@@ -302,9 +380,10 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
         /**
          * OnTimeSet updates the prefs, textview displays, and backside calendars using
          * the hour and minute selected by the User.
-         * @param view is the TimePicker widget.
+         *
+         * @param view      is the TimePicker widget.
          * @param hourOfDay is thehour selected
-         * @param minute is the minute selected
+         * @param minute    is the minute selected
          */
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -320,10 +399,10 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
                     LocalStorage.putEndTime(getUnixTimeStamp(END_RANGE), getActivity());
                     Log.w("End Time Set: ", Long.toString(getUnixTimeStamp(END_RANGE)));
                 }
-            } else{
-                    Toast.makeText(getActivity(), ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
-                }
+            } else {
+                Toast.makeText(getActivity(), ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
             }
+        }
     }
 
 
@@ -342,6 +421,37 @@ public class RangePickerFragment extends android.support.v4.app.Fragment impleme
         public boolean onTouch(View v, MotionEvent event) {
             closeKeyboard(getActivity(), v.getWindowToken());
             return false;
+        }
+    }
+
+    /**
+     * Private class to implement a ResetPasswordListener.
+     *
+     * @author leachad
+     * @version 5.3.15
+     */
+    private class ResetPasswordListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+
+            String email = LocalStorage.getUserEmail(getActivity());
+
+            try {
+                String result = WebDriver.resetPassword(email);
+
+                if (result.matches(JsonBuilder.VAL_FAIL)) {
+                    Toast.makeText(getActivity().getApplicationContext(), RESET_FAILED, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), RESET_PROMPT + email, Toast.LENGTH_SHORT).show();
+                    LocalStorage.clearPrefs(getActivity());
+                    getActivity().finish();
+                }
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
         }
     }
 }

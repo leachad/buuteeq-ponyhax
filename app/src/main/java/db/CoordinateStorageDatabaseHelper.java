@@ -110,7 +110,6 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
      * that the user has obtained while polling gps every 'n' seconds.
      * <p/>
      * theLocalCoordinates is a list of Coordinates generated before pushed to webservices
-     *
      */
     public void publishCoordinateBatch(final String theUserID) {
         List<Coordinate> theLocalCoordinates = getAllCoordinates(User.ALL_USERS);

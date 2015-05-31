@@ -98,12 +98,11 @@ public class Coordinate {
     }
 
     /**
-     *
      * Another overloaded constructor that allows calling classes to pass in a location object to create a new
      * Coordinate Object for use within the context of the application.
      *
      * @param theLocation is the location object passed from the calling code.
-     *                    @param theUserID is the current user's UID.
+     * @param theUserID   is the current user's UID.
      */
     public Coordinate(final Location theLocation, final String theUserID) {
         myLatitude = theLocation.getLatitude();

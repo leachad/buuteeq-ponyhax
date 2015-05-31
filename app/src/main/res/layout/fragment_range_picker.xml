@@ -14,28 +14,39 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/selectDateRange"
-        android:theme="@style/restrictedTextTheme" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:baselineAligned="false"
         android:gravity="center"
         android:orientation="vertical"
-        tools:context="uw.buuteeq_ponyhax.app.MyAccount$PlaceholderFragment">
+        tools:context="uw.buuteeq_ponyhax.app.MyAccount$PlaceholderFragment"
+        android:id="@+id/container">
 
+        <Button
+            android:id="@+id/resetPasswordSettings"
+            style="@style/buttonTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/reset_password" />
+
+
+        <TextView
+            android:id="@+id/dateRangeText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/selectDateRange"
+            android:theme="@style/restrictedTextTheme"
+            android:layout_marginTop="15dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:id="@+id/startRangeContainer">
 
             <TextView
                 style="@style/AppTheme"
@@ -82,7 +93,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:id="@+id/endRangeContainer">
 
             <TextView
                 style="@style/AppTheme"
@@ -122,6 +134,30 @@
                     android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/samplingRateText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/gps_sampling_text"
+            android:theme="@style/restrictedTextTheme"
+            android:layout_marginTop="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/every_x_minutes"
+            android:id="@+id/gps_sampling_seconds"
+            android:theme="@style/restrictedTextTheme"
+            android:layout_gravity="center_horizontal" />
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/gps_sampling_seek_bar"
+            android:layout_gravity="center_horizontal"
+            android:max="59" />
     </LinearLayout>
 
 </LinearLayout>

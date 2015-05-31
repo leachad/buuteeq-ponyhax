@@ -5,19 +5,15 @@
 package uw.buuteeq_ponyhax.app;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -55,7 +51,7 @@ public class MyAccount extends ActionBarActivity
     private GPSPlotter.ServiceType mServiceType = GPSPlotter.ServiceType.BACKGROUND;
     protected List<Coordinate> coordinates;
     private BackgroundLocationReceiver mLocationReceiver;
-
+    private GPSPlotter myGPSPlotter;
     /**
      * Used to store the last screen title.
      */
@@ -88,8 +84,12 @@ public class MyAccount extends ActionBarActivity
         //START location manager setup
         LocalStorage.putDBFlag(true, getApplicationContext());
 
+
        // mSelectedSampleRate = some_var -- TODO This variable will be set by the power and network management classes
         mLocationReceiver = new BackgroundLocationReceiver(getApplicationContext());
+
+        // mSelectedSampleRate = some_var -- TODO This variable will be set by the power and network management classes
+
         initializeButtons();
 
         // network stuff
@@ -115,7 +115,7 @@ public class MyAccount extends ActionBarActivity
         if (thePlotter.hasApiClientConnectivity() && mStartButton.isChecked()) {
             thePlotter.beginManagedLocationRequests(mSelectedSampleRate, mServiceType);
         } else if (thePlotter.hasApiClientConnectivity() && !mStartButton.isChecked()
-                || !thePlotter.hasApiClientConnectivity() && !mStartButton.isChecked()){
+                || !thePlotter.hasApiClientConnectivity() && !mStartButton.isChecked()) {
             checkStartButton();
             Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
         } else if (!thePlotter.hasApiClientConnectivity() && mStartButton.isChecked()) {
@@ -128,7 +128,7 @@ public class MyAccount extends ActionBarActivity
         if (thePlotter.hasApiClientConnectivity() && mStopButton.isChecked()) {
             thePlotter.endManagedLocationRequests(mSelectedSampleRate, mServiceType);
         } else if (thePlotter.hasApiClientConnectivity() && !mStopButton.isChecked()
-                || !thePlotter.hasApiClientConnectivity() && !mStopButton.isChecked()){
+                || !thePlotter.hasApiClientConnectivity() && !mStopButton.isChecked()) {
             checkStartButton();
             Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
         } else if (!thePlotter.hasApiClientConnectivity() && mStopButton.isChecked()) {
@@ -141,26 +141,26 @@ public class MyAccount extends ActionBarActivity
      * Private method to initialize the radio buttons and their associated listeners.
      */
     private void initializeButtons() {
-        final GPSPlotter pointPlotter = new GPSPlotter(getApplicationContext(), this);
+        myGPSPlotter = new GPSPlotter(getApplicationContext(), this);
         mStartButton = (RadioButton) findViewById(R.id.startButton);
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startCheckedAction(pointPlotter);
+                startCheckedAction(myGPSPlotter);
             }
         });
         mStopButton = (RadioButton) findViewById(R.id.stopButton);
         mStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopCheckedAction(pointPlotter);
+                stopCheckedAction(myGPSPlotter);
             }
         });
 
         //Set the default clicked Radio Button
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupTracking);
 
-        if (pointPlotter.isRunningLocationUpdates()) {
+        if (myGPSPlotter.isRunningLocationUpdates()) {
             checkStartButton();
         } else {
             checkStopButton();
@@ -353,12 +353,12 @@ public class MyAccount extends ActionBarActivity
     /**
      * @author Eduard
      * @author copied teachers code
-     *
+     * <p/>
      * Check whether the device is connected, and if so, whether the connection
      * is wifi or mobile (it could be something else).
      */
     private void checkNetworkConnection() {
-        
+
         ConnectivityManager connMgr =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -367,9 +367,9 @@ public class MyAccount extends ActionBarActivity
         if (activeInfo != null && activeInfo.isConnected()) {
             wifiConnected = activeInfo.getType() == ConnectivityManager.TYPE_WIFI;
             mobileConnected = activeInfo.getType() == ConnectivityManager.TYPE_MOBILE;
-            if(wifiConnected) {
+            if (wifiConnected) {
                 Log.i(TAG, "@@The active connection is wifi.");
-            } else if (mobileConnected){
+            } else if (mobileConnected) {
                 Log.i(TAG, "@@The active connection is mobile.");
             }
         } else {
@@ -411,5 +411,10 @@ public class MyAccount extends ActionBarActivity
     public List<Coordinate> getList() {
         Log.d("GETLIST CALL", "list returned length" + coordinates.size());
         return coordinates;
+    }
+
+    @Override
+    public GPSPlotter getGPSPlotter() {
+        return myGPSPlotter;
     }
 }

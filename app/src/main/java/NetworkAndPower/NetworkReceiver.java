@@ -5,13 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.BatteryManager;
 import android.util.Log;
 
 /**
  * Created by eduard_prokhor on 5/20/15.
  */
-public class NetworkReceiver extends BroadcastReceiver{
+public class NetworkReceiver extends BroadcastReceiver {
 
     private static final String TAG = "NetworkReceiver";
     private boolean wifiConnected;
@@ -24,7 +23,7 @@ public class NetworkReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, "onReceive" + intent.getAction().toString());
-            boolean isConnected;
+        boolean isConnected;
 
         ConnectivityManager connMgr =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -34,9 +33,9 @@ public class NetworkReceiver extends BroadcastReceiver{
         if (activeInfo != null && activeInfo.isConnected()) {
             wifiConnected = activeInfo.getType() == ConnectivityManager.TYPE_WIFI;
             mobileConnected = activeInfo.getType() == ConnectivityManager.TYPE_MOBILE;
-            if(wifiConnected) {
+            if (wifiConnected) {
                 Log.i(TAG, "@@The active connection is wifi.");
-            } else if (mobileConnected){
+            } else if (mobileConnected) {
                 Log.i(TAG, "@@The active connection is mobile.");
             }
         } else {

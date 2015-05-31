@@ -4,11 +4,9 @@
 
 package uw.buuteeq_ponyhax.app;
 
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +18,6 @@ import java.util.concurrent.ExecutionException;
 
 import db.Coordinate;
 import db.LocalStorage;
-import db.User;
 import webservices.JsonBuilder;
 import webservices.WebDriver;
 
@@ -35,7 +32,8 @@ public class SettingsFragment extends Fragment implements UIUpdater {
     private static final String RESET_FAILED = "Unable to execute reset request. Please try again later.";
     Button resetPassword;
 
-    public void update(Location currentLocation, List<Coordinate> locations) {}
+    public void update(Location currentLocation, List<Coordinate> locations) {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,7 +66,7 @@ public class SettingsFragment extends Fragment implements UIUpdater {
         @Override
         public void onClick(View v) {
 
-            String email =  LocalStorage.getUserEmail(getActivity());
+            String email = LocalStorage.getUserEmail(getActivity());
 
             try {
                 String result = WebDriver.resetPassword(email);

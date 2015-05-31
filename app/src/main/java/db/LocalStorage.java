@@ -247,7 +247,7 @@ public class LocalStorage {
      * Public method to return the destroyed state to the calling code.
      *
      * @param context is the application context.
-     *                   @return theDestroyedState
+     * @return theDestroyedState
      */
     public static boolean getDestroyedState(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);

@@ -23,12 +23,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
-import webservices.WebDriver;
+import location_services.GPSPlotter;
 
 /**
  * Created by BrentYoung on 4/12/15.
@@ -178,7 +177,7 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
 //        }
 
         List<Coordinate> coordinates = mCallBackActivity.getList();
-        
+
         update(null, coordinates);
 
     }
@@ -186,7 +185,7 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
     /**
      * Private method used to update the contents of a List view everytime the user points are updated.
      */
-    private void updateListAdapter(List<Coordinate> theUpdatedCoordinates)  {
+    private void updateListAdapter(List<Coordinate> theUpdatedCoordinates) {
         mCoordinateAdapter.addAll(theUpdatedCoordinates);
         mCoordinateAdapter.sort(new CoordinateComparator());
         mCoordinateAdapter.notifyDataSetChanged();
@@ -200,6 +199,7 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
 
     /**
      * Private class to implement a CoordinateComparator for correctly sorting the coordinates.
+     *
      * @author leachad
      * @version 5.10.15
      */
@@ -270,6 +270,8 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
     public interface UIListUpdater {
 
         List<Coordinate> getList();
+
+        GPSPlotter getGPSPlotter();
     }
 
 }

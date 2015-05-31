@@ -2,13 +2,11 @@ package location_services;
 
 import android.app.IntentService;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -90,6 +88,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         Log.w(TAG, "Ending background updates");
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, buildPendingIntent());
     }
+
     /**
      * Private helper method to initialize the Google Api Client with the
      * LocationServices Api and Build it for use.
@@ -255,6 +254,10 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
             endForegroundUpdates();
             startForegroundUpdates();
         }
+    }
+
+    public int getInterval() {
+        return mIntentInterval;
     }
 
     /**
