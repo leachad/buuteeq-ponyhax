@@ -49,16 +49,24 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
      */
     public static final String START_RANGE = "start";
     public static final String END_RANGE = "end";
-    private static final String ERROR_MESSAGE = "Select Time and Date must be in Contiguous Order";
     public static final int TIMESTAMP_DIVISOR = 1000;
-
+    private static final String ERROR_MESSAGE = "Select Time and Date must be in Contiguous Order";
+    /**
+     * Forget password settings
+     */
+    private static final String RESET_PROMPT = "Your password can be reset with the link sent to: ";
+    private static final String RESET_FAILED = "Unable to execute reset request. Please try again later.";
+    Button resetPassword;
+    /**
+     * Callback fields
+     */
+    MyAccountFragment.UIListUpdater mCallBackActivity;
     /**
      * Backend calendars used for maintaining the correct date format.
      */
     private Calendar mCalendar = GregorianCalendar.getInstance();
     private Calendar mStartCalendar;
     private Calendar mEndCalendar;
-
     /**
      * Text view widgets that allow use within the scope of the class.
      */
@@ -66,19 +74,6 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
     private TextView mStartTime;
     private TextView mEndDate;
     private TextView mEndTime;
-
-    /**
-     * Forget password settings
-     */
-    private static final String RESET_PROMPT = "Your password can be reset with the link sent to: ";
-    private static final String RESET_FAILED = "Unable to execute reset request. Please try again later.";
-    Button resetPassword;
-
-    /**
-     * Callback fields
-     */
-    MyAccountFragment.UIListUpdater mCallBackActivity;
-
     /**
      * Frequency fields
      */
@@ -146,13 +141,13 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
         int currentGPSInterval = mCallBackActivity.getGPSPlotter().getInterval();
         changeIntervalText(currentGPSInterval);
         frequencyBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int frequency;
+
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                int frequency = progress + 1;
+                frequency = progress + 1;
                 changeIntervalText(frequency);
-                mCallBackActivity.getGPSPlotter().changeRequestIntervals(frequency * 60, GPSPlotter.ServiceType.FOREGROUND);
                 Log.d("Progress Bar Test", "The seekbar value is at " + frequency);
-                Log.d("Progress Bar Test", "The GPSPlotter value is at " + mCallBackActivity.getGPSPlotter().getInterval());
             }
 
             @Override
@@ -162,7 +157,8 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                mCallBackActivity.getGPSPlotter().changeRequestIntervals(frequency * 60, GPSPlotter.ServiceType.FOREGROUND);
+                Log.d("Progress Bar Test", "The GPSPlotter value is at " + mCallBackActivity.getGPSPlotter().getInterval());
             }
         });
 

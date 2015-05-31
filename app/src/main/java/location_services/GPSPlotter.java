@@ -1,12 +1,10 @@
 package location_services;
 
-import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -14,7 +12,6 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -34,21 +31,20 @@ import uw.buuteeq_ponyhax.app.MyAccount;
  */
 public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, BackgroundMapUpdate {
 
+    private static final String TAG = "GPSPlotter: ";
+    private static final int DEFAULT_INTENT_INTERVAL = 60;
     /**
      * Static fields used in both Background and Foreground Location Updates.
      */
     private static GPSPlotter gpsPlotterInstance;
-    private static final String TAG = "GPSPlotter: ";
-    private static final int DEFAULT_INTENT_INTERVAL = 60;
     private static Location mCurrentLocation;
     private static CoordinateStorageDatabaseHelper mDbHelper;
     private static String mUserID;
     private static MyAccount mParentActivity;
     private static IntentFilter mIntentFilter;
     private static LocalBroadcastManager mBroadcastManager;
-
-    private GoogleApiClient mGoogleApiClient;
     private static Context mContext;
+    private GoogleApiClient mGoogleApiClient;
     private int mIntentInterval;
     private boolean mRequestingForegroundUpdates;
     private boolean mRequestingBackgroundUpdates;
@@ -59,6 +55,13 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         initializeFields(theContext, theParentActivity);
         buildApiClient();
         connectClient();
+    }
+
+    /**
+     * Returns an instance of the GPS Plotter.
+     */
+    public static GPSPlotter getInstance() {
+        return gpsPlotterInstance;
     }
 
     /**
@@ -130,7 +133,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     }
 
-
     /**
      * Private method to initialize the fields of the GPS Plotter class.
      *
@@ -148,7 +150,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         mRequestingBackgroundUpdates = false;
         mBroadcastManager = LocalBroadcastManager.getInstance(mContext);
     }
-
 
     /**
      * Private method to build the Api Client for use with the LocationServices API.
@@ -292,16 +293,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     public boolean isRunningLocationUpdates() {
         return LocalStorage.getLocationRequestStatus(mContext);
     }
-
-    /**
-     * Returns an instance of the GPS Plotter.
-     *
-     */
-    public static GPSPlotter getInstance() {
-        return gpsPlotterInstance;
-    }
-
-
 
     @Override
     public void onConnected(Bundle bundle) {
