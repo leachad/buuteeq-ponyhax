@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--   ~ Copyright (c) 4.17.15 - Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young -->
+<!-- ~ Copyright (c) 4.17.15 - Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="uw.buuteeq_ponyhax.app" >
 
@@ -12,21 +12,20 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
-    <action android:name="android.intent.action.ACTION_DOCK_EVENT"/>
+    <action android:name="android.intent.action.ACTION_DOCK_EVENT" />
 
     <receiver
         android:name=".NetworkPowerReceiver"
         android:enabled="true"
         android:exported="true" >
         <intent-filter>
-            <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-            <action android:name="android.intent.action.BATTERY_LOW"/>
-            <action android:name="android.intent.action.BATTERY_OKAY"/>
-            <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
-            <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+            <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            <action android:name="android.intent.action.BATTERY_LOW" />
+            <action android:name="android.intent.action.BATTERY_OKAY" />
+            <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+            <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
         </intent-filter>
     </receiver>
-
 
     <application
         android:allowBackup="true"
@@ -79,16 +78,15 @@
             android:value="@string/google_maps_key" />
 
         <service
-            android:name="location_services.GPSPlotter$GPSService"
-            android:exported="true" >
+            android:name="location_services.GPSService"
+            android:exported="false" >
         </service>
 
-        <receiver android:name="location_services.GPSPlotter$BackgroundLocationReceiver" >
-            <intent-filter>
-                <action android:name="android.intent.action.LOCALE_CHANGED"/>
-            </intent-filter>
+        <receiver
+            android:name="location_services.BackgroundLocationReceiver"
+            android:enabled="true"
+            android:exported="true" >
         </receiver>
-
     </application>
 
 </manifest>

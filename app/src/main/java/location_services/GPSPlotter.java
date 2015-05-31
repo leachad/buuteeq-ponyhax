@@ -38,6 +38,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      * Static fields used in both Background and Foreground Location Updates.
      */
     private static final String TAG = "GPSPlotter: ";
+    private static final int DEFAULT_INTENT_INTERVAL = 60;
     private static Location mCurrentLocation;
     private static CoordinateStorageDatabaseHelper mDbHelper;
     private static String mUserID;
@@ -131,7 +132,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         mUserID = LocalStorage.getUserID(theContext);
         mContext = theContext;
         mParentActivity = theParentActivity;
-        mIntentInterval = 0;
+        mIntentInterval = DEFAULT_INTENT_INTERVAL;
         mRequestingForegroundUpdates = false;
         mRequestingBackgroundUpdates = false;
         mBroadcastManager = LocalBroadcastManager.getInstance(mContext);
@@ -179,7 +180,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         Log.w(TAG, "Location obtained is: " + location.toString());
         mCurrentLocation = location;
         mDbHelper.insertCoordinate(new Coordinate(mCurrentLocation, mUserID));
-        //mParentActivity.addCoordinateToList(new Coordinate(mCurrentLocation, mUserID));
         List<Coordinate> list = mParentActivity.getList();
         list.add(new Coordinate(mCurrentLocation, mUserID));
         mParentActivity.fragment.update(mCurrentLocation, list);
@@ -299,37 +299,11 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     }
 
     /**
-     * Public class to create an IntentService that will run in a background thread.
-     *
-     * @author leachad
-     * @version 5.27.15
-     */
-    public static class GPSService extends IntentService {
-
-        /**
-         * Creates an IntentService.  Invoked by your subclass's constructor.
-         * <p/>
-         * Used to name the worker thread, important only for debugging.
-         */
-        public GPSService() {
-            super(GPSService.class.getName());
-        }
-
-        @Override
-        protected void onHandleIntent(Intent intent) {
-            Log.w("GPS SERVICE", "I heard an Intent!");
-            final Location current = intent.getParcelableExtra(FusedLocationProviderApi.KEY_LOCATION_CHANGED);
-            Log.w("GPS SERVICE", new Coordinate(current, mUserID).toString());
-        }
-
-    }
-
-    /**
      * Public Static Class to contain Enumerated Types useful for
      * articulating service preferences from the User's selected background processes.
      */
     public enum ServiceType {
-        BACKGROUND, FOREGROUND;
+        BACKGROUND, FOREGROUND
     }
 
 }

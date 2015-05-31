@@ -36,6 +36,7 @@ import NetworkAndPower.NetworkReceiver;
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
+import location_services.BackgroundLocationReceiver;
 import location_services.GPSPlotter;
 import webservices.WebDriver;
 
@@ -51,8 +52,10 @@ public class MyAccount extends ActionBarActivity
     public int publishCounter = 0;
     private static final int DEFAULT_INTERVAL = 60;
     private int mSelectedSampleRate = DEFAULT_INTERVAL;
-    private GPSPlotter.ServiceType mServiceType = GPSPlotter.ServiceType.FOREGROUND;
+    private GPSPlotter.ServiceType mServiceType = GPSPlotter.ServiceType.BACKGROUND;
     protected List<Coordinate> coordinates;
+    private BackgroundLocationReceiver mLocationReceiver;
+
     /**
      * Used to store the last screen title.
      */
@@ -86,7 +89,7 @@ public class MyAccount extends ActionBarActivity
         LocalStorage.putDBFlag(true, getApplicationContext());
 
        // mSelectedSampleRate = some_var -- TODO This variable will be set by the power and network management classes
-
+        mLocationReceiver = new BackgroundLocationReceiver(getApplicationContext());
         initializeButtons();
 
         // network stuff
@@ -164,6 +167,23 @@ public class MyAccount extends ActionBarActivity
         }
 
         setTitle("");
+    }
+
+    /**
+     *  REGISTER AND UNREGISTER THE BROADCAST RECEIVERS FOR
+     *  SENDING BACKGROUND LOCATION REQUESTS.
+     */
+    @Override
+    public void onResume(){
+        super.onResume();
+        registerReceiver(mLocationReceiver,
+                new IntentFilter("background"));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver(mLocationReceiver);
     }
 
     /**
