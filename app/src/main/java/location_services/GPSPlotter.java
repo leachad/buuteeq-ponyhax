@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -23,6 +24,7 @@ import java.util.List;
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
+import db.User;
 import uw.buuteeq_ponyhax.app.MyAccount;
 
 /**
@@ -30,11 +32,12 @@ import uw.buuteeq_ponyhax.app.MyAccount;
  * static calls to issue thread requests and set
  * different pertinent variables.
  */
-public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, BackgroundMapUpdate {
 
     /**
      * Static fields used in both Background and Foreground Location Updates.
      */
+    private static GPSPlotter gpsPlotterInstance;
     private static final String TAG = "GPSPlotter: ";
     private static final int DEFAULT_INTENT_INTERVAL = 60;
     private static Location mCurrentLocation;
@@ -52,6 +55,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
 
     public GPSPlotter(Context theContext, MyAccount theParentActivity) {
+        initializeInstance();
         initializeFields(theContext, theParentActivity);
         buildApiClient();
         connectClient();
@@ -118,6 +122,14 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         }
     }
 
+    /**
+     * Private method to initialize an instance of the GPS Plotter class.
+     */
+    private void initializeInstance() {
+        gpsPlotterInstance = this;
+
+    }
+
 
     /**
      * Private method to initialize the fields of the GPS Plotter class.
@@ -175,7 +187,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      *
      * @param location is the current obtained location.
      */
-    private void addLocationToView(Location location) {
+    public void addLocationToView(Location location) {
         Log.w(TAG, "Location obtained is: " + location.toString());
         mCurrentLocation = location;
         mDbHelper.insertCoordinate(new Coordinate(mCurrentLocation, mUserID));
@@ -192,7 +204,10 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      */
     private PendingIntent buildPendingIntent() {
         Log.w(TAG, "building pending intent");
-        return PendingIntent.getBroadcast(mContext, 0, new Intent(mContext, BackgroundLocationReceiver.class), 0);
+        Intent intent = new Intent(mContext, BackgroundLocationReceiver.class);
+        intent.setAction("background");
+        intent.putExtra(User.USER_ID, mUserID);
+        return PendingIntent.getBroadcast(mContext, 0, intent, 0);
     }
 
     /**
@@ -278,6 +293,15 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         return LocalStorage.getLocationRequestStatus(mContext);
     }
 
+    /**
+     * Returns an instance of the GPS Plotter.
+     *
+     */
+    public static GPSPlotter getInstance() {
+        return gpsPlotterInstance;
+    }
+
+
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -301,6 +325,13 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     }
 
+    @Override
+    public void updatePointsOnMap(Location theLocation) {
+        Log.w(TAG, "Received update request");
+        addLocationToView(theLocation);
+    }
+
+
     /**
      * Public Static Class to contain Enumerated Types useful for
      * articulating service preferences from the User's selected background processes.
@@ -308,5 +339,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     public enum ServiceType {
         BACKGROUND, FOREGROUND
     }
+
 
 }
