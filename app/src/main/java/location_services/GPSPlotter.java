@@ -192,7 +192,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      */
     private PendingIntent buildPendingIntent() {
         Log.w(TAG, "building pending intent");
-        return PendingIntent.getService(mContext, 1, new Intent(mContext, GPSService.class), 0);
+        return PendingIntent.getBroadcast(mContext, 0, new Intent(mContext, BackgroundLocationReceiver.class), PendingIntent.FLAG_NO_CREATE);
     }
 
     /**

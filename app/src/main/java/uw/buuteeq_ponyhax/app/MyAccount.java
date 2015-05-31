@@ -50,7 +50,6 @@ public class MyAccount extends ActionBarActivity
     private int mSelectedSampleRate = DEFAULT_INTERVAL;
     private GPSPlotter.ServiceType mServiceType = GPSPlotter.ServiceType.BACKGROUND;
     protected List<Coordinate> coordinates;
-    private BackgroundLocationReceiver mLocationReceiver;
     private GPSPlotter myGPSPlotter;
     /**
      * Used to store the last screen title.
@@ -83,10 +82,6 @@ public class MyAccount extends ActionBarActivity
 
         //START location manager setup
         LocalStorage.putDBFlag(true, getApplicationContext());
-
-
-       // mSelectedSampleRate = some_var -- TODO This variable will be set by the power and network management classes
-        mLocationReceiver = new BackgroundLocationReceiver(getApplicationContext());
 
         // mSelectedSampleRate = some_var -- TODO This variable will be set by the power and network management classes
 
@@ -169,22 +164,6 @@ public class MyAccount extends ActionBarActivity
         setTitle("");
     }
 
-    /**
-     *  REGISTER AND UNREGISTER THE BROADCAST RECEIVERS FOR
-     *  SENDING BACKGROUND LOCATION REQUESTS.
-     */
-    @Override
-    public void onResume(){
-        super.onResume();
-        registerReceiver(mLocationReceiver,
-                new IntentFilter("background"));
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        unregisterReceiver(mLocationReceiver);
-    }
 
     /**
      * Overrides the onRestoreInstanceState and maintains the state of tracking when screen is rotated.

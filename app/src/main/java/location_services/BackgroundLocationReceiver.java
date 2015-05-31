@@ -14,9 +14,6 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
     public BackgroundLocationReceiver() {
 
     }
-    public BackgroundLocationReceiver(Context theContext) {
-        mDbHelper = new CoordinateStorageDatabaseHelper(theContext);
-    }
 
     @Override
     public void onReceive(Context context, Intent intent) {

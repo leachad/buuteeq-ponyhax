@@ -12,20 +12,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
-    <action android:name="android.intent.action.ACTION_DOCK_EVENT" />
 
-    <receiver
-        android:name=".NetworkPowerReceiver"
-        android:enabled="true"
-        android:exported="true" >
-        <intent-filter>
-            <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            <action android:name="android.intent.action.BATTERY_LOW" />
-            <action android:name="android.intent.action.BATTERY_OKAY" />
-            <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-            <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-        </intent-filter>
-    </receiver>
+
 
     <application
         android:allowBackup="true"
@@ -77,15 +65,36 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <service
-            android:name="location_services.GPSService"
-            android:exported="false" >
-        </service>
+
+        <service android:name="location_services.GPSService"
+            android:exported="false"/>
 
         <receiver
             android:name="location_services.BackgroundLocationReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="background"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="location_services.LocationBootReceiver"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="NetworkAndPower.NetworkPowerReceiver"
             android:enabled="true"
             android:exported="true" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <action android:name="android.intent.action.BATTERY_OKAY" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
         </receiver>
     </application>
 
