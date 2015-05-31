@@ -39,16 +39,17 @@ public class MyAccount extends ActionBarActivity
 
     public static final String TAG = "Basic Network Demo";
     public static final String API_ERROR = "Try again soon. Api client currently disconnected.";
+    private static final int DEFAULT_INTERVAL = 60;
     // Whether there is a Wi-Fi connection.
     public static boolean wifiConnected = false;
     private boolean wifizInTheHouse = false;
     // Whether there is a mobile connection.
     public static boolean mobileConnected = false;
     public int publishCounter = 0;
-    private static final int DEFAULT_INTERVAL = 60;
+    public UIUpdater fragment;
+    protected List<Coordinate> coordinates;
     private int mSelectedSampleRate = DEFAULT_INTERVAL;
     private GPSPlotter.ServiceType mServiceType = GPSPlotter.ServiceType.BACKGROUND;
-    protected List<Coordinate> coordinates;
     private GPSPlotter myGPSPlotter;
     /**
      * Used to store the last screen title.
@@ -58,8 +59,6 @@ public class MyAccount extends ActionBarActivity
     private RadioButton mStartButton;
     private RadioButton mStopButton;
     private Location mLastLocation;
-    public UIUpdater fragment;
-
     private CoordinateStorageDatabaseHelper coordHelper;
 
     @Override

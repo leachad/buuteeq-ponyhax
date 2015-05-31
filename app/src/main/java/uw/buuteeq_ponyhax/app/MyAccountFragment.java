@@ -42,14 +42,12 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
     private static final int MINUTE = 60 * SECOND;
     private static final int HOUR = 60 * MINUTE;
     private static final int DAY = 24 * HOUR;
-
+    UIListUpdater mCallBackActivity;
     private TextView mTotalDistanceView;
     private TextView mIntervalDistanceView;
     private TextView mDataPointsView;
     private MyCoordinateAdapter mCoordinateAdapter;
     private ListView mPointListView;
-
-    UIListUpdater mCallBackActivity;
 
     public void update(Location currentLocation, List<Coordinate> locations) {
 
@@ -196,6 +194,18 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
         return db.getAllCoordinates(LocalStorage.getUserID(getActivity()));
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        mCallBackActivity = (UIListUpdater) activity;
+        super.onAttach(activity);
+    }
+
+    public interface UIListUpdater {
+
+        List<Coordinate> getList();
+
+        GPSPlotter getGPSPlotter();
+    }
 
     /**
      * Private class to implement a CoordinateComparator for correctly sorting the coordinates.
@@ -259,19 +269,6 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
 
             return convertView;
         }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        mCallBackActivity = (UIListUpdater) activity;
-        super.onAttach(activity);
-    }
-
-    public interface UIListUpdater {
-
-        List<Coordinate> getList();
-
-        GPSPlotter getGPSPlotter();
     }
 
 }

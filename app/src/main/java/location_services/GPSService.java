@@ -1,9 +1,8 @@
 package location_services;
 
 import android.app.IntentService;
-import android.content.Intent;
 import android.content.Context;
-import android.support.v4.content.LocalBroadcastManager;
+import android.content.Intent;
 import android.util.Log;
 
 /**
@@ -24,6 +23,10 @@ public class GPSService extends IntentService {
     // TODO: Rename parameters
     private static final String EXTRA_PARAM1 = "location_services.extra.PARAM1";
     private static final String EXTRA_PARAM2 = "location_services.extra.PARAM2";
+
+    public GPSService() {
+        super("GPSService");
+    }
 
     /**
      * Starts this service to perform action Foo with the given parameters. If
@@ -53,10 +56,6 @@ public class GPSService extends IntentService {
         intent.putExtra(EXTRA_PARAM1, param1);
         intent.putExtra(EXTRA_PARAM2, param2);
         context.startService(intent);
-    }
-
-    public GPSService() {
-        super("GPSService");
     }
 
     @Override
