@@ -9,11 +9,11 @@ import android.util.Log;
 /**
  * Created by eduard_prokhor on 5/20/15.
  */
-public class NetworkPowerReceiver extends BroadcastReceiver {
+public class PowerReceiver extends BroadcastReceiver {
 
     private static final String TAG = "BatteryLevelReceiver";
 
-    public NetworkPowerReceiver() {
+    public PowerReceiver() {
 
     }
 
