@@ -32,7 +32,7 @@ import uw.buuteeq_ponyhax.app.MyAccount;
  * static calls to issue thread requests and set
  * different pertinent variables.
  */
-public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, BackgroundMapUpdate {
+public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     /**
      * Static fields used in both Background and Foreground Location Updates.
@@ -301,8 +301,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         return gpsPlotterInstance;
     }
 
-
-
     @Override
     public void onConnected(Bundle bundle) {
         Log.w(TAG, "Connected. Ready to Go!");
@@ -324,13 +322,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         addLocationToView(location);
 
     }
-
-    @Override
-    public void updatePointsOnMap(Location theLocation) {
-        Log.w(TAG, "Received update request");
-        addLocationToView(theLocation);
-    }
-
 
     /**
      * Public Static Class to contain Enumerated Types useful for

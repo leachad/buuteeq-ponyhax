@@ -199,6 +199,8 @@ public class MyAccount extends ActionBarActivity
 
     @Override
     public void onDestroy() {
+
+        LocalStorage.putDestroyedState(true, getApplicationContext());
         super.onDestroy();
     }
 
