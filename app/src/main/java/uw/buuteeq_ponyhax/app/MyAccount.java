@@ -5,7 +5,6 @@
 package uw.buuteeq_ponyhax.app;
 
 import android.content.Context;
-import android.content.IntentFilter;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -28,11 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import NetworkAndPower.NetworkReceiver;
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
-import location_services.BackgroundLocationReceiver;
+
 import location_services.GPSPlotter;
 import webservices.WebDriver;
 
@@ -43,6 +41,7 @@ public class MyAccount extends ActionBarActivity
     public static final String API_ERROR = "Try again soon. Api client currently disconnected.";
     // Whether there is a Wi-Fi connection.
     public static boolean wifiConnected = false;
+    private boolean wifizInTheHouse = false;
     // Whether there is a mobile connection.
     public static boolean mobileConnected = false;
     public int publishCounter = 0;
@@ -89,10 +88,6 @@ public class MyAccount extends ActionBarActivity
 
         // network stuff
         checkNetworkConnection();
-        NetworkReceiver mNetworkReceiver = new NetworkReceiver();
-        //LocalBroadcastManager.getInstance(this).registerReceiver(mNetworkReceiver, null);
-
-
         //checkPowerConnection();
     }
 
@@ -316,7 +311,7 @@ public class MyAccount extends ActionBarActivity
     public void addCoordinateToList(Coordinate coord) {
         coordinates.add(coord);
 
-        if (publishCounter == 5) {
+        if ((publishCounter % 5 == 0) && checkNetworkConnection()) {
             coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
             publishCounter = 0;
             Log.w("PUBLISH: ", Integer.toString(publishCounter));
@@ -325,12 +320,11 @@ public class MyAccount extends ActionBarActivity
 
     /**
      * @author Eduard
-     * @author copied teachers code
      * <p/>
      * Check whether the device is connected, and if so, whether the connection
      * is wifi or mobile (it could be something else).
      */
-    private void checkNetworkConnection() {
+    private boolean checkNetworkConnection() {
 
         ConnectivityManager connMgr =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -341,13 +335,17 @@ public class MyAccount extends ActionBarActivity
             wifiConnected = activeInfo.getType() == ConnectivityManager.TYPE_WIFI;
             mobileConnected = activeInfo.getType() == ConnectivityManager.TYPE_MOBILE;
             if (wifiConnected) {
+                wifizInTheHouse = true;
                 Log.i(TAG, "@@The active connection is wifi.");
             } else if (mobileConnected) {
                 Log.i(TAG, "@@The active connection is mobile.");
+                wifizInTheHouse = false;
             }
         } else {
             Log.i(TAG, "@@No wireless or mobile connection.");
+            wifizInTheHouse = false;
         }
+        return wifizInTheHouse;
 
     }
 

@@ -85,8 +85,7 @@
         </receiver>
 
         <!--<receiver-->
-            <!--android:name="NetworkAndPower.NetworkPowerReceiver"-->
-            <!--android:enabled="true"-->
+            <!--android:name="NetworkAndPower.PowerReceiver          <!--android:enabled="true"-->
             <!--android:exported="true" >-->
             <!--<intent-filter>-->
                 <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
