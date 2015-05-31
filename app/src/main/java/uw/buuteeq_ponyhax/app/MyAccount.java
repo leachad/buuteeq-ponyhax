@@ -241,9 +241,6 @@ public class MyAccount extends ActionBarActivity
                 fragment = new SettingsFragment();
                 break;
             case 3:
-                fragment = new RangePickerFragment();
-                break;
-            case 4:
                 LocalStorage.clearPrefs(getApplicationContext());
                 choice = false;
                 finish();
@@ -278,9 +275,6 @@ public class MyAccount extends ActionBarActivity
                 break;
             case 4:
                 mTitle = getString(R.string.title_section4);
-                break;
-            case 5:
-                mTitle = getString(R.string.title_section5);
                 break;
         }
     }
