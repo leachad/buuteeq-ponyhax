@@ -1,6 +1,5 @@
 package location_services;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -8,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderApi;
@@ -17,7 +15,6 @@ import java.util.List;
 
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
-import db.LocalStorage;
 import db.User;
 
 public class BackgroundLocationReceiver extends BroadcastReceiver {
@@ -67,8 +64,9 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
 
     /**
      * Private method to determine if the app is in the foreground or not.
+     *
      * @param theApplicationContext is the context of the lifecycle.
-     *                              @return isForeground
+     * @return isForeground
      */
     private boolean isAppInForeground(Context theApplicationContext) {
         ActivityManager manager = (ActivityManager) theApplicationContext.getSystemService(Context.ACTIVITY_SERVICE);
@@ -81,7 +79,6 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
         }
         return false;
     }
-
 
 
 }

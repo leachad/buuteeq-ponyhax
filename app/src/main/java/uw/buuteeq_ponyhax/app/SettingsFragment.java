@@ -56,6 +56,7 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
      */
     private static final String RESET_PROMPT = "Your password can be reset with the link sent to: ";
     private static final String RESET_FAILED = "Unable to execute reset request. Please try again later.";
+    private static final String FREQUENCY_KEY = "frequencyValue";
     Button resetPassword;
     /**
      * Callback fields
@@ -83,11 +84,12 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putInt(FREQUENCY_KEY, frequencyBar.getProgress() + 1);
+
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -96,6 +98,11 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
         super.onCreateView(inflater, container, savedInstanceState);
         mStartCalendar = GregorianCalendar.getInstance();
         mEndCalendar = GregorianCalendar.getInstance();
+
+        if (savedInstanceState != null) {
+            int frequencyValue = savedInstanceState.getInt(FREQUENCY_KEY);
+            frequencyBar.setProgress(frequencyValue);
+        }
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
 
@@ -138,8 +145,9 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
         frequencyText = (TextView) getActivity().findViewById(R.id.gps_sampling_seconds);
         frequencyBar = (SeekBar) getActivity().findViewById(R.id.gps_sampling_seek_bar);
 
-        int currentGPSInterval = mCallBackActivity.getGPSPlotter().getInterval();
+        int currentGPSInterval = mCallBackActivity.getGPSPlotter().getInterval() / 60;
         changeIntervalText(currentGPSInterval);
+        frequencyBar.setProgress(currentGPSInterval);
         frequencyBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int frequency;
 

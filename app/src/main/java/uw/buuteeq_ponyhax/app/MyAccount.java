@@ -30,7 +30,6 @@ import java.util.concurrent.ExecutionException;
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
-
 import location_services.GPSPlotter;
 import webservices.WebDriver;
 
@@ -42,12 +41,12 @@ public class MyAccount extends ActionBarActivity
     private static final int DEFAULT_INTERVAL = 60;
     // Whether there is a Wi-Fi connection.
     public static boolean wifiConnected = false;
-    private boolean wifizInTheHouse = false;
     // Whether there is a mobile connection.
     public static boolean mobileConnected = false;
     public int publishCounter = 0;
     public UIUpdater fragment;
     protected List<Coordinate> coordinates;
+    private boolean wifizInTheHouse = false;
     private int mSelectedSampleRate = DEFAULT_INTERVAL;
     private GPSPlotter.ServiceType mServiceType = GPSPlotter.ServiceType.BACKGROUND;
     private GPSPlotter myGPSPlotter;
