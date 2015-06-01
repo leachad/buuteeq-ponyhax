@@ -20,9 +20,9 @@ import db.User;
 public class BackgroundLocationReceiver extends BroadcastReceiver {
     private static final String TAG = "BLocRec: ";
     private static final String ACTION = "background";
+    private static final int CURRENT_INTERVAL = 60;
+    //TODO Current interval needs to be pulled from prefs
     private CoordinateStorageDatabaseHelper mDbHelper;
-    private SharedPreferences mLocalStorage;
-    private boolean isAlive = true;
 
     public BackgroundLocationReceiver() {
 
@@ -34,29 +34,44 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
 
         if (intent.getAction().matches(ACTION)) {
             Log.w(TAG, "BLR Received-background");
-
             if (mDbHelper == null) {
                 mDbHelper = new CoordinateStorageDatabaseHelper(context);
             }
 
-
-            mLocalStorage = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-
-
             Location location = intent.getParcelableExtra(FusedLocationProviderApi.KEY_LOCATION_CHANGED);
-
             Log.w(TAG, "App is in foreground - " + Boolean.toString(isAppInForeground(context)));
-            //TODO do a not check here
+
             if (isAppInForeground(context)) {
                 GPSPlotter.getInstance().addLocationToView(location);
             } else {
-                Coordinate current = new Coordinate(location, intent.getStringExtra(User.USER_ID));
-                Log.w(TAG, current.toString());
-                mDbHelper.insertCoordinate(current);
+                insertCoordinateToDatabase(location, intent.getStringExtra(User.USER_ID));
             }
 
-        } else {
-            //TODO Something pertinent to a wake from boot operation
+        } else if (intent.getAction().matches(Intent.ACTION_BOOT_COMPLETED)) {
+            Log.w(TAG, "REBOOT!!!");
+            boolean isBackgroundServiceRunning;
+
+            SharedPreferences preferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+            if (preferences.contains(User.REQUESTING_LOCATION)) {
+                Log.w(TAG, "Asking shared prefs about background services");
+                isBackgroundServiceRunning = preferences.getBoolean(User.REQUESTING_LOCATION, false);
+
+                if (isBackgroundServiceRunning) {
+                    Log.w(TAG, "Restarting Background Service on Boot!");
+                    Location current = intent.getParcelableExtra(FusedLocationProviderApi.KEY_LOCATION_CHANGED);
+                    GPSPlotter gpsPlotter = new GPSPlotter(context, null);
+
+                    while (!gpsPlotter.hasApiClientConnectivity()) {
+                        Log.w(TAG, "Waiting for api connectivity");
+                    }
+
+                    gpsPlotter.beginManagedLocationRequests(CURRENT_INTERVAL, GPSPlotter.ServiceType.BACKGROUND);
+
+                } else {
+                    Log.w(TAG, "Background Service wasn't running...");
+                }
+            }
+
         }
 
 
@@ -78,6 +93,17 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
             }
         }
         return false;
+    }
+
+    /**
+     * Private helper method to add points to the Coordinate Storage Database Helper.
+     * @param theLocation is the newly obtained Location
+     *                    @param theUserID is used to construct the Coordinate Object.
+     */
+    private void insertCoordinateToDatabase(Location theLocation, String theUserID) {
+        Coordinate current = new Coordinate(theLocation, theUserID);
+        Log.w(TAG, current.toString());
+        mDbHelper.insertCoordinate(current);
     }
 
 

@@ -61,7 +61,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      * Returns an instance of the GPS Plotter.
      */
     public static GPSPlotter getInstance() {
-        return gpsPlotterInstance;
+      return gpsPlotterInstance;
     }
 
     /**
