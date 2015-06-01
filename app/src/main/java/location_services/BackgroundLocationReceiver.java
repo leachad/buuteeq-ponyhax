@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.util.Log;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
 
         if (intent.getAction().matches(ACTION)) {
             Log.w(TAG, "BLR Received-background");
+
             if (mDbHelper == null) {
                 mDbHelper = new CoordinateStorageDatabaseHelper(context);
             }
@@ -42,7 +44,9 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
             Log.w(TAG, "App is in foreground - " + Boolean.toString(isAppInForeground(context)));
 
             if (isAppInForeground(context)) {
-                GPSPlotter.getInstance().addLocationToView(location);
+                GPSPlotter.getInstance(context).updateParentActivity();
+                GPSPlotter.getInstance(context).addLocationToView(location);
+
             } else {
                 insertCoordinateToDatabase(location, intent.getStringExtra(User.USER_ID));
             }
@@ -51,6 +55,7 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
             Log.w(TAG, "REBOOT!!!");
             boolean isBackgroundServiceRunning;
 
+
             SharedPreferences preferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
             if (preferences.contains(User.REQUESTING_LOCATION)) {
                 Log.w(TAG, "Asking shared prefs about background services");
@@ -58,14 +63,12 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
 
                 if (isBackgroundServiceRunning) {
                     Log.w(TAG, "Restarting Background Service on Boot!");
-                    Location current = intent.getParcelableExtra(FusedLocationProviderApi.KEY_LOCATION_CHANGED);
-                    GPSPlotter gpsPlotter = new GPSPlotter(context, null);
+                    ComponentName componentName = new ComponentName(context.getPackageName(), BackgroundService.class.getName());
+                    ComponentName service = context.startService(new Intent().setComponent(componentName));
 
-                    while (!gpsPlotter.hasApiClientConnectivity()) {
-                        Log.w(TAG, "Waiting for api connectivity");
+                    if (service == null) {
+                        Log.w(TAG, "Could not start service");
                     }
-
-                    gpsPlotter.beginManagedLocationRequests(CURRENT_INTERVAL, GPSPlotter.ServiceType.BACKGROUND);
 
                 } else {
                     Log.w(TAG, "Background Service wasn't running...");

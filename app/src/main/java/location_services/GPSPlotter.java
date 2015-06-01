@@ -3,10 +3,8 @@ package location_services;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -37,22 +35,18 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      * Static fields used in both Background and Foreground Location Updates.
      */
     private static GPSPlotter gpsPlotterInstance;
+    private GoogleApiClient mGoogleApiClient;
+    private MyAccount mAccount;
     private static Location mCurrentLocation;
     private static CoordinateStorageDatabaseHelper mDbHelper;
     private static String mUserID;
-    private static MyAccount mParentActivity;
-    private static IntentFilter mIntentFilter;
-    private static LocalBroadcastManager mBroadcastManager;
     private static Context mContext;
-    private GoogleApiClient mGoogleApiClient;
     private int mIntentInterval;
-    private boolean mRequestingForegroundUpdates;
-    private boolean mRequestingBackgroundUpdates;
 
 
-    public GPSPlotter(Context theContext, MyAccount theParentActivity) {
+    private GPSPlotter(Context theContext) {
         initializeInstance();
-        initializeFields(theContext, theParentActivity);
+        initializeFields(theContext);
         buildApiClient();
         connectClient();
     }
@@ -60,8 +54,13 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     /**
      * Returns an instance of the GPS Plotter.
      */
-    public static GPSPlotter getInstance() {
-      return gpsPlotterInstance;
+    public static GPSPlotter getInstance(Context theContext) {
+
+        if (gpsPlotterInstance == null)
+            return new GPSPlotter(theContext);
+        else
+            return gpsPlotterInstance;
+
     }
 
     /**
@@ -118,11 +117,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      */
     private boolean googlePlayServicesInstalled() {
         int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mContext);
-        if (result != ConnectionResult.SUCCESS) {
-            return false;
-        } else {
-            return true;
-        }
+        return result == ConnectionResult.SUCCESS;
     }
 
     /**
@@ -138,17 +133,14 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      *
      * @param theContext is the application context.
      */
-    private void initializeFields(Context theContext, MyAccount theParentActivity) {
+    private void initializeFields(Context theContext) {
         mGoogleApiClient = null;
         mCurrentLocation = null;
         mDbHelper = new CoordinateStorageDatabaseHelper(theContext);
         mUserID = LocalStorage.getUserID(theContext);
         mContext = theContext;
-        mParentActivity = theParentActivity;
+        mAccount = null;
         mIntentInterval = DEFAULT_INTENT_INTERVAL;
-        mRequestingForegroundUpdates = false;
-        mRequestingBackgroundUpdates = false;
-        mBroadcastManager = LocalBroadcastManager.getInstance(mContext);
     }
 
     /**
@@ -193,10 +185,10 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         mCurrentLocation = location;
         Coordinate coord = new Coordinate(mCurrentLocation, mUserID);
         mDbHelper.insertCoordinate(coord);
-        mParentActivity.addCoordinateToList(coord);
-        List<Coordinate> list = mParentActivity.getList();
+        mAccount.addCoordinateToList(coord);
+        List<Coordinate> list = mAccount.getList();
 //        list.add(new Coordinate(mCurrentLocation, mUserID));
-        mParentActivity.fragment.update(mCurrentLocation, list);
+        mAccount.fragment.update(mCurrentLocation, list);
     }
 
     /**
@@ -229,14 +221,16 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      *
      * @param requestedInterval is the polling interval as requested by the user.
      */
-    public void beginManagedLocationRequests(final int requestedInterval, ServiceType serviceType) {
+    public void beginManagedLocationRequests(final int requestedInterval,
+                                             ServiceType serviceType, MyAccount theAccount) {
         mIntentInterval = requestedInterval;
 
+        if (mAccount == null)
+            mAccount = theAccount;
+
         if (googlePlayServicesInstalled() && serviceType.equals(ServiceType.FOREGROUND)) {
-            mRequestingForegroundUpdates = true;
             startForegroundUpdates();
         } else if (googlePlayServicesInstalled() && serviceType.equals(ServiceType.BACKGROUND)) {
-            mRequestingBackgroundUpdates = true;
             LocalStorage.putLocationRequestStatus(true, mContext);
             startBackgroundUpdates();
 
@@ -249,26 +243,22 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      * Public method to end the managed Location Requests.
      */
     public void endManagedLocationRequests(final int requestedInterval, ServiceType serviceType) {
-
+        mIntentInterval = requestedInterval;
         if (serviceType.equals(ServiceType.FOREGROUND)) {
             endForegroundUpdates();
-            mRequestingForegroundUpdates = false;
         } else if (serviceType.equals(ServiceType.BACKGROUND)) {
             endBackgroundUpdates();
-            mRequestingBackgroundUpdates = false;
             LocalStorage.putLocationRequestStatus(false, mContext);
 
         }
     }
 
-    public void changeRequestIntervals(int theInterval, ServiceType theserviceType) {
+    public void changeRequestIntervals(int theInterval, ServiceType theServiceType) {
         mIntentInterval = theInterval;
-        if (theserviceType.equals(ServiceType.FOREGROUND)) {
-            mRequestingForegroundUpdates = true;
+        if (theServiceType.equals(ServiceType.FOREGROUND)) {
             endForegroundUpdates();
             startForegroundUpdates();
-        } else if (theserviceType.equals(ServiceType.BACKGROUND)) {
-            mRequestingBackgroundUpdates = true;
+        } else if (theServiceType.equals(ServiceType.BACKGROUND)) {
             endForegroundUpdates();
             startForegroundUpdates();
         }
@@ -294,6 +284,13 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      */
     public boolean isRunningLocationUpdates() {
         return LocalStorage.getLocationRequestStatus(mContext);
+    }
+
+    /**
+     * Public method to update the Parent View if it is currently null.
+     */
+    public void updateParentActivity() {
+        mAccount = MyAccount.getInstance();
     }
 
     @Override

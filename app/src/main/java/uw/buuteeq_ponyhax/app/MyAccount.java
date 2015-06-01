@@ -5,7 +5,6 @@
 package uw.buuteeq_ponyhax.app;
 
 import android.content.Context;
-import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -39,10 +38,12 @@ public class MyAccount extends ActionBarActivity
     public static final String TAG = "Basic Network Demo";
     public static final String API_ERROR = "Try again soon. Api client currently disconnected.";
     private static final int DEFAULT_INTERVAL = 60;
+    private static final int PUBLISH_INTERVAL = 5;
     // Whether there is a Wi-Fi connection.
     public static boolean wifiConnected = false;
     // Whether there is a mobile connection.
     public static boolean mobileConnected = false;
+    private static MyAccount mAccountActivity;
     public int publishCounter = 0;
     public UIUpdater fragment;
     protected List<Coordinate> coordinates;
@@ -50,15 +51,11 @@ public class MyAccount extends ActionBarActivity
     private int mSelectedSampleRate = DEFAULT_INTERVAL;
     private GPSPlotter.ServiceType mServiceType = GPSPlotter.ServiceType.BACKGROUND;
     private GPSPlotter myGPSPlotter;
-    /**
-     * Used to store the last screen title.
-     */
-    private CharSequence mTitle;
     private RadioGroup mRadioGroup;
     private RadioButton mStartButton;
     private RadioButton mStopButton;
-    private Location mLastLocation;
     private CoordinateStorageDatabaseHelper coordHelper;
+    private CharSequence mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +68,7 @@ public class MyAccount extends ActionBarActivity
         if (coordinates == null) coordinates = new ArrayList<>();
         coordHelper = new CoordinateStorageDatabaseHelper(getApplicationContext());
         loadCoordinates();
-
+        initializeInstance();
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
@@ -86,62 +83,75 @@ public class MyAccount extends ActionBarActivity
 
         // network stuff
         checkNetworkConnection();
-        //checkPowerConnection();
     }
 
-    private void checkStartButton() {
+    private void initializeInstance() {
+        mAccountActivity = this;
+    }
+
+    private void selectStartButton() {
         mRadioGroup.clearCheck();
         mRadioGroup.check(mStartButton.getId());
     }
 
-    private void checkStopButton() {
+    private void selectStopButton() {
         mRadioGroup.clearCheck();
         mRadioGroup.check(mStopButton.getId());
     }
 
-    private void startCheckedAction(GPSPlotter thePlotter) {
+    /**
+     * $ -- START & STOP ACTIONS DEPENDENT UPON APPLICATION CONDITIONS -- $
+     * @param thePlotter is a reference to the GPSPlotter for initiating
+     *                   specific tracking actions.
+     */
+    private void doStartSelectedAction(GPSPlotter thePlotter) {
         if (thePlotter.hasApiClientConnectivity() && mStartButton.isChecked()) {
-            thePlotter.beginManagedLocationRequests(mSelectedSampleRate, mServiceType);
+            thePlotter.beginManagedLocationRequests(mSelectedSampleRate, mServiceType, this);
+
         } else if (thePlotter.hasApiClientConnectivity() && !mStartButton.isChecked()
                 || !thePlotter.hasApiClientConnectivity() && !mStartButton.isChecked()) {
-            checkStartButton();
+            selectStartButton();
             Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
+
         } else if (!thePlotter.hasApiClientConnectivity() && mStartButton.isChecked()) {
-            checkStopButton();
+            selectStopButton();
             Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
+
         }
     }
 
-    private void stopCheckedAction(GPSPlotter thePlotter) {
+    private void doStopSelectedAction(GPSPlotter thePlotter) {
         if (thePlotter.hasApiClientConnectivity() && mStopButton.isChecked()) {
             thePlotter.endManagedLocationRequests(mSelectedSampleRate, mServiceType);
         } else if (thePlotter.hasApiClientConnectivity() && !mStopButton.isChecked()
                 || !thePlotter.hasApiClientConnectivity() && !mStopButton.isChecked()) {
-            checkStartButton();
+            selectStartButton();
             Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
         } else if (!thePlotter.hasApiClientConnectivity() && mStopButton.isChecked()) {
-            checkStopButton();
+            selectStopButton();
             Toast.makeText(getApplicationContext(), API_ERROR, Toast.LENGTH_SHORT).show();
         }
     }
 
     /**
-     * Private method to initialize the radio buttons and their associated listeners.
+     *
+     * $ -- INITIALIZE THE TRACKING BUTTONS -- START & STOP -- $
+     *
      */
     private void initializeButtons() {
-        myGPSPlotter = new GPSPlotter(getApplicationContext(), this);
+        myGPSPlotter = GPSPlotter.getInstance(getApplicationContext());
         mStartButton = (RadioButton) findViewById(R.id.startButton);
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startCheckedAction(myGPSPlotter);
+                doStartSelectedAction(myGPSPlotter);
             }
         });
         mStopButton = (RadioButton) findViewById(R.id.stopButton);
         mStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopCheckedAction(myGPSPlotter);
+                doStopSelectedAction(myGPSPlotter);
             }
         });
 
@@ -149,12 +159,44 @@ public class MyAccount extends ActionBarActivity
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupTracking);
 
         if (myGPSPlotter.isRunningLocationUpdates()) {
-            checkStartButton();
+            selectStartButton();
         } else {
-            checkStopButton();
+            selectStopButton();
         }
 
-        setTitle("");
+        setTitle(mTitle);
+    }
+
+    /**
+     *
+     *
+     * $ -- EVALUATING NETWORK CONNECTIONS -- $
+     * Check whether the device is connected, and if so, whether the connection
+     * is wifi or mobile (it could be something else).
+     */
+    private boolean checkNetworkConnection() {
+
+        ConnectivityManager connMgr =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
+
+        if (activeInfo != null && activeInfo.isConnected()) {
+            wifiConnected = activeInfo.getType() == ConnectivityManager.TYPE_WIFI;
+            mobileConnected = activeInfo.getType() == ConnectivityManager.TYPE_MOBILE;
+            if (wifiConnected) {
+                wifizInTheHouse = true;
+                Log.i(TAG, "@@The active connection is wifi.");
+            } else if (mobileConnected) {
+                Log.i(TAG, "@@The active connection is mobile.");
+                wifizInTheHouse = false;
+            }
+        } else {
+            Log.i(TAG, "@@No wireless or mobile connection.");
+            wifizInTheHouse = false;
+        }
+        return wifizInTheHouse;
+
     }
 
 
@@ -274,6 +316,14 @@ public class MyAccount extends ActionBarActivity
     }
 
     /**
+     * Public method to return a reference of myAccount to the
+     * GPS Plotter class for updating points on the maps.
+     */
+    public static MyAccount getInstance() {
+        return mAccountActivity;
+    }
+
+    /**
      * This method is meant to grab the remote coordinates so that a local list can be kept and save
      * data usage.
      */
@@ -309,71 +359,13 @@ public class MyAccount extends ActionBarActivity
     public void addCoordinateToList(Coordinate coord) {
         coordinates.add(coord);
 
-        if ((publishCounter % 5 == 0) && checkNetworkConnection()) {
+        if (publishCounter % PUBLISH_INTERVAL == 0 &&  publishCounter != 0 && checkNetworkConnection()) {
             coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
             publishCounter = 0;
             Log.w("PUBLISH: ", Integer.toString(publishCounter));
         }
     }
 
-    /**
-     * @author Eduard
-     * <p/>
-     * Check whether the device is connected, and if so, whether the connection
-     * is wifi or mobile (it could be something else).
-     */
-    private boolean checkNetworkConnection() {
-
-        ConnectivityManager connMgr =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
-
-        if (activeInfo != null && activeInfo.isConnected()) {
-            wifiConnected = activeInfo.getType() == ConnectivityManager.TYPE_WIFI;
-            mobileConnected = activeInfo.getType() == ConnectivityManager.TYPE_MOBILE;
-            if (wifiConnected) {
-                wifizInTheHouse = true;
-                Log.i(TAG, "@@The active connection is wifi.");
-            } else if (mobileConnected) {
-                Log.i(TAG, "@@The active connection is mobile.");
-                wifizInTheHouse = false;
-            }
-        } else {
-            Log.i(TAG, "@@No wireless or mobile connection.");
-            wifizInTheHouse = false;
-        }
-        return wifizInTheHouse;
-
-    }
-
-//    /**
-//     * @author Eduard Prokhor
-//     * @author Google api
-//     *
-//     * This checks the power connection.
-//     */
-//    private void checkPowerConnection(){
-//
-//        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-//        Intent batteryStatus = getApplicationContext().registerReceiver(null, ifilter);
-//
-//        // Are we charging / charged?
-//        int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-//        boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-//                status == BatteryManager.BATTERY_STATUS_FULL;
-//
-//        if(isCharging) Log.i("IsThePhoneBeingCharged?", "Heck Yeah");
-//
-//        // How are we charging?
-//        int chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
-//        boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
-//        boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
-//
-//        if(usbCharge) Log.i("YOu are hooked up by a ", " @@@@ Damn usb @@@");
-//        if(acCharge) Log.i("You are hooked up by a ", " @@@ the wall");
-//
-//    }
 
 
     @Override
