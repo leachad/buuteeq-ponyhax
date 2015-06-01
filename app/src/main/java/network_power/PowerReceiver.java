@@ -1,4 +1,4 @@
-package NetworkAndPower;
+package network_power;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

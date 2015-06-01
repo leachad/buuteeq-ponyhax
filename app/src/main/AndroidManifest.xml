@@ -63,10 +63,6 @@
             android:value="@string/google_maps_key" />
 
 
-        <service
-            android:name="location_services.GPSService"
-            android:exported="false" />
-
         <receiver
             android:name="location_services.BackgroundLocationReceiver"
             android:enabled="true">
@@ -84,7 +80,7 @@
         </receiver>
 
         <receiver
-        android:name="NetworkAndPower.PowerReceiver"
+        android:name="network_power.PowerReceiver"
         android:enabled="true"
         android:exported="true" >
         <intent-filter>

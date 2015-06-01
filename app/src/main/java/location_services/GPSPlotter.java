@@ -58,13 +58,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     }
 
     /**
-     * Returns an instance of the GPS Plotter.
-     */
-    public static GPSPlotter getInstance() {
-        return gpsPlotterInstance;
-    }
-
-    /**
      * Private method to start the Location Updates using the FusedLocation API in .the foreground.
      */
     private void startForegroundUpdates() {
@@ -294,7 +287,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         return LocalStorage.getLocationRequestStatus(mContext);
     }
 
-<<<<<<< HEAD
     /**
      * Returns an instance of the GPS Plotter.
      *
@@ -303,8 +295,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         return gpsPlotterInstance;
     }
 
-=======
->>>>>>> 3f966677aab1d9e1429e1feb2f0ed65985bb948d
+
     @Override
     public void onConnected(Bundle bundle) {
         Log.w(TAG, "Connected. Ready to Go!");
