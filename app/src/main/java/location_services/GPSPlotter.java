@@ -191,9 +191,9 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     public void addLocationToView(Location location) {
         Log.w(TAG, "Location obtained is: " + location.toString());
         mCurrentLocation = location;
-        mDbHelper.insertCoordinate(new Coordinate(mCurrentLocation, mUserID));
-
-        mParentActivity.addCoordinateToList(new Coordinate(location, mUserID));
+        Coordinate coord = new Coordinate(mCurrentLocation, mUserID);
+        mDbHelper.insertCoordinate(coord);
+        mParentActivity.addCoordinateToList(coord);
         List<Coordinate> list = mParentActivity.getList();
 //        list.add(new Coordinate(mCurrentLocation, mUserID));
         mParentActivity.fragment.update(mCurrentLocation, list);
