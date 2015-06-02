@@ -131,6 +131,7 @@
     <!--
     Range Picker fragment Values
     -->
+    <string name="foregroundChoiceText">Enable Background Updates</string>
     <string name="push_points_prompt1">Upload</string>
     <string name="push_points_prompt2">Locally Stored Points</string>
     <string name="general_options_string">General Options: </string>

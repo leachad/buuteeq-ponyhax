@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -59,6 +61,7 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
     private static final String FREQUENCY_KEY = "frequencyValue";
     private Button resetPassword;
     private Button uploadButton;
+    private CheckBox backgroundCheckbox;
     /**
      * Callback fields
      */
@@ -153,6 +156,20 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
             }
         });
         setUploadButtonText();
+
+        //setup background updates checkbox
+        backgroundCheckbox = (CheckBox) getActivity().findViewById(R.id.foregroundCheckbox);
+        backgroundCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+//                    mCallBackActivity.getGPSPlotter().enableBackgroundUpdates();
+                } else {
+//                    mCallBackActivity.getGPSPlotter().disableBackgroundUpdates();
+                }
+            }
+        });
+
         //Grab the current gps frequency value
         frequencyText = (TextView) getActivity().findViewById(R.id.gps_sampling_seconds);
         frequencyBar = (SeekBar) getActivity().findViewById(R.id.gps_sampling_seek_bar);
