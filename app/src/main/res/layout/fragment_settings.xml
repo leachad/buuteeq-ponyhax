@@ -14,151 +14,219 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
+    <TextView
+        android:id="@+id/textView3"
+        style="@style/restrictedTextTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="@string/title_preferences"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <LinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:baselineAligned="false"
-        android:gravity="center"
         android:orientation="vertical"
-        tools:context="uw.buuteeq_ponyhax.app.MyAccount$PlaceholderFragment">
-
-        <Button
-            android:id="@+id/resetPasswordSettings"
-            style="@style/buttonTheme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/reset_password" />
-
+        tools:context="uw.buuteeq_ponyhax.app.MyAccount$PlaceholderFragment"
+        android:weightSum="1">
 
         <TextView
             android:id="@+id/dateRangeText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:gravity="center"
-            android:text="@string/selectDateRange"
-            android:theme="@style/restrictedTextTheme" />
-
-        <LinearLayout
-            android:id="@+id/startRangeContainer"
+            style="@style/editTextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical">
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/selectDateRange" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight=".5"
+            android:weightSum="1.0"
+            android:background="@drawable/sectional_background"
+            android:padding="10dp"
+            android:layout_marginBottom="10dp"
+            >
 
             <TextView
-                style="@style/AppTheme"
-                android:layout_width="wrap_content"
+                style="@style/editTextTheme"
+                android:layout_margin="2dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:text="@string/startOfRange"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:layout_weight=".1
+                " />
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:id="@+id/startRangeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:orientation="horizontal"
+                android:weightSum="1.0"
+                android:padding="2dp"
+
+                android:gravity="center"
+                android:layout_weight=".4">
+
+
 
                 <TextView
                     android:id="@+id/startDateField"
                     style="@style/textViewThemeLight"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:gravity="center"
+                    android:layout_weight="0.40"
                     android:textSize="16sp" />
-
-                <Space
-                    android:layout_width="16dp"
-                    android:layout_height="match_parent" />
 
                 <TextView
                     android:id="@+id/startTimeField"
                     style="@style/textViewThemeLight"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:text="@string/startDateText"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:gravity="center"
+                    android:layout_weight="0.40"
                     android:textSize="16sp" />
 
             </LinearLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/endRangeContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical">
-
             <TextView
-                style="@style/AppTheme"
+                style="@style/editTextTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:gravity="left"
                 android:text="@string/endOfRange"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:layout_margin="2dp"
+                android:layout_weight="0.2"/>
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:id="@+id/endRangeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:orientation="horizontal"
+                android:weightSum="1.0"
+                android:padding="2dp"
+                android:layout_weight="0.4"
+                android:gravity="center">
+
 
                 <TextView
                     android:id="@+id/endDateField"
                     style="@style/textViewThemeLight"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:gravity="center"
+                    android:layout_weight="0.40"
                     android:textSize="16sp" />
-
-                <Space
-                    android:layout_width="16dp"
-                    android:layout_height="match_parent" />
 
                 <TextView
                     android:id="@+id/endTimeField"
                     style="@style/textViewThemeLight"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:text="@string/endDateText"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:layout_weight="0.40" />
             </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
+
+
+        <TextView
+            android:id="@+id/samplingText"
+            style="@style/editTextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/gps_sampling_text" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight=".5"
+            android:weightSum="1.0"
+            android:background="@drawable/sectional_background"
+            android:padding="10dp"
+            android:layout_marginBottom="10dp"
+            >
+
+            <TextView
+                android:id="@+id/gps_sampling_seconds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/every_x_minutes"
+                android:theme="@style/restrictedTextTheme" />
+
+            <SeekBar
+                android:id="@+id/gps_sampling_seek_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:progressBackgroundTint="@color/material_deep_teal_500"
+                android:max="59"
+                android:secondaryProgress="@color/material_deep_teal_500"
+                android:progressTint="@color/material_deep_teal_500" />
+
         </LinearLayout>
 
         <TextView
-            android:id="@+id/samplingRateText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:gravity="center"
-            android:text="@string/gps_sampling_text"
-            android:theme="@style/restrictedTextTheme" />
-
-        <TextView
-            android:id="@+id/gps_sampling_seconds"
+            android:id="@+id/optionsTextTitle"
+            style="@style/editTextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/every_x_minutes"
-            android:theme="@style/restrictedTextTheme" />
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/general_options_string" />
 
-        <SeekBar
-            android:id="@+id/gps_sampling_seek_bar"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:max="59" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight=".5"
+            android:weightSum="1.0"
+            android:background="@drawable/sectional_background"
+            android:padding="10dp"
+            android:layout_marginBottom="10dp"
+            >
+
+
+            <Button
+                android:id="@+id/resetPasswordSettings"
+                style="@style/buttonTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/reset_password"
+                />
+
+
+            <Button
+                android:id="@+id/pushToRemoteButton"
+                style="@style/buttonTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/push_points_prompt1"
+                />
+
+        </LinearLayout>
+
+
     </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
 

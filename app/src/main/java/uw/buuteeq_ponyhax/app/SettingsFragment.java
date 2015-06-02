@@ -57,7 +57,8 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
     private static final String RESET_PROMPT = "Your password can be reset with the link sent to: ";
     private static final String RESET_FAILED = "Unable to execute reset request. Please try again later.";
     private static final String FREQUENCY_KEY = "frequencyValue";
-    Button resetPassword;
+    private Button resetPassword;
+    private Button uploadButton;
     /**
      * Callback fields
      */
@@ -141,6 +142,17 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
         resetPassword = (Button) getActivity().findViewById(R.id.resetPasswordSettings);
         resetPassword.setOnClickListener(new ResetPasswordListener());
 
+        //setup push updates to remote database
+        uploadButton = (Button) getActivity().findViewById(R.id.pushToRemoteButton);
+        uploadButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                mCallBackActivity.pushUpdates();
+                setUploadButtonText();
+            }
+        });
+        setUploadButtonText();
         //Grab the current gps frequency value
         frequencyText = (TextView) getActivity().findViewById(R.id.gps_sampling_seconds);
         frequencyBar = (SeekBar) getActivity().findViewById(R.id.gps_sampling_seek_bar);
@@ -189,6 +201,10 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
         } else {
             frequencyText.setText("Every " + inputSeconds + " minute");
         }
+    }
+
+    private void setUploadButtonText() {
+        uploadButton.setText(getResources().getString(R.string.push_points_prompt1) + " " + mCallBackActivity.getNumLocallyStoredPoints() + " " + getResources().getString(R.string.push_points_prompt2));
     }
 
     /**
@@ -275,7 +291,9 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
      */
     @Override
     public void update(Location currentLocation, List<Coordinate> locations) {
-        //do nothing method.
+        if (currentLocation != null) {
+            setUploadButtonText();
+        }
     }
 
     /**

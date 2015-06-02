@@ -375,7 +375,18 @@ public class MyAccount extends ActionBarActivity
     }
 
     @Override
+    public int getNumLocallyStoredPoints() {
+        return coordHelper.size();
+    }
+
+    @Override
     public GPSPlotter getGPSPlotter() {
         return myGPSPlotter;
+    }
+
+    @Override
+    public void pushUpdates() {
+        coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
+        publishCounter = 0;
     }
 }

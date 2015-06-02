@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:orientation="horizontal"
+            style="@style/AppTheme"
             android:weightSum="1.0">
 
             <RadioGroup

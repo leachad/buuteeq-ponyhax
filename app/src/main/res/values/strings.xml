@@ -131,17 +131,21 @@
     <!--
     Range Picker fragment Values
     -->
+    <string name="push_points_prompt1">Upload</string>
+    <string name="push_points_prompt2">Locally Stored Points</string>
+    <string name="general_options_string">General Options: </string>
+    <string name="title_preferences">Preferences</string>
     <string name="startDateText">Modify Start Time</string>
-    <string name="selectDateRange">Select Date Range</string>
+    <string name="selectDateRange">Select Date Range:</string>
     <string name="endDateText">Modify End Time</string>
-    <string name="startOfRange">START OF RANGE</string>
-    <string name="endOfRange">END OF RANGE</string>
+    <string name="startOfRange">From:</string>
+    <string name="endOfRange">  To:</string>
     <string name="confirmRange">@android:string/ok</string>
     <string name="cancelRange">@android:string/cancel</string>
     <string name="queryDateRange">Query Date Range</string>
     <string name="storeChosenTimes">SAVE</string>
     <string name="cancelChosenTimes">@android:string/cancel</string>
-    <string name="gps_sampling_text">Set GPS sampling frequency</string>
+    <string name="gps_sampling_text">GPS Sampling Frequency: </string>
     <string name="every_x_minutes">Every x minutes</string>
 
 

@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -117,6 +118,10 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
         wipeTable();
 
 
+    }
+
+    public int size() {
+        return (int) DatabaseUtils.queryNumEntries(getReadableDatabase(), TABLE_NAME);
     }
 
 

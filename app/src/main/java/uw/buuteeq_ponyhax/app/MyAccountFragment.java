@@ -205,6 +205,10 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
         List<Coordinate> getList();
 
         GPSPlotter getGPSPlotter();
+
+        void pushUpdates();
+
+        int getNumLocallyStoredPoints();
     }
 
     /**
