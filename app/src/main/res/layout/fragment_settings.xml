@@ -226,7 +226,10 @@
                 android:layout_height="wrap_content"
                 style="@style/buttonTheme"
                 android:id="@+id/foregroundCheckbox"
-                android:text="@string/foregroundChoiceText"/>
+                android:text="@string/foregroundChoiceText"
+                android:enabled="true"
+                android:checked="true"
+                android:buttonTint="@color/material_deep_teal_500" />
 
         </LinearLayout>
 

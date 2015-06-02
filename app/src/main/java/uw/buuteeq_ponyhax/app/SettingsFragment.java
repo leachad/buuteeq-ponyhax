@@ -157,7 +157,7 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
         });
         setUploadButtonText();
 
-        //setup background updates checkbox
+        //setup background updates checkbox -- still some stuff to do here
         backgroundCheckbox = (CheckBox) getActivity().findViewById(R.id.foregroundCheckbox);
         backgroundCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -169,6 +169,7 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
                 }
             }
         });
+        backgroundCheckbox.setChecked(mCallBackActivity.getGPSPlotter().isRunningLocationUpdates());
 
         //Grab the current gps frequency value
         frequencyText = (TextView) getActivity().findViewById(R.id.gps_sampling_seconds);

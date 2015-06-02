@@ -60,7 +60,7 @@
 
     <string name="title_section1">My Map</string>
     <string name="title_section2">Overview</string>
-    <string name="title_section3">My Settings</string>
+    <string name="title_section3">Preferences</string>
     <string name="title_section4">Logout</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

@@ -64,7 +64,7 @@ public class MyAccount extends ActionBarActivity
 
         NavigationDrawerFragment mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
+//        mTitle = getTitle();
         if (coordinates == null) coordinates = new ArrayList<>();
         coordHelper = new CoordinateStorageDatabaseHelper(getApplicationContext());
         loadCoordinates();
@@ -164,7 +164,7 @@ public class MyAccount extends ActionBarActivity
             selectStopButton();
         }
 
-        setTitle(mTitle);
+//        setTitle(mTitle);
     }
 
     /**
