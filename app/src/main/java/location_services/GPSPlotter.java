@@ -35,6 +35,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      * Static fields used in both Background and Foreground Location Updates.
      */
     private static GPSPlotter gpsPlotterInstance;
+    private ServiceType mServiceType;
     private GoogleApiClient mGoogleApiClient;
     private MyAccount mAccount;
     private static Location mCurrentLocation;
@@ -178,6 +179,21 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         Log.w(TAG, "Building location request");
         return locationRequest;
+    }
+
+    /**
+     * Private method used to set the current service type and location requests
+     * appropriately. Evaluates the parameter again the current service type.
+     *
+     * @param theServiceType is the currently requested service type.
+     */
+    public void modifyServiceType(ServiceType theServiceType) {
+        if (!theServiceType.equals(mServiceType) && isRunningLocationUpdates()) {
+            mServiceType = theServiceType;
+            beginManagedLocationRequests(mIntentInterval, theServiceType, MyAccount.getInstance());
+        } else {
+            mServiceType = theServiceType;
+        }
     }
 
     /**

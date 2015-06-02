@@ -366,12 +366,6 @@ public class MyAccount extends ActionBarActivity
         }
     }
 
-    public void setServiceType(GPSPlotter.ServiceType theServiceType) {
-        mServiceType = theServiceType;
-    }
-
-
-
     @Override
     public List<Coordinate> getList() {
         Log.d("GETLIST CALL", "list returned length" + coordinates.size());
