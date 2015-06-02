@@ -35,26 +35,37 @@ import webservices.WebDriver;
 public class MyAccount extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, MyAccountFragment.UIListUpdater {
 
+    /**
+     * Static final variables used for logging, conversions, and counters.
+     */
     public static final String TAG = "Basic Network Demo";
     public static final String API_ERROR = "Try again soon. Api client currently disconnected.";
     private static final int DEFAULT_INTERVAL = 60;
     private static final int PUBLISH_INTERVAL = 5;
-    // Whether there is a Wi-Fi connection.
-    public static boolean wifiConnected = false;
-    // Whether there is a mobile connection.
+
+    /**
+     * Booleans used for determining the state of the network.
+     */
+    public static boolean isWifiConnected = false;
     public static boolean mobileConnected = false;
-    private static MyAccount mAccountActivity;
-    public int publishCounter = 0;
-    public UIUpdater fragment;
-    protected List<Coordinate> coordinates;
     private boolean wifizInTheHouse = false;
-    private int mSelectedSampleRate = DEFAULT_INTERVAL;
+
+    /**
+     * References to other classes and enums used for properly propagating the view.
+     */
+    private static MyAccount mAccountActivity;
+    private CoordinateStorageDatabaseHelper coordHelper;
+    public UIUpdater fragment;
     private GPSPlotter.ServiceType mServiceType = GPSPlotter.ServiceType.FOREGROUND;
     private GPSPlotter myGPSPlotter;
+
+    public int publishCounter = 0;
+    protected List<Coordinate> coordinates;
+    private int mSelectedSampleRate = DEFAULT_INTERVAL;
     private RadioGroup mRadioGroup;
     private RadioButton mStartButton;
     private RadioButton mStopButton;
-    private CoordinateStorageDatabaseHelper coordHelper;
+
     private CharSequence mTitle;
 
     @Override
@@ -76,8 +87,6 @@ public class MyAccount extends ActionBarActivity
 
         //START location manager setup
         LocalStorage.putDBFlag(true, getApplicationContext());
-
-        // mSelectedSampleRate = some_var -- TODO This variable will be set by the power and network management classes
 
         initializeButtons();
 
@@ -182,9 +191,9 @@ public class MyAccount extends ActionBarActivity
         NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
 
         if (activeInfo != null && activeInfo.isConnected()) {
-            wifiConnected = activeInfo.getType() == ConnectivityManager.TYPE_WIFI;
+            isWifiConnected = activeInfo.getType() == ConnectivityManager.TYPE_WIFI;
             mobileConnected = activeInfo.getType() == ConnectivityManager.TYPE_MOBILE;
-            if (wifiConnected) {
+            if (isWifiConnected) {
                 wifizInTheHouse = true;
                 Log.i(TAG, "@@The active connection is wifi.");
             } else if (mobileConnected) {

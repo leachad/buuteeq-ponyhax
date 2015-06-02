@@ -16,8 +16,11 @@ import java.util.List;
 import db.Coordinate;
 
 /**
- * Created by Andrew on 4/28/2015.
- * Enums used to maintain global scope for JSON evaluations.
+ * This class is used to parse JSON results returned from web requests to the web services
+ * used for this application.
+ * @author leachad
+ * @version 4.28.15
+ *
  */
 public final class JsonBuilder extends PhpBuilder {
     public static final String VAL_SUCCESS = "success";
