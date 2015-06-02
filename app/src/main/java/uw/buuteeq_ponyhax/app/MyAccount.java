@@ -49,7 +49,7 @@ public class MyAccount extends ActionBarActivity
     protected List<Coordinate> coordinates;
     private boolean wifizInTheHouse = false;
     private int mSelectedSampleRate = DEFAULT_INTERVAL;
-    private GPSPlotter.ServiceType mServiceType = GPSPlotter.ServiceType.BACKGROUND;
+    private GPSPlotter.ServiceType mServiceType = GPSPlotter.ServiceType.FOREGROUND;
     private GPSPlotter myGPSPlotter;
     private RadioGroup mRadioGroup;
     private RadioButton mStartButton;
@@ -366,6 +366,10 @@ public class MyAccount extends ActionBarActivity
         }
     }
 
+    public void setServiceType(GPSPlotter.ServiceType theServiceType) {
+        mServiceType = theServiceType;
+    }
+
 
 
     @Override
@@ -382,6 +386,11 @@ public class MyAccount extends ActionBarActivity
     @Override
     public GPSPlotter getGPSPlotter() {
         return myGPSPlotter;
+    }
+
+    @Override
+    public MyAccount getMyAccount() {
+        return getInstance();
     }
 
     @Override

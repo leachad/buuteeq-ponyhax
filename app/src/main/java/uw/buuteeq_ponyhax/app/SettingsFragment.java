@@ -163,9 +163,9 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-//                    mCallBackActivity.getGPSPlotter().enableBackgroundUpdates();
+                    mCallBackActivity.getMyAccount().setServiceType(GPSPlotter.ServiceType.BACKGROUND);
                 } else {
-//                    mCallBackActivity.getGPSPlotter().disableBackgroundUpdates();
+                    mCallBackActivity.getMyAccount().setServiceType(GPSPlotter.ServiceType.FOREGROUND);
                 }
             }
         });
