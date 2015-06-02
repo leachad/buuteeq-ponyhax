@@ -42,6 +42,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     private static String mUserID;
     private static Context mContext;
     private int mIntentInterval;
+    private boolean startTracking;
 
 
     private GPSPlotter(Context theContext) {
@@ -69,6 +70,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     private void startForegroundUpdates() {
         Log.w(TAG, "Starting foreground updates");
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), getLocationListener());
+        startTracking = true;
     }
 
     /**
@@ -77,6 +79,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     private void startBackgroundUpdates() {
         Log.w(TAG, "Starting background updates");
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), buildPendingIntent());
+        startTracking = true;
     }
 
     /**
@@ -85,6 +88,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     private void endForegroundUpdates() {
         Log.w(TAG, "Ending foreground updates");
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getLocationListener());
+        startTracking = false;
     }
 
     /**
@@ -93,6 +97,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     private void endBackgroundUpdates() {
         Log.w(TAG, "Ending background updates");
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, buildPendingIntent());
+        startTracking = false;
     }
 
     /**
@@ -181,14 +186,16 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      * @param location is the current obtained location.
      */
     public void addLocationToView(Location location) {
-        Log.w(TAG, "Location obtained is: " + location.toString());
-        mCurrentLocation = location;
-        Coordinate coord = new Coordinate(mCurrentLocation, mUserID);
-        mDbHelper.insertCoordinate(coord);
-        mAccount.addCoordinateToList(coord);
-        List<Coordinate> list = mAccount.getList();
+        if (location != null) {
+            Log.w(TAG, "Location obtained is: " + location.toString());
+            mCurrentLocation = location;
+            Coordinate coord = new Coordinate(mCurrentLocation, mUserID);
+            mDbHelper.insertCoordinate(coord);
+            mAccount.addCoordinateToList(coord);
+            List<Coordinate> list = mAccount.getList();
 //        list.add(new Coordinate(mCurrentLocation, mUserID));
-        mAccount.fragment.update(mCurrentLocation, list);
+            mAccount.fragment.update(mCurrentLocation, list);
+        }
     }
 
     /**
@@ -257,10 +264,14 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         mIntentInterval = theInterval;
         if (theServiceType.equals(ServiceType.FOREGROUND)) {
             endForegroundUpdates();
-            startForegroundUpdates();
+            if (startTracking) {
+                startForegroundUpdates();
+            }
         } else if (theServiceType.equals(ServiceType.BACKGROUND)) {
             endForegroundUpdates();
-            startForegroundUpdates();
+            if (startTracking) {
+                startBackgroundUpdates();
+            }
         }
     }
 

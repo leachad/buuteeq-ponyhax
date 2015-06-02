@@ -38,7 +38,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight=".5"
-                    android:text="@string/startButtonText" />
+                    android:text="@string/startButtonText"
+                    android:checked="false" />
 
                 <RadioButton
                     android:id="@+id/stopButton"
@@ -46,7 +47,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight=".5"
-                    android:text="@string/stopButtonText" />
+                    android:text="@string/stopButtonText"
+                    android:checked="false" />
 
             </RadioGroup>
 
