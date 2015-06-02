@@ -52,6 +52,7 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
     public static final String START_RANGE = "start";
     public static final String END_RANGE = "end";
     public static final int TIMESTAMP_DIVISOR = 1000;
+    public static final int SAMPLE_CONVERSION = 60;
     private static final String ERROR_MESSAGE = "Select Time and Date must be in Contiguous Order";
     /**
      * Forget password settings
@@ -195,7 +196,8 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                mCallBackActivity.getGPSPlotter().changeRequestIntervals(frequency * 60, GPSPlotter.ServiceType.FOREGROUND);
+                mCallBackActivity.getGPSPlotter().changeRequestIntervals(frequency * SAMPLE_CONVERSION, GPSPlotter.ServiceType.FOREGROUND);
+                LocalStorage.putSamplingRate(frequency * SAMPLE_CONVERSION, getActivity().getApplicationContext());
                 Log.d("Progress Bar Test", "The GPSPlotter value is at " + mCallBackActivity.getGPSPlotter().getInterval());
             }
         });

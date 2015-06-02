@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 4.17.15 -- Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
+ */
 package location_services;
 
 import android.app.ActivityManager;
@@ -9,7 +12,6 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.util.Log;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
 
 import java.util.List;
@@ -18,20 +20,27 @@ import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.User;
 
+/**
+ * BackgroundLocationReceiver has two main responsibilities. The first responsibility is to
+ * receive any background actions issued by the GPSPlotter class. The second responsibility is
+ * to listen for System BOOT_COMPLETED actions and generate GPSPlotter services again based on the
+ * users preferences before the device was turned off.
+ *
+ * @author leachad
+ * @version 5.30.15
+ */
+
 public class BackgroundLocationReceiver extends BroadcastReceiver {
     private static final String TAG = "BLocRec: ";
     private static final String ACTION = "background";
-    private static final int CURRENT_INTERVAL = 60;
-    //TODO Current interval needs to be pulled from prefs
     private CoordinateStorageDatabaseHelper mDbHelper;
 
     public BackgroundLocationReceiver() {
-
+        //Default, no-arg constructor
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        // TODO: This method is called when the BroadcastReceiver is receiving
 
         if (intent.getAction().matches(ACTION)) {
             Log.w(TAG, "BLR Received-background");
@@ -82,6 +91,12 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
 
     /**
      * Private method to determine if the app is in the foreground or not.
+     * <p/>
+     * NOTE: Because we wanted to implement features for the user including a preference to sample
+     * in the foreground or the background, we had to know when the app was in the background or the
+     * foreground. Since Android does not have a system service to provide such a value, the below
+     * method uses a Deprecated Method call on the Activity manager class. We realize this violates
+     * convention and coding principles, but wanted to explicitly state we are aware of this violation.
      *
      * @param theApplicationContext is the context of the lifecycle.
      * @return isForeground
@@ -100,8 +115,9 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
 
     /**
      * Private helper method to add points to the Coordinate Storage Database Helper.
+     *
      * @param theLocation is the newly obtained Location
-     *                    @param theUserID is used to construct the Coordinate Object.
+     * @param theUserID   is used to construct the Coordinate Object.
      */
     private void insertCoordinateToDatabase(Location theLocation, String theUserID) {
         Coordinate current = new Coordinate(theLocation, theUserID);

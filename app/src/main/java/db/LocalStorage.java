@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 4.17.15 -- Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
+ */
+
 package db;
 
 import android.content.Context;
