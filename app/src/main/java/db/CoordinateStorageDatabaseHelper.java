@@ -113,9 +113,9 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
      * <p/>
      * theLocalCoordinates is a list of Coordinates generated before pushed to webservices
      */
-    public void publishCoordinateBatch(final String theUserID, View theView) {
+    public void publishCoordinateBatch(final String theUserID) {
         List<Coordinate> theLocalCoordinates = getAllCoordinates(User.ALL_USERS);
-        WebDriver.addCoordinates(theLocalCoordinates, theUserID, theView);
+        WebDriver.addCoordinates(theLocalCoordinates, theUserID);
         wipeTable();
 
 

@@ -7,8 +7,10 @@ package uw.buuteeq_ponyhax.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -16,6 +18,7 @@ import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 
 import db.LocalStorage;
+import network_power.NetworkChecker;
 import webservices.WebDriver;
 
 /**
@@ -40,24 +43,58 @@ public class LoginActivity extends Activity {
         /** Set the first page view with activity_login.xml. */
         setContentView(R.layout.activity_login);
 
-        /** Registers the custom login listener with the Login Button.*/
-        (findViewById(R.id.login_button)).setOnClickListener(new LoginListener());
+    }
 
-        (findViewById(R.id.new_account_button)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(LoginActivity.this, AgreementActivity.class);
-                startActivity(myIntent);
-            }
-        });
+    @Override
+    public void onResume() {
+        super.onResume();
 
-        (findViewById(R.id.forgot_button)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(LoginActivity.this, ForgotActivity.class);
-                startActivity(myIntent);
-            }
-        });
+        Button loginButton = (Button) findViewById(R.id.login_button);
+        Button newAccountButton = (Button) findViewById(R.id.new_account_button);
+        Button forgotButton = (Button) findViewById(R.id.forgot_button);
+
+        final NetworkChecker network = NetworkChecker.getInstance();
+
+        if (network.isOnInternet(getApplicationContext())) {
+            /** Registers the custom login listener with the Login Button.*/
+            //Runs this method only when connected to internet.
+            loginButton.setOnClickListener(new LoginListener());
+
+            newAccountButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent myIntent = new Intent(LoginActivity.this, AgreementActivity.class);
+                    startActivity(myIntent);
+                }
+            });
+
+            forgotButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent myIntent = new Intent(LoginActivity.this, ForgotActivity.class);
+                    startActivity(myIntent);
+                }
+            });
+        } else {
+            final Toast[] toast = new Toast[1];
+            CharSequence message = "You need internet connection for this feature.";
+            toast[0] = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+
+            View.OnClickListener noInternetClickListener = new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    if (!toast[0].getView().isShown()) {
+                        toast[0].show();
+                    }
+                }
+            };
+
+            loginButton.setOnClickListener(noInternetClickListener);
+            newAccountButton.setOnClickListener(noInternetClickListener);
+            forgotButton.setOnClickListener(noInternetClickListener);
+        }
+
 
         (findViewById(R.id.password_field)).setOnKeyListener(new View.OnKeyListener() {
 
@@ -72,7 +109,6 @@ public class LoginActivity extends Activity {
                 return false;
             }
         });
-
     }
 
     /**

@@ -71,10 +71,9 @@ public class WebDriver {
         return new AddUser().execute().get();
     }
 
-    public static void addCoordinates(List<Coordinate> theCoordinateList, String theUserID, View theView) {
+    public static void addCoordinates(List<Coordinate> theCoordinateList, String theUserID) {
         myCoordinateList = theCoordinateList;
         myUserID = theUserID;
-        mCurrentView = theView;
 
         /** Does a blind push to the Database, otherwise, the main thread would hang up
          *  waiting to see if this process crashed or not.

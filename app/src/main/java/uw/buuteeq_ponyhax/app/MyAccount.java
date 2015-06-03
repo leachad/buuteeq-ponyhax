@@ -56,12 +56,13 @@ public class MyAccount extends ActionBarActivity
     private static MyAccount mAccountActivity;
     private CoordinateStorageDatabaseHelper coordHelper;
     public UIUpdater fragment;
+    private GPSPlotter.ServiceType mServiceType;
     private GPSPlotter myGPSPlotter;
 
     public int publishCounter = 0;
     protected List<Coordinate> coordinates;
     private int mSelectedSampleRate = DEFAULT_INTERVAL;
-    private Fragment mCurrentFragment = null;
+    private int mFragmentId = R.id.map;
     private RadioGroup mRadioGroup;
     private RadioButton mStartButton;
     private RadioButton mStopButton;
@@ -132,6 +133,7 @@ public class MyAccount extends ActionBarActivity
 
     private void doStopSelectedAction(GPSPlotter thePlotter) {
 
+
         if (thePlotter.hasApiClientConnectivity() && mStopButton.isChecked()) {
             thePlotter.endManagedLocationRequests();
         } else if (thePlotter.hasApiClientConnectivity() && !mStopButton.isChecked()
@@ -171,7 +173,7 @@ public class MyAccount extends ActionBarActivity
 
         /** Set the default clicked button and instantiate the radio group.*/
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupTracking);
-        Log.w(TAG, "GPS Plotter is running loc upates-" + Boolean.toString(LocalStorage.getLocationRequestStatus(getApplicationContext())));
+
         if (myGPSPlotter.isRunningLocationUpdates()) {
             selectStartButton();
         } else {
@@ -215,14 +217,12 @@ public class MyAccount extends ActionBarActivity
 
     /**
      * Public method to return the currently selected fragment for display in
-     * the Fragment Manager. Allows propagation of a Progress Dialog. This method obtains the base
-     * Fragment Manager and returns to the WebDriver class and it's associated methods the current
-     * Fragment so that a Progress Bar or some other type of Progress View can be displayed to the
-     * User.
+     * the Fragment Manager. Allows propagation of a Progress Dialog.
      * @return fragment
      */
     public Fragment getBaseViewFragment() {
-        return mCurrentFragment;
+
+        return getSupportFragmentManager().findFragmentById(mFragmentId);
     }
 
 
@@ -273,15 +273,15 @@ public class MyAccount extends ActionBarActivity
         switch (position) {
             case 0:
                 fragment = new MyMap();
-                mCurrentFragment = fragment;
+                mFragmentId = fragment.getId();
                 break;
             case 1:
                 fragment = new MyAccountFragment();
-                mCurrentFragment = fragment;
+                mFragmentId = fragment.getId();
                 break;
             case 2:
                 fragment = new SettingsFragment();
-                mCurrentFragment = fragment;
+                mFragmentId = fragment.getId();
                 break;
             case 3:
                 LocalStorage.clearPrefs(getApplicationContext());
@@ -389,7 +389,7 @@ public class MyAccount extends ActionBarActivity
         coordinates.add(coord);
 
         if (publishCounter % PUBLISH_INTERVAL == 0 &&  publishCounter != 0 && checkNetworkConnection()) {
-            coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()), getCurrentFocus());
+            coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
             publishCounter = 0;
             Log.w("PUBLISH: ", Integer.toString(publishCounter));
         }
@@ -418,7 +418,7 @@ public class MyAccount extends ActionBarActivity
 
     @Override
     public void pushUpdates() {
-        coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()), getCurrentFocus());
+        coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
         publishCounter = 0;
     }
 }
