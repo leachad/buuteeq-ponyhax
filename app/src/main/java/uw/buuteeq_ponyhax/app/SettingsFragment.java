@@ -101,14 +101,16 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
         mStartCalendar = GregorianCalendar.getInstance();
         mEndCalendar = GregorianCalendar.getInstance();
 
         if (savedInstanceState != null) {
             int frequencyValue = savedInstanceState.getInt(FREQUENCY_KEY);
+            frequencyBar = (SeekBar) view.findViewById(R.id.gps_sampling_seek_bar);
             frequencyBar.setProgress(frequencyValue);
         }
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        return view;
     }
 
     @Override
