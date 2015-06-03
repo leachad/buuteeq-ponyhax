@@ -12,6 +12,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,9 +113,9 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
      * <p/>
      * theLocalCoordinates is a list of Coordinates generated before pushed to webservices
      */
-    public void publishCoordinateBatch(final String theUserID) {
+    public void publishCoordinateBatch(final String theUserID, View theView) {
         List<Coordinate> theLocalCoordinates = getAllCoordinates(User.ALL_USERS);
-        WebDriver.addCoordinates(theLocalCoordinates, theUserID);
+        WebDriver.addCoordinates(theLocalCoordinates, theUserID, theView);
         wipeTable();
 
 

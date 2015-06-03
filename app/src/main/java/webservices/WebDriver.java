@@ -7,6 +7,8 @@ package webservices;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -22,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 import db.Coordinate;
 import db.User;
 import uw.buuteeq_ponyhax.app.MyAccount;
+import uw.buuteeq_ponyhax.app.R;
 
 /**
  * UserDriver will be the class that stores and gets users from the webservices
@@ -49,6 +52,7 @@ public class WebDriver {
     private static String myPassword;
     private static long myStartTime;
     private static long myEndTime;
+    private static View mCurrentView;
 
 
     /**
@@ -67,9 +71,10 @@ public class WebDriver {
         return new AddUser().execute().get();
     }
 
-    public static void addCoordinates(List<Coordinate> theCoordinateList, String theUserID) {
+    public static void addCoordinates(List<Coordinate> theCoordinateList, String theUserID, View theView) {
         myCoordinateList = theCoordinateList;
         myUserID = theUserID;
+        mCurrentView = theView;
 
         try {
             new AddCoordinates().execute().get();
@@ -145,7 +150,7 @@ public class WebDriver {
         private static final String PROGRESS_MESSAGE = "Uploading Coordinates...";
         private static final String DONE_MESSAGE = "All Coordinates Uploaded!";
         private static final String TITLE = "GeoTracker";
-        ProgressDialog display;
+        ProgressBar progressBar;
 
 
         /**
@@ -172,19 +177,27 @@ public class WebDriver {
 
         @Override
         protected void onPreExecute() {
-            display = new ProgressDialog(MyAccount.getInstance().getBaseViewFragment().getActivity());
-            display.setMessage(PROGRESS_MESSAGE);
-            display.show();
+            Log.w("WEBDRIVER PD:", MyAccount.getInstance().getBaseViewFragment().toString());
+            progressBar = (ProgressBar) MyAccount.getInstance()
+                    .getBaseViewFragment().getView().findViewById(R.id.progressBar);
+            progressBar.setVisibility(ProgressBar.VISIBLE);
+            progressBar.setMax(100);
+            progressBar.setProgress(0);
+
+
         }
 
         @Override
         protected String doInBackground(Void... addCoordinates) {
 
             String result = JsonBuilder.VAL_FAIL;
+            int i = myCoordinateList.size() ;
             for (Coordinate coordinate : myCoordinateList) {
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpPost httpPost = new HttpPost(requestBuilder.getAddCoordinateRequest(coordinate, myUserID));
                 Log.w("ADD COORD:", requestBuilder.getAddCoordinateRequest(coordinate, myUserID));
+                progressBar.setProgress(i / 100);
+                i++;
                 result = executePost(httpClient, httpPost);
             }
             return result;
@@ -192,8 +205,7 @@ public class WebDriver {
 
         @Override
         protected void onPostExecute(String data) {
-            display.setMessage(DONE_MESSAGE);
-            display.dismiss();
+            progressBar.setVisibility(ProgressBar.INVISIBLE);
             Log.d("UPLOAD: ", "done executing");
         }
     }

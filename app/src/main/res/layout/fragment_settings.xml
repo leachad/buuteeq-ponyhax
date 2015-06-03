@@ -233,6 +233,23 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight=".5"
+            android:weightSum="1.0"
+            android:background="@drawable/sectional_background"
+            android:padding="10dp"
+            android:layout_marginBottom="10dp"
+            >
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:id="@+id/progressBar"
+                />
+            </LinearLayout>
 
     </LinearLayout>
 

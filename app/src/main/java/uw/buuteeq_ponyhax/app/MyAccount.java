@@ -62,7 +62,7 @@ public class MyAccount extends ActionBarActivity
     public int publishCounter = 0;
     protected List<Coordinate> coordinates;
     private int mSelectedSampleRate = DEFAULT_INTERVAL;
-    private int mFragmentId = R.id.map;
+    private Fragment mCurrentFragment = null;
     private RadioGroup mRadioGroup;
     private RadioButton mStartButton;
     private RadioButton mStopButton;
@@ -221,12 +221,14 @@ public class MyAccount extends ActionBarActivity
 
     /**
      * Public method to return the currently selected fragment for display in
-     * the Fragment Manager. Allows propagation of a Progress Dialog.
+     * the Fragment Manager. Allows propagation of a Progress Dialog. This method obtains the base
+     * Fragment Manager and returns to the WebDriver class and it's associated methods the current
+     * Fragment so that a Progress Bar or some other type of Progress View can be displayed to the
+     * User.
      * @return fragment
      */
     public Fragment getBaseViewFragment() {
-
-        return getSupportFragmentManager().findFragmentById(mFragmentId);
+        return mCurrentFragment;
     }
 
 
@@ -277,15 +279,15 @@ public class MyAccount extends ActionBarActivity
         switch (position) {
             case 0:
                 fragment = new MyMap();
-                mFragmentId = fragment.getId();
+                mCurrentFragment = fragment;
                 break;
             case 1:
                 fragment = new MyAccountFragment();
-                mFragmentId = fragment.getId();
+                mCurrentFragment = fragment;
                 break;
             case 2:
                 fragment = new SettingsFragment();
-                mFragmentId = fragment.getId();
+                mCurrentFragment = fragment;
                 break;
             case 3:
                 LocalStorage.clearPrefs(getApplicationContext());
@@ -393,7 +395,7 @@ public class MyAccount extends ActionBarActivity
         coordinates.add(coord);
 
         if (publishCounter % PUBLISH_INTERVAL == 0 &&  publishCounter != 0 && checkNetworkConnection()) {
-            coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
+            coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()), getCurrentFocus());
             publishCounter = 0;
             Log.w("PUBLISH: ", Integer.toString(publishCounter));
         }
@@ -422,7 +424,7 @@ public class MyAccount extends ActionBarActivity
 
     @Override
     public void pushUpdates() {
-        coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
+        coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()), getCurrentFocus());
         publishCounter = 0;
     }
 }
