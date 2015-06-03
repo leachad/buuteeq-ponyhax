@@ -4,9 +4,6 @@
 
 package uw.buuteeq_ponyhax.app;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
@@ -30,6 +27,7 @@ import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
 import location_services.GPSPlotter;
+import network_power.NetworkChecker;
 import webservices.WebDriver;
 
 public class MyAccount extends ActionBarActivity
@@ -42,13 +40,6 @@ public class MyAccount extends ActionBarActivity
     public static final String API_ERROR = "Try again soon. Api client currently disconnected.";
     private static final int DEFAULT_INTERVAL = 60;
     private static final int PUBLISH_INTERVAL = 5;
-
-    /**
-     * Booleans used for determining the state of the network.
-     */
-    public static boolean isWifiConnected = false;
-    public static boolean mobileConnected = false;
-    private boolean wifizInTheHouse = false;
 
     /**
      * References to other classes and enums used for properly propagating the view.
@@ -111,6 +102,7 @@ public class MyAccount extends ActionBarActivity
 
     /**
      * $ -- START & STOP ACTIONS DEPENDENT UPON APPLICATION CONDITIONS -- $
+     *
      * @param thePlotter is a reference to the GPSPlotter for initiating
      *                   specific tracking actions.
      */
@@ -148,9 +140,7 @@ public class MyAccount extends ActionBarActivity
     }
 
     /**
-     *
      * $ -- INITIALIZE THE TRACKING BUTTONS -- START & STOP -- $
-     *
      */
     private void initializeButtons() {
         /** Instance of the GPSPlotter.*/
@@ -188,40 +178,20 @@ public class MyAccount extends ActionBarActivity
     }
 
     /**
-     *
-     *
      * $ -- EVALUATING NETWORK CONNECTIONS -- $
      * Check whether the device is connected, and if so, whether the connection
      * is wifi or mobile (it could be something else).
      */
     private boolean checkNetworkConnection() {
-
-        ConnectivityManager connMgr =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
-
-        if (activeInfo != null && activeInfo.isConnected()) {
-            isWifiConnected = activeInfo.getType() == ConnectivityManager.TYPE_WIFI;
-            mobileConnected = activeInfo.getType() == ConnectivityManager.TYPE_MOBILE;
-            if (isWifiConnected) {
-                wifizInTheHouse = true;
-                Log.i(TAG, "@@The active connection is wifi.");
-            } else if (mobileConnected) {
-                Log.i(TAG, "@@The active connection is mobile.");
-                wifizInTheHouse = false;
-            }
-        } else {
-            Log.i(TAG, "@@No wireless or mobile connection.");
-            wifizInTheHouse = false;
-        }
-        return wifizInTheHouse;
+        NetworkChecker network = NetworkChecker.getInstance();
+        return network.isOnWifi(getApplicationContext());
 
     }
 
     /**
      * Public method to return the currently selected fragment for display in
      * the Fragment Manager. Allows propagation of a Progress Dialog.
+     *
      * @return fragment
      */
     public Fragment getBaseViewFragment() {
@@ -392,7 +362,7 @@ public class MyAccount extends ActionBarActivity
     public void addCoordinateToList(Coordinate coord) {
         coordinates.add(coord);
 
-        if (publishCounter % PUBLISH_INTERVAL == 0 &&  publishCounter != 0 && checkNetworkConnection()) {
+        if (publishCounter % PUBLISH_INTERVAL == 0 && publishCounter != 0 && checkNetworkConnection()) {
             coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
             publishCounter = 0;
             Log.w("PUBLISH: ", Integer.toString(publishCounter));
