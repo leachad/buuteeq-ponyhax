@@ -56,12 +56,13 @@ public class MyAccount extends ActionBarActivity
     private static MyAccount mAccountActivity;
     private CoordinateStorageDatabaseHelper coordHelper;
     public UIUpdater fragment;
-    private GPSPlotter.ServiceType mServiceType = GPSPlotter.ServiceType.FOREGROUND;
+    private GPSPlotter.ServiceType mServiceType;
     private GPSPlotter myGPSPlotter;
 
     public int publishCounter = 0;
     protected List<Coordinate> coordinates;
     private int mSelectedSampleRate = DEFAULT_INTERVAL;
+    private int mFragmentId = R.id.map;
     private RadioGroup mRadioGroup;
     private RadioButton mStartButton;
     private RadioButton mStopButton;
@@ -114,6 +115,8 @@ public class MyAccount extends ActionBarActivity
      *                   specific tracking actions.
      */
     private void doStartSelectedAction(GPSPlotter thePlotter) {
+        mServiceType = myGPSPlotter.getServiceType();
+
         if (thePlotter.hasApiClientConnectivity() && mStartButton.isChecked()) {
             thePlotter.beginManagedLocationRequests(mSelectedSampleRate, mServiceType, this);
 
@@ -130,6 +133,8 @@ public class MyAccount extends ActionBarActivity
     }
 
     private void doStopSelectedAction(GPSPlotter thePlotter) {
+        mServiceType = myGPSPlotter.getServiceType();
+
         if (thePlotter.hasApiClientConnectivity() && mStopButton.isChecked()) {
             thePlotter.endManagedLocationRequests(mSelectedSampleRate, mServiceType);
         } else if (thePlotter.hasApiClientConnectivity() && !mStopButton.isChecked()
@@ -148,7 +153,13 @@ public class MyAccount extends ActionBarActivity
      *
      */
     private void initializeButtons() {
+        /** Instance of the GPSPlotter.*/
         myGPSPlotter = GPSPlotter.getInstance(getApplicationContext());
+
+        /** Get the Default Service Type Instance for GPSPlotter (Foreground or Background).*/
+        mServiceType = myGPSPlotter.getServiceType();
+
+        /** Initialize the Start and Stop Radio buttons. Register the actions with their listeners.*/
         mStartButton = (RadioButton) findViewById(R.id.startButton);
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,7 +175,7 @@ public class MyAccount extends ActionBarActivity
             }
         });
 
-        //Set the default clicked Radio Button
+        /** Set the default clicked button and instantiate the radio group.*/
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupTracking);
 
         if (myGPSPlotter.isRunningLocationUpdates()) {
@@ -206,6 +217,16 @@ public class MyAccount extends ActionBarActivity
         }
         return wifizInTheHouse;
 
+    }
+
+    /**
+     * Public method to return the currently selected fragment for display in
+     * the Fragment Manager. Allows propagation of a Progress Dialog.
+     * @return fragment
+     */
+    public Fragment getBaseViewFragment() {
+
+        return getSupportFragmentManager().findFragmentById(mFragmentId);
     }
 
 
@@ -256,12 +277,15 @@ public class MyAccount extends ActionBarActivity
         switch (position) {
             case 0:
                 fragment = new MyMap();
+                mFragmentId = fragment.getId();
                 break;
             case 1:
                 fragment = new MyAccountFragment();
+                mFragmentId = fragment.getId();
                 break;
             case 2:
                 fragment = new SettingsFragment();
+                mFragmentId = fragment.getId();
                 break;
             case 3:
                 LocalStorage.clearPrefs(getApplicationContext());

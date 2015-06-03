@@ -4,6 +4,7 @@
 
 package webservices;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -20,6 +21,7 @@ import java.util.concurrent.ExecutionException;
 
 import db.Coordinate;
 import db.User;
+import uw.buuteeq_ponyhax.app.MyAccount;
 
 /**
  * UserDriver will be the class that stores and gets users from the webservices
@@ -139,6 +141,13 @@ public class WebDriver {
      */
     private static class AddCoordinates extends AsyncTask<Void, Integer, String> {
 
+        /** Fields for showing Async Progress.*/
+        private static final String PROGRESS_MESSAGE = "Uploading Coordinates...";
+        private static final String DONE_MESSAGE = "All Coordinates Uploaded!";
+        private static final String TITLE = "GeoTracker";
+        ProgressDialog display;
+
+
         /**
          * Private helper method to execute a series of coordinate posts and
          * gets.
@@ -161,6 +170,14 @@ public class WebDriver {
             return result;
         }
 
+        @Override
+        protected void onPreExecute() {
+            display = new ProgressDialog(MyAccount.getInstance().getBaseViewFragment().getActivity());
+            display.setMessage(PROGRESS_MESSAGE);
+            display.show();
+        }
+
+        @Override
         protected String doInBackground(Void... addCoordinates) {
 
             String result = JsonBuilder.VAL_FAIL;
@@ -171,6 +188,13 @@ public class WebDriver {
                 result = executePost(httpClient, httpPost);
             }
             return result;
+        }
+
+        @Override
+        protected void onPostExecute(String data) {
+            display.setMessage(DONE_MESSAGE);
+            display.dismiss();
+            Log.d("UPLOAD: ", "done executing");
         }
     }
 

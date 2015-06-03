@@ -28,7 +28,8 @@ public class User {
     public static final String USER_EXISTS = "userExistCheck";
     public static final String SAMPLE_RATE = "sampleRate";
     public static final String UPLOAD_RATE = "uploadRate";
-    public static final String REQUESTING_LOCATION = "requestingLocation";
+    public static final String REQUESTING_BACKGROUND_STATUS = "requestingLocation";
+    public static final String REQUESTING_LOCATION = "location";
 
 
     /**

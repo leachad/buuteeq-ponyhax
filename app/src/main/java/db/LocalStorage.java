@@ -100,14 +100,14 @@ public class LocalStorage {
     }
 
     /**
-     * Public static method to set the Location Request status flag in the prefs.
+     * Public static method to set the Background Location Request status flag in the prefs.
      *
      * @param theFlag is the boolean passed from the calling code.
      * @param context is the application context within the lifecycle.
      */
-    public static void putLocationRequestStatus(boolean theFlag, Context context) {
+    public static void putBackgroundRequestStatus(boolean theFlag, Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-        sharedPreferences.edit().putBoolean(User.REQUESTING_LOCATION, theFlag).apply();
+        sharedPreferences.edit().putBoolean(User.REQUESTING_BACKGROUND_STATUS, theFlag).apply();
     }
 
 
@@ -121,6 +121,18 @@ public class LocalStorage {
         SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
         sharedPreferences.edit().putInt(User.SAMPLE_RATE, theSamplingRate).apply();
     }
+
+    /**
+     * Public static method to set the Location Request status flag in the prefs.
+     *
+     * @param theFlag is the boolean passed from the calling code.
+     * @param context is the application context within the lifecycle.
+     */
+    public static void putLocationRequestStatus(boolean theFlag, Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putBoolean(User.REQUESTING_BACKGROUND_STATUS, theFlag).apply();
+    }
+
 
     /**
      * Public static method to set the upload rate selected by the user.
@@ -228,6 +240,17 @@ public class LocalStorage {
     /**
      * Public static method to get the flag determining if background requests
      * are being asked for on application startup.
+     *
+     * @param context is the application context within the lifecycle.
+     * @return theRequestingLocationState
+     */
+    public static boolean getRequestingBackgroundStatus(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(User.REQUESTING_BACKGROUND_STATUS, false);
+    }
+
+    /**
+     * Public static method to get the flag determining if requests for location are being made.
      *
      * @param context is the application context within the lifecycle.
      * @return theRequestingLocationState

@@ -112,7 +112,7 @@ public class LoginActivity extends Activity {
                 LocalStorage.putUserEmail(mEmailField.getText().toString().trim(), getApplicationContext());
                 LocalStorage.putStartTime(0, getApplicationContext());
                 LocalStorage.putEndTime(Calendar.getInstance().getTimeInMillis() / TIMESTAMP_DIVISOR, getApplicationContext());
-                LocalStorage.putLocationRequestStatus(false, getApplicationContext());
+                LocalStorage.putBackgroundRequestStatus(false, getApplicationContext());
 
             }
         }

@@ -170,7 +170,7 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
                 }
             }
         });
-        backgroundCheckbox.setChecked(LocalStorage.getLocationRequestStatus(getActivity().getApplicationContext()));
+        backgroundCheckbox.setChecked(LocalStorage.getRequestingBackgroundStatus(getActivity().getApplicationContext()));
 
         //Grab the current gps frequency value
         frequencyText = (TextView) getActivity().findViewById(R.id.gps_sampling_seconds);

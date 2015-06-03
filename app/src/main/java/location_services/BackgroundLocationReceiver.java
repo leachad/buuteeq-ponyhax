@@ -66,9 +66,9 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
 
 
             SharedPreferences preferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-            if (preferences.contains(User.REQUESTING_LOCATION)) {
+            if (preferences.contains(User.REQUESTING_BACKGROUND_STATUS)) {
                 Log.w(TAG, "Asking shared prefs about background services");
-                isBackgroundServiceRunning = preferences.getBoolean(User.REQUESTING_LOCATION, false);
+                isBackgroundServiceRunning = preferences.getBoolean(User.REQUESTING_BACKGROUND_STATUS, false);
 
                 if (isBackgroundServiceRunning) {
                     Log.w(TAG, "Restarting Background Service on Boot!");
