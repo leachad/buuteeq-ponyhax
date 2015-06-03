@@ -76,12 +76,12 @@ public class WebDriver {
         myUserID = theUserID;
         mCurrentView = theView;
 
-        try {
-            new AddCoordinates().execute().get();
-            //TODO Use the obtained result for data integrity.
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
+        /** Does a blind push to the Database, otherwise, the main thread would hang up
+         *  waiting to see if this process crashed or not.
+         */
+        new AddCoordinates().execute();
+
+
 
     }
 
@@ -146,13 +146,6 @@ public class WebDriver {
      */
     private static class AddCoordinates extends AsyncTask<Void, Integer, String> {
 
-        /** Fields for showing Async Progress.*/
-        private static final String PROGRESS_MESSAGE = "Uploading Coordinates...";
-        private static final String DONE_MESSAGE = "All Coordinates Uploaded!";
-        private static final String TITLE = "GeoTracker";
-        ProgressBar progressBar;
-
-
         /**
          * Private helper method to execute a series of coordinate posts and
          * gets.
@@ -176,37 +169,17 @@ public class WebDriver {
         }
 
         @Override
-        protected void onPreExecute() {
-            Log.w("WEBDRIVER PD:", MyAccount.getInstance().getBaseViewFragment().toString());
-            progressBar = (ProgressBar) MyAccount.getInstance()
-                    .getBaseViewFragment().getView().findViewById(R.id.progressBar);
-            progressBar.setVisibility(ProgressBar.VISIBLE);
-            progressBar.setMax(100);
-            progressBar.setProgress(0);
-
-
-        }
-
-        @Override
         protected String doInBackground(Void... addCoordinates) {
 
             String result = JsonBuilder.VAL_FAIL;
-            int i = myCoordinateList.size() ;
+
             for (Coordinate coordinate : myCoordinateList) {
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpPost httpPost = new HttpPost(requestBuilder.getAddCoordinateRequest(coordinate, myUserID));
                 Log.w("ADD COORD:", requestBuilder.getAddCoordinateRequest(coordinate, myUserID));
-                progressBar.setProgress(i / 100);
-                i++;
                 result = executePost(httpClient, httpPost);
             }
             return result;
-        }
-
-        @Override
-        protected void onPostExecute(String data) {
-            progressBar.setVisibility(ProgressBar.INVISIBLE);
-            Log.d("UPLOAD: ", "done executing");
         }
     }
 

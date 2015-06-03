@@ -56,7 +56,6 @@ public class MyAccount extends ActionBarActivity
     private static MyAccount mAccountActivity;
     private CoordinateStorageDatabaseHelper coordHelper;
     public UIUpdater fragment;
-    private GPSPlotter.ServiceType mServiceType;
     private GPSPlotter myGPSPlotter;
 
     public int publishCounter = 0;
@@ -115,10 +114,9 @@ public class MyAccount extends ActionBarActivity
      *                   specific tracking actions.
      */
     private void doStartSelectedAction(GPSPlotter thePlotter) {
-        mServiceType = myGPSPlotter.getServiceType();
 
         if (thePlotter.hasApiClientConnectivity() && mStartButton.isChecked()) {
-            thePlotter.beginManagedLocationRequests(mSelectedSampleRate, mServiceType, this);
+            thePlotter.beginManagedLocationRequests(this);
 
         } else if (thePlotter.hasApiClientConnectivity() && !mStartButton.isChecked()
                 || !thePlotter.hasApiClientConnectivity() && !mStartButton.isChecked()) {
@@ -133,10 +131,9 @@ public class MyAccount extends ActionBarActivity
     }
 
     private void doStopSelectedAction(GPSPlotter thePlotter) {
-        mServiceType = myGPSPlotter.getServiceType();
 
         if (thePlotter.hasApiClientConnectivity() && mStopButton.isChecked()) {
-            thePlotter.endManagedLocationRequests(mSelectedSampleRate, mServiceType);
+            thePlotter.endManagedLocationRequests();
         } else if (thePlotter.hasApiClientConnectivity() && !mStopButton.isChecked()
                 || !thePlotter.hasApiClientConnectivity() && !mStopButton.isChecked()) {
             selectStartButton();
@@ -156,9 +153,6 @@ public class MyAccount extends ActionBarActivity
         /** Instance of the GPSPlotter.*/
         myGPSPlotter = GPSPlotter.getInstance(getApplicationContext());
 
-        /** Get the Default Service Type Instance for GPSPlotter (Foreground or Background).*/
-        mServiceType = myGPSPlotter.getServiceType();
-
         /** Initialize the Start and Stop Radio buttons. Register the actions with their listeners.*/
         mStartButton = (RadioButton) findViewById(R.id.startButton);
         mStartButton.setOnClickListener(new View.OnClickListener() {
@@ -177,7 +171,7 @@ public class MyAccount extends ActionBarActivity
 
         /** Set the default clicked button and instantiate the radio group.*/
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupTracking);
-
+        Log.w(TAG, "GPS Plotter is running loc upates-" + Boolean.toString(LocalStorage.getLocationRequestStatus(getApplicationContext())));
         if (myGPSPlotter.isRunningLocationUpdates()) {
             selectStartButton();
         } else {

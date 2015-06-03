@@ -38,7 +38,8 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      * Static fields used in both Background and Foreground Location Updates.
      */
     private static GPSPlotter gpsPlotterInstance;
-    private ServiceType mServiceType;
+    private ServiceType mCurrentServiceType;
+    private ServiceType mNewServiceType;
     private GoogleApiClient mGoogleApiClient;
     private MyAccount mAccount;
     private static Location mCurrentLocation;
@@ -73,8 +74,11 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      */
     private void startForegroundUpdates() {
         Log.w(TAG, "Starting foreground updates");
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), getLocationListener());
-        startTracking = true;
+        if (googlePlayServicesInstalled()) {
+            LocalStorage.putLocationRequestStatus(true, mContext);
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), getLocationListener());
+            startTracking = true;
+        }
     }
 
     /**
@@ -82,8 +86,12 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      */
     private void startBackgroundUpdates() {
         Log.w(TAG, "Starting background updates");
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), buildPendingIntent());
-        startTracking = true;
+        if (googlePlayServicesInstalled()) {
+            LocalStorage.putBackgroundRequestStatus(true, mContext);
+            LocalStorage.putLocationRequestStatus(true, mContext);
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), buildPendingIntent());
+            startTracking = true;
+        }
     }
 
     /**
@@ -91,6 +99,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      */
     private void endForegroundUpdates() {
         Log.w(TAG, "Ending foreground updates");
+        LocalStorage.putLocationRequestStatus(false, mContext);
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getLocationListener());
         startTracking = false;
     }
@@ -100,6 +109,8 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      */
     private void endBackgroundUpdates() {
         Log.w(TAG, "Ending background updates");
+        LocalStorage.putBackgroundRequestStatus(false, mContext);
+        LocalStorage.putLocationRequestStatus(false, mContext);
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, buildPendingIntent());
         startTracking = false;
     }
@@ -150,9 +161,20 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         mContext = theContext;
         mAccount = null;
         mIntentInterval = DEFAULT_INTENT_INTERVAL;
-        mServiceType = ServiceType.FOREGROUND;
+        mCurrentServiceType = determineServiceType();
+        mNewServiceType = null;
     }
 
+    /**
+     * Private method to determine which service type based on variable held
+     * in Local Storage.
+     */
+    private ServiceType determineServiceType() {
+        if (LocalStorage.getRequestingBackgroundStatus(mContext))
+            return ServiceType.BACKGROUND;
+        else
+            return ServiceType.FOREGROUND;
+    }
     /**
      * Private method to build the Api Client for use with the LocationServices API.
      */
@@ -192,13 +214,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      * @param theServiceType is the currently requested service type.
      */
     public void modifyServiceType(ServiceType theServiceType) {
-        if (isRunningLocationUpdates()) {
-            mServiceType = theServiceType;
-            endManagedLocationRequests(mIntentInterval, theServiceType);
-            beginManagedLocationRequests(mIntentInterval, theServiceType, MyAccount.getInstance());
-        } else {
-            mServiceType = theServiceType;
-        }
+        mNewServiceType = theServiceType;
     }
 
     /**
@@ -214,7 +230,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
             mDbHelper.insertCoordinate(coord);
             mAccount.addCoordinateToList(coord);
             List<Coordinate> list = mAccount.getList();
-//        list.add(new Coordinate(mCurrentLocation, mUserID));
             mAccount.fragment.update(mCurrentLocation, list);
         }
     }
@@ -247,67 +262,54 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      * User passes in a requested interval polling time in seconds as an
      * integer.
      *
-     * @param requestedInterval is the polling interval as requested by the user.
+     * @param theAccount is a reference to the parent activity used for updating views.
      */
-    public void beginManagedLocationRequests(final int requestedInterval,
-                                             ServiceType serviceType, MyAccount theAccount) {
-        mIntentInterval = requestedInterval;
-
+    public void beginManagedLocationRequests(MyAccount theAccount) {
         if (mAccount == null)
             mAccount = theAccount;
 
-        if (googlePlayServicesInstalled() && serviceType.equals(ServiceType.FOREGROUND)) {
-            LocalStorage.putLocationRequestStatus(true, mContext);
+        if (mNewServiceType == null && mCurrentServiceType.equals(ServiceType.FOREGROUND)) {
             startForegroundUpdates();
-        } else if (googlePlayServicesInstalled() && serviceType.equals(ServiceType.BACKGROUND)) {
-            LocalStorage.putBackgroundRequestStatus(true, mContext);
-            LocalStorage.putLocationRequestStatus(true, mContext);
+        } else if (mNewServiceType == null && mCurrentServiceType.equals(ServiceType.BACKGROUND)) {
             startBackgroundUpdates();
-
+        } else if (!mNewServiceType.equals(mCurrentServiceType) && mCurrentServiceType.equals(ServiceType.FOREGROUND)) {
+            mCurrentServiceType = ServiceType.BACKGROUND;
+            startBackgroundUpdates();
+        } else if (!mNewServiceType.equals(mCurrentServiceType) && mCurrentServiceType.equals(ServiceType.BACKGROUND)) {
+            mCurrentServiceType = ServiceType.FOREGROUND;
+            startForegroundUpdates();
+        } else if (mNewServiceType.equals(mCurrentServiceType) && mNewServiceType.equals(ServiceType.FOREGROUND)) {
+            startForegroundUpdates();
+        } else if (mNewServiceType.equals(mCurrentServiceType) && mNewServiceType.equals(ServiceType.BACKGROUND)) {
+            startBackgroundUpdates();
         }
-
 
     }
 
     /**
      * Public method to end the managed Location Requests.
      */
-    public void endManagedLocationRequests(final int requestedInterval, ServiceType serviceType) {
-        mIntentInterval = requestedInterval;
-        if (serviceType.equals(ServiceType.FOREGROUND)) {
-            LocalStorage.putLocationRequestStatus(false, mContext);
+    public void endManagedLocationRequests() {
+        if (mCurrentServiceType.equals(ServiceType.FOREGROUND)) {
             endForegroundUpdates();
-        } else if (serviceType.equals(ServiceType.BACKGROUND)) {
-            LocalStorage.putLocationRequestStatus(false, mContext);
-            LocalStorage.putBackgroundRequestStatus(false, mContext);
+        } else if (mCurrentServiceType.equals(ServiceType.BACKGROUND)) {
             endBackgroundUpdates();
-
-
         }
     }
 
-    public void changeRequestIntervals(int theInterval, ServiceType theServiceType) {
+    public void changeRequestIntervals(int theInterval) {
         mIntentInterval = theInterval;
-        if (theServiceType.equals(ServiceType.FOREGROUND)) {
+        if (mCurrentServiceType.equals(ServiceType.FOREGROUND)) {
             endForegroundUpdates();
             if (startTracking) {
                 startForegroundUpdates();
             }
-        } else if (theServiceType.equals(ServiceType.BACKGROUND)) {
+        } else if (mCurrentServiceType.equals(ServiceType.BACKGROUND)) {
             endBackgroundUpdates();
             if (startTracking) {
                 startBackgroundUpdates();
             }
         }
-    }
-
-
-    /**
-     * Public method to return the current service type to the calling code.
-     * @return mServiceType
-     */
-    public ServiceType getServiceType() {
-        return mServiceType;
     }
 
     /**

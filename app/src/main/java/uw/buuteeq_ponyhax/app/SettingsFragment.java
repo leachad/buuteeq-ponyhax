@@ -198,7 +198,7 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                mCallBackActivity.getGPSPlotter().changeRequestIntervals(frequency * SAMPLE_CONVERSION, GPSPlotter.ServiceType.FOREGROUND);
+                mCallBackActivity.getGPSPlotter().changeRequestIntervals(frequency * SAMPLE_CONVERSION);
                 LocalStorage.putSamplingRate(frequency * SAMPLE_CONVERSION, getActivity().getApplicationContext());
                 Log.d("Progress Bar Test", "The GPSPlotter value is at " + mCallBackActivity.getGPSPlotter().getInterval());
             }
