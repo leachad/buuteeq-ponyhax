@@ -47,11 +47,10 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
             mDbHelper = new CoordinateStorageDatabaseHelper(context);
         }
 
-        if (intent.getAction().matches(GPSPlotter.BACKGROUND_ACTION) || intent.getAction().matches(GPSPlotter.FOREGROUND_ACTION)) {
+        if (intent.getAction().matches(GPSPlotter.BACKGROUND_ACTION)) {
             Log.w(TAG, "BLR Received-background");
             Location location = intent.getParcelableExtra(FusedLocationProviderApi.KEY_LOCATION_CHANGED);
             storeLocation(location, context, intent.getStringExtra(User.USER_ID));
-
 
         } else if (intent.getAction().matches(Intent.ACTION_BOOT_COMPLETED)) {
             Log.w(TAG, "REBOOT!!!");
@@ -117,7 +116,7 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
     /**
      * Private method used to push the coordinates in the local sqlite database to the
      * WebService database using Async Tasks.
-     * @param userID
+     * @param userID is the UUID
      */
     private void pushToDatabase(String userID) {
         mDbHelper.publishCoordinateBatch(userID);

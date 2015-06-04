@@ -228,12 +228,13 @@ public class MyAccount extends ActionBarActivity
      */
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
+        Log.w(TAG, "On restore instance state");
         if (savedInstanceState.getBoolean(mStartButton.getText().toString())) {
             mRadioGroup.check(mStartButton.getId());
         } else {
             mRadioGroup.check(mStopButton.getId());
         }
+        super.onRestoreInstanceState(savedInstanceState);
 
 
     }
@@ -242,32 +243,17 @@ public class MyAccount extends ActionBarActivity
      * Overrides the onRestoreInstanceState and maintains the state of tracking when screen is rotated.
      *
      * @param outState           is the Bundle that the transient user-entered variables need to be saved to.
-     * @param outPersistentState is the bundle that persists throughout the application orientation change.
      */
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.w(TAG, "on save instance state");
         outState.putBoolean(mStartButton.getText().toString(), mStartButton.isChecked());
+        super.onSaveInstanceState(outState);
+
 
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.w(TAG, "Destroy??");
-        if (GPSPlotter.getInstance(getApplicationContext()).getServiceType().equals(GPSPlotter.ServiceType.FOREGROUND))
-            GPSPlotter.getInstance(getApplicationContext()).endManagedLocationRequests();
-    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.w(TAG, "Pausing...");
-        if (GPSPlotter.getInstance(getApplicationContext()).getServiceType().equals(GPSPlotter.ServiceType.FOREGROUND)) {
-            GPSPlotter.getInstance(getApplicationContext()).endManagedLocationRequests();
-            selectStopButton();
-        }
-    }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {

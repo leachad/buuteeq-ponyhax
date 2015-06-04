@@ -212,16 +212,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/push_points_prompt1" />
 
-                <CheckBox
-                    android:id="@+id/foregroundCheckbox"
-                    style="@style/buttonTheme"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="@color/material_deep_teal_500"
-                    android:checked="true"
-                    android:enabled="true"
-                    android:text="@string/foregroundChoiceText" />
-
             </LinearLayout>
 
 

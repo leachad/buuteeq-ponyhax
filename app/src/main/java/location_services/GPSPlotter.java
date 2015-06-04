@@ -43,7 +43,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      */
     private static GPSPlotter gpsPlotterInstance;
     private ServiceType mCurrentServiceType;
-    private ServiceType mNewServiceType;
     private GoogleApiClient mGoogleApiClient;
     private MyAccount mAccount;
     private static Location mCurrentLocation;
@@ -87,20 +86,9 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         mContext = theContext;
         mAccount = null;
         mIntentInterval = DEFAULT_INTENT_INTERVAL;
-        mCurrentServiceType = determineServiceType();
-        mNewServiceType = null;
+        mCurrentServiceType = ServiceType.BACKGROUND;
     }
 
-    /**
-     * Private method to determine which service type based on variable held
-     * in Local Storage.
-     */
-    private ServiceType determineServiceType() {
-        if (LocalStorage.getRequestingBackgroundStatus(mContext))
-            return ServiceType.BACKGROUND;
-        else
-            return ServiceType.FOREGROUND;
-    }
 
     /**
      * Private method to initialize an instance of the GPS Plotter class.
@@ -207,21 +195,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         if (mAccount == null)
             mAccount = theAccount;
 
-        if (mNewServiceType == null && mCurrentServiceType.equals(ServiceType.FOREGROUND)) {
-            startForegroundUpdates();
-        } else if (mNewServiceType == null && mCurrentServiceType.equals(ServiceType.BACKGROUND)) {
-            startBackgroundUpdates();
-        } else if (!mNewServiceType.equals(mCurrentServiceType) && mCurrentServiceType.equals(ServiceType.FOREGROUND)) {
-            mCurrentServiceType = ServiceType.BACKGROUND;
-            startBackgroundUpdates();
-        } else if (!mNewServiceType.equals(mCurrentServiceType) && mCurrentServiceType.equals(ServiceType.BACKGROUND)) {
-            mCurrentServiceType = ServiceType.FOREGROUND;
-            startForegroundUpdates();
-        } else if (mNewServiceType.equals(mCurrentServiceType) && mNewServiceType.equals(ServiceType.FOREGROUND)) {
-            startForegroundUpdates();
-        } else if (mNewServiceType.equals(mCurrentServiceType) && mNewServiceType.equals(ServiceType.BACKGROUND)) {
-            startBackgroundUpdates();
-        }
+        startBackgroundUpdates();
 
     }
 
@@ -229,20 +203,13 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      * Public method to end the managed Location Requests.
      */
     public void endManagedLocationRequests() {
-        if (mCurrentServiceType.equals(ServiceType.FOREGROUND)) {
-            endForegroundUpdates();
-        } else if (mCurrentServiceType.equals(ServiceType.BACKGROUND)) {
             endBackgroundUpdates();
-        }
+
     }
 
     public void changeRequestIntervals(int theInterval) {
         mIntentInterval = theInterval;
-        if (mCurrentServiceType.equals(ServiceType.FOREGROUND) && isRunningLocationUpdates()) {
-            endForegroundUpdates();
-            startForegroundUpdates();
-
-        } else if (mCurrentServiceType.equals(ServiceType.BACKGROUND) && isRunningLocationUpdates()) {
+        if (isRunningLocationUpdates()) {
             endBackgroundUpdates();
             startBackgroundUpdates();
 
@@ -263,18 +230,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     }
 
     /**
-     * Private helper method to build an Intent that will issue requests in the foreground. This
-     * is used so that all types of service calls can be issued in the same Receiver Locale.
-     * @return intent is the pending intent.
-     */
-    private Intent buildForegroundRequestIntent() {
-        Intent intent = new Intent(mContext, BackgroundLocationReceiver.class);
-        intent.setAction(FOREGROUND_ACTION);
-        intent.putExtra(User.USER_ID, mUserID);
-        return intent;
-    }
-
-    /**
      * Private helper method used to generate a PendingIntent for use when the User requests background service
      * within the FusedLocationApi until the Interval is changed.
      *
@@ -285,18 +240,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         return PendingIntent.getBroadcast(mContext, 0, theIntent, 0);
     }
 
-    /**
-     * Private method to start the Location Updates using the FusedLocation API in .the foreground.
-     */
-    private void startForegroundUpdates() {
-        Log.w(TAG, "Starting foreground updates");
-        if (googlePlayServicesInstalled()) {
-            LocalStorage.putBackgroundRequestStatus(false, mContext);
-            LocalStorage.putLocationRequestStatus(true, mContext);
-            registerAlarmManager();
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), buildRequestPendingIntent(buildForegroundRequestIntent()));
-        }
-    }
+
 
     /**
      * Private method to start the Location Updates using the FusedLocation API in the background.
@@ -311,16 +255,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         }
     }
 
-    /**
-     * Private method to end foreground updates.
-     */
-    private void endForegroundUpdates() {
-        Log.w(TAG, "Ending foreground updates");
-        LocalStorage.putBackgroundRequestStatus(false, mContext);
-        LocalStorage.putLocationRequestStatus(false, mContext);
-        unregisterAlarmManager();
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, buildRequestPendingIntent(buildForegroundRequestIntent()));
-    }
 
     /**
      * Private method to end background updates.
@@ -350,16 +284,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     }
 
     /**
-     * Private method used to set the current service type and location requests
-     * appropriately. Evaluates the parameter again the current service type.
-     *
-     * @param theServiceType is the currently requested service type.
-     */
-    public void modifyServiceType(ServiceType theServiceType) {
-        mNewServiceType = theServiceType;
-    }
-
-    /**
      * Private method used to add the coordinates to the display (map and overview).
      * DOES NOT HANDLE BACKGROUND STORAGE...DB Helper, etc.
      *
@@ -383,15 +307,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     /******************************GETTERS FOR VARIOUS INTEGRAL DATA CHECKS************************/
 
-    /**
-     * Private helper method to return the current location listener to a FusedLocationservices Api
-     * call and build it if it does not exists.
-     *
-     * @return theCurrentLocationListener using the android.gms.location Listener API.
-     */
-    private LocationListener getLocationListener() {
-        return this;
-    }
 
     /**
      * Public method to return the Service Type currently being used to the calling class.
