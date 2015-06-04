@@ -48,12 +48,14 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         mySolo.clickOnButton("Login");
         Assert.assertTrue(mySolo.searchText("Overview"));
         mySolo.clickOnActionBarHomeButton();
-        getActivity().getIntent();
+        // Logout
         mySolo.clickInList(4);
-        mySolo = new Solo(getInstrumentation(), getActivity());
-        mySolo.sleep(100);
+        // Log back in
         assertTrue(mySolo.searchText("Enter Email"));
-
+        mySolo.enterText(0, "eprokhor@uw.edu");
+        mySolo.enterText(1, "123456");
+        mySolo.clickOnButton("Login");
+        mySolo.sleep(5000);
     }
 
 

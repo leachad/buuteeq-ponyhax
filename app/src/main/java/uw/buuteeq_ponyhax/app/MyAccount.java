@@ -5,6 +5,7 @@
 package uw.buuteeq_ponyhax.app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -292,6 +293,9 @@ public class MyAccount extends ActionBarActivity
             case 3:
                 LocalStorage.clearPrefs(getApplicationContext());
                 choice = false;
+                Intent intent;
+                intent = new Intent(MyAccount.this, LoginActivity.class);
+                startActivity(intent);
                 finish();
                 break;
         }
