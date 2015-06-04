@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderApi;
 
@@ -19,6 +20,7 @@ import java.util.List;
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.User;
+import network_power.NetworkChecker;
 
 /**
  * BackgroundLocationReceiver has two main responsibilities. The first responsibility is to
@@ -32,8 +34,11 @@ import db.User;
 
 public class BackgroundLocationReceiver extends BroadcastReceiver {
     private static final String TAG = "BLocRec: ";
-    private static final String ACTION = "background";
+    private static final String REQUEST_ACTION = "background";
+    private static final String UPLOAD_ACTION = "upload";
+    private static final String UPLOAD_ERROR_MESSAGE = "Background Service to Upload Coordinates Failed.";
     private CoordinateStorageDatabaseHelper mDbHelper;
+    private String mUserID;
 
     public BackgroundLocationReceiver() {
         //Default, no-arg constructor
@@ -41,49 +46,28 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        mUserID = intent.getStringExtra(User.USER_ID);
+        if (mDbHelper == null) {
+            mDbHelper = new CoordinateStorageDatabaseHelper(context);
+        }
 
-        if (intent.getAction().matches(ACTION)) {
+        if (intent.getAction().matches(REQUEST_ACTION)) {
             Log.w(TAG, "BLR Received-background");
-
-            if (mDbHelper == null) {
-                mDbHelper = new CoordinateStorageDatabaseHelper(context);
-            }
-
             Location location = intent.getParcelableExtra(FusedLocationProviderApi.KEY_LOCATION_CHANGED);
-            Log.w(TAG, "App is in foreground - " + Boolean.toString(isAppInForeground(context)));
+            storeLocation(location, context);
 
-            if (isAppInForeground(context)) {
-                GPSPlotter.getInstance(context).updateParentActivity();
-                GPSPlotter.getInstance(context).addLocationToView(location);
-
-            } else {
-                insertCoordinateToDatabase(location, intent.getStringExtra(User.USER_ID));
-            }
 
         } else if (intent.getAction().matches(Intent.ACTION_BOOT_COMPLETED)) {
             Log.w(TAG, "REBOOT!!!");
-            boolean isBackgroundServiceRunning;
+            initializeBackgroundServices(context);
 
+        } else if (intent.getAction().matches(UPLOAD_ACTION) && verifyConnectivity(context)) {
+            Log.w(TAG, "Push to Database. Connected!");
+            pushToDatabase();
 
-            SharedPreferences preferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
-            if (preferences.contains(User.REQUESTING_BACKGROUND_STATUS)) {
-                Log.w(TAG, "Asking shared prefs about background services");
-                isBackgroundServiceRunning = preferences.getBoolean(User.REQUESTING_BACKGROUND_STATUS, false);
-
-                if (isBackgroundServiceRunning) {
-                    Log.w(TAG, "Restarting Background Service on Boot!");
-                    ComponentName componentName = new ComponentName(context.getPackageName(), BackgroundService.class.getName());
-                    ComponentName service = context.startService(new Intent().setComponent(componentName));
-
-                    if (service == null) {
-                        Log.w(TAG, "Could not start service");
-                    }
-
-                } else {
-                    Log.w(TAG, "Background Service wasn't running...");
-                }
-            }
-
+        } else if (intent.getAction().matches(UPLOAD_ACTION) && !verifyConnectivity(context)) {
+            Log.w(TAG, "Push to Database. Not Connected!");
+            Toast.makeText(context, UPLOAD_ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
         }
 
 
@@ -117,12 +101,77 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
      * Private helper method to add points to the Coordinate Storage Database Helper.
      *
      * @param theLocation is the newly obtained Location
-     * @param theUserID   is used to construct the Coordinate Object.
      */
-    private void insertCoordinateToDatabase(Location theLocation, String theUserID) {
-        Coordinate current = new Coordinate(theLocation, theUserID);
+    private void insertCoordinateToDatabase(Location theLocation) {
+        Coordinate current = new Coordinate(theLocation, mUserID);
         Log.w(TAG, current.toString());
         mDbHelper.insertCoordinate(current);
+    }
+
+    /**
+     * Private helper method to determine if connectivity exists in the lifecycle of the app.
+     * @return isConnected
+     *
+     */
+    private boolean verifyConnectivity(Context theContext) {
+        return new NetworkChecker().isOnInternet(theContext);
+    }
+
+    /**
+     * Private method used to push the coordinates in the local sqlite database to the
+     * WebService database using Async Tasks.
+     */
+    private void pushToDatabase() {
+        mDbHelper.publishCoordinateBatch(mUserID);
+    }
+
+    /**
+     * Private method used to initialize the background services
+     * and make sure that everything is running correctly.
+     * @param theContext is the current application context.
+     */
+    private void initializeBackgroundServices(Context theContext) {
+        boolean isBackgroundServiceRunning;
+
+
+        SharedPreferences preferences = theContext.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        if (preferences.contains(User.REQUESTING_BACKGROUND_STATUS)) {
+            Log.w(TAG, "Asking shared prefs about background services");
+            isBackgroundServiceRunning = preferences.getBoolean(User.REQUESTING_BACKGROUND_STATUS, false);
+
+            if (isBackgroundServiceRunning) {
+                Log.w(TAG, "Restarting Background Service on Boot!");
+                ComponentName componentName = new ComponentName(theContext.getPackageName(), BackgroundService.class.getName());
+                ComponentName service = theContext.startService(new Intent().setComponent(componentName));
+                if (service == null) {
+                    Log.w(TAG, "Could not start service");
+                }
+
+            } else {
+                Log.w(TAG, "Background Service wasn't running...");
+            }
+        }
+    }
+
+    /**
+     * Private method called upon to store the location in the appropriate structure.
+     * If in foreground, the coordinate is stored in the database and in the View using
+     * a reference to the GPSPlotter instance. Else, the coordinate is only stored in the Local
+     * Database, because there is no view in the foreground of the application lifecycle.
+     * @param theLocation is the location obtained from the Parcelable Extra.
+     *                    @param theContext is the application context.
+     */
+    private void storeLocation(Location theLocation, Context theContext) {
+        Log.w(TAG, "App is in foreground - " + Boolean.toString(isAppInForeground(theContext)));
+
+        if (isAppInForeground(theContext)) {
+            GPSPlotter.getInstance(theContext).updateParentActivity();
+            GPSPlotter.getInstance(theContext).addLocationToView(theLocation);
+            insertCoordinateToDatabase(theLocation);
+
+        } else {
+            insertCoordinateToDatabase(theLocation);
+        }
     }
 
 

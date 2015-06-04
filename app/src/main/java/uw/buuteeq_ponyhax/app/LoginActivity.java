@@ -33,6 +33,7 @@ public class LoginActivity extends Activity {
     /**
      * Private static field to hold an error message.
      */
+    private static final String TAG = LoginActivity.class.getName();
     private static final String MISSING_USER = "The User or Password is incorrect!";
     private static final int TIMESTAMP_DIVISOR = 1000;
 
@@ -54,6 +55,10 @@ public class LoginActivity extends Activity {
         Button forgotButton = (Button) findViewById(R.id.forgot_button);
 
         final NetworkChecker network = NetworkChecker.getInstance();
+        Log.w(TAG, "Internet?" + Boolean.toString(network.isOnInternet(getApplicationContext())));
+        Log.w(TAG, "Wifi?" + Boolean.toString(network.isOnNetwork(getApplicationContext())));
+        Log.w(TAG, "Network?" + Boolean.toString(network.isOnWifi(getApplicationContext())));
+
 
         if (network.isOnInternet(getApplicationContext())) {
             /** Registers the custom login listener with the Login Button.*/
@@ -141,8 +146,10 @@ public class LoginActivity extends Activity {
             }
 
             if (userID == null) {
+                Log.w(TAG, "Invalid User");
                 makeMissingUserToast();
-            } else {
+            } else if (LocalStorage.getUserID(getApplicationContext()) == null || !LocalStorage.getUserID(getApplicationContext()).matches(userID)){
+                Log.w(TAG, "Valid User, but different from the User that was previously logged in");
                 toRet = true;
                 LocalStorage.putUserId(userID, getApplicationContext());
                 LocalStorage.putUserEmail(mEmailField.getText().toString().trim(), getApplicationContext());

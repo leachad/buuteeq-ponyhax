@@ -13,21 +13,28 @@ public class NetworkChecker {
     /**
      * Protected constructor for singleton design
      */
-    protected NetworkChecker() {
+    public NetworkChecker() {
 
     }
 
     public boolean isOnWifi(Context context) {
         ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        return mWifi.isConnected();
+        if (mWifi != null)
+            return mWifi.isConnected();
+        else
+            return false;
     }
 
     public boolean isOnNetwork(Context context) {
         ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mNetwork = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        return mNetwork.isConnected();
+        if (mNetwork != null)
+            return mNetwork.isConnected();
+        else
+            return false;
     }
+
 
     public boolean isOnInternet(Context context) {
         return isOnWifi(context) || isOnNetwork(context);

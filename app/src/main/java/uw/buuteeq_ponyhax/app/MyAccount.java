@@ -30,6 +30,7 @@ import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
 import location_services.GPSPlotter;
+import network_power.NetworkChecker;
 import webservices.WebDriver;
 
 public class MyAccount extends ActionBarActivity
@@ -59,7 +60,6 @@ public class MyAccount extends ActionBarActivity
     private GPSPlotter.ServiceType mServiceType;
     private GPSPlotter myGPSPlotter;
 
-    public int publishCounter = 0;
     protected List<Coordinate> coordinates;
     private int mSelectedSampleRate = DEFAULT_INTERVAL;
     private int mFragmentId = R.id.map;
@@ -111,6 +111,7 @@ public class MyAccount extends ActionBarActivity
 
     /**
      * $ -- START & STOP ACTIONS DEPENDENT UPON APPLICATION CONDITIONS -- $
+     *
      * @param thePlotter is a reference to the GPSPlotter for initiating
      *                   specific tracking actions.
      */
@@ -147,9 +148,7 @@ public class MyAccount extends ActionBarActivity
     }
 
     /**
-     *
      * $ -- INITIALIZE THE TRACKING BUTTONS -- START & STOP -- $
-     *
      */
     private void initializeButtons() {
         /** Instance of the GPSPlotter.*/
@@ -186,12 +185,10 @@ public class MyAccount extends ActionBarActivity
             selectStopButton();
         }
 
-//        setTitle(mTitle);
+        setTitle(mTitle);
     }
 
     /**
-     *
-     *
      * $ -- EVALUATING NETWORK CONNECTIONS -- $
      * Check whether the device is connected, and if so, whether the connection
      * is wifi or mobile (it could be something else).
@@ -219,16 +216,6 @@ public class MyAccount extends ActionBarActivity
         }
         return wifizInTheHouse;
 
-    }
-
-    /**
-     * Public method to return the currently selected fragment for display in
-     * the Fragment Manager. Allows propagation of a Progress Dialog.
-     * @return fragment
-     */
-    public Fragment getBaseViewFragment() {
-
-        return getSupportFragmentManager().findFragmentById(mFragmentId);
     }
 
 
@@ -263,12 +250,21 @@ public class MyAccount extends ActionBarActivity
         super.onSaveInstanceState(outState, outPersistentState);
     }
 
-
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
+        super.onStop();
+        Log.w(TAG, "Destroy??");
+        if (GPSPlotter.getInstance(getApplicationContext()).getServiceType().equals(GPSPlotter.ServiceType.FOREGROUND))
+            GPSPlotter.getInstance(getApplicationContext()).endManagedLocationRequests();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.w(TAG, "Pausing...");
+        if (GPSPlotter.getInstance(getApplicationContext()).getServiceType().equals(GPSPlotter.ServiceType.FOREGROUND))
+            GPSPlotter.getInstance(getApplicationContext()).endManagedLocationRequests();
+    }
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         //Update fragment view on navigation selection
@@ -291,6 +287,7 @@ public class MyAccount extends ActionBarActivity
                 break;
             case 3:
                 LocalStorage.clearPrefs(getApplicationContext());
+                GPSPlotter.getInstance(getApplicationContext()).endManagedLocationRequests();
                 choice = false;
                 finish();
                 break;
@@ -393,12 +390,6 @@ public class MyAccount extends ActionBarActivity
 
     public void addCoordinateToList(Coordinate coord) {
         coordinates.add(coord);
-
-        if (publishCounter % PUBLISH_INTERVAL == 0 &&  publishCounter != 0 && checkNetworkConnection()) {
-            coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
-            publishCounter = 0;
-            Log.w("PUBLISH: ", Integer.toString(publishCounter));
-        }
     }
 
     @Override
@@ -409,22 +400,18 @@ public class MyAccount extends ActionBarActivity
 
     @Override
     public int getNumLocallyStoredPoints() {
-        return coordHelper.size();
+        return coordHelper.getNumberUserCoordinates(LocalStorage.getUserID(getApplicationContext()));
     }
 
     @Override
     public GPSPlotter getGPSPlotter() {
-        return myGPSPlotter;
-    }
-
-    @Override
-    public MyAccount getMyAccount() {
-        return getInstance();
+        return GPSPlotter.getInstance(getApplicationContext());
     }
 
     @Override
     public void pushUpdates() {
-        coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
-        publishCounter = 0;
+        if (new NetworkChecker().isOnInternet(getApplicationContext()))
+            coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
+
     }
 }

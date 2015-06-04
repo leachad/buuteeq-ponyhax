@@ -121,8 +121,30 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    /**
+     *  Returns the size of the entire database.
+     *  NO guarantee that these are all of the Users points.
+     *
+     * @return size of the locally stored database.
+     */
     public int size() {
         return (int) DatabaseUtils.queryNumEntries(getReadableDatabase(), TABLE_NAME);
+    }
+
+    /**
+     * Public method used to access the current number of points that the current user has
+     * accrued in the shared local database.
+     * @param theUserID is the current user's UUID.
+     * @return numberLocalPoints
+     *
+     */
+    public int getNumberUserCoordinates(String theUserID) {
+        Cursor cursor = getCoordinateCursor(theUserID);
+        int total = 0;
+        while (cursor.moveToNext()) {
+            total++;
+        }
+        return total;
     }
 
 
@@ -155,6 +177,7 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
         Log.d("LOCAL COORD LENGTH", "" + coordinates.size());
         return coordinates;
     }
+
 
 
     /**

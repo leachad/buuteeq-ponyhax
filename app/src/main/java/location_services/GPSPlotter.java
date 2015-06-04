@@ -3,6 +3,7 @@
  */
 package location_services;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -44,6 +45,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     private MyAccount mAccount;
     private static Location mCurrentLocation;
     private static CoordinateStorageDatabaseHelper mDbHelper;
+    private static AlarmManager mAlarmManager;
     private static String mUserID;
     private static Context mContext;
     private int mIntentInterval;
@@ -69,80 +71,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     }
 
-    /**
-     * Private method to start the Location Updates using the FusedLocation API in .the foreground.
-     */
-    private void startForegroundUpdates() {
-        Log.w(TAG, "Starting foreground updates");
-        if (googlePlayServicesInstalled()) {
-            LocalStorage.putLocationRequestStatus(true, mContext);
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), getLocationListener());
-        }
-    }
-
-    /**
-     * Private method to start the Location Updates using the FusedLocation API in the background.
-     */
-    private void startBackgroundUpdates() {
-        Log.w(TAG, "Starting background updates");
-        if (googlePlayServicesInstalled()) {
-            LocalStorage.putBackgroundRequestStatus(true, mContext);
-            LocalStorage.putLocationRequestStatus(true, mContext);
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), buildPendingIntent());
-        }
-    }
-
-    /**
-     * Private method to end foreground updates.
-     */
-    private void endForegroundUpdates() {
-        Log.w(TAG, "Ending foreground updates");
-        LocalStorage.putLocationRequestStatus(false, mContext);
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getLocationListener());
-    }
-
-    /**
-     * Private method to end background updates.
-     */
-    private void endBackgroundUpdates() {
-        Log.w(TAG, "Ending background updates");
-        LocalStorage.putBackgroundRequestStatus(false, mContext);
-        LocalStorage.putLocationRequestStatus(false, mContext);
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, buildPendingIntent());
-    }
-
-    /**
-     * Private helper method to initialize the Google Api Client with the
-     * LocationServices Api and Build it for use.
-     */
-    private void initializeGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-
-
-    }
-
-    /**
-     * Private helper method to determine whether or not GooglePlayServices
-     * are installed on the local system.
-     *
-     * @return services are installed.
-     */
-    private boolean googlePlayServicesInstalled() {
-        int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mContext);
-        return result == ConnectionResult.SUCCESS;
-    }
-
-    /**
-     * Private method to initialize an instance of the GPS Plotter class.
-     */
-    private void initializeInstance() {
-        gpsPlotterInstance = this;
-
-    }
 
     /**
      * Private method to initialize the fields of the GPS Plotter class.
@@ -171,6 +99,41 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         else
             return ServiceType.FOREGROUND;
     }
+
+    /**
+     * Private method to initialize an instance of the GPS Plotter class.
+     */
+    private void initializeInstance() {
+        gpsPlotterInstance = this;
+
+    }
+
+    /***********************************GOOGLE API CLIENT METHODS*********************************/
+
+    /**
+     * Private helper method to initialize the Google Api Client with the
+     * LocationServices Api and Build it for use.
+     */
+    private void initializeGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+    }
+
+    /**
+     * Private helper method to determine whether or not GooglePlayServices
+     * are installed on the local system.
+     *
+     * @return services are installed.
+     */
+    private boolean googlePlayServicesInstalled() {
+        int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mContext);
+        return result == ConnectionResult.SUCCESS;
+    }
+
     /**
      * Private method to build the Api Client for use with the LocationServices API.
      */
@@ -187,72 +150,48 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         mGoogleApiClient.connect();
     }
 
+    /***********************************UPLOAD PROCESSES AND INTENTS********************************/
+
     /**
-     * Private helper method used to generate a LocationRequest which will be used to handle all location updates
-     * within the FusedLocationApi until the Interval is changed.
+     * Private method to create a pending intent for issuing alarm manager requests.
      *
-     * @return locationRequest
+     * @param theIntent is the original intent.
+     * @return thePendingIntent
      */
-    private LocationRequest buildLocationRequest() {
-        int dateConversion = 1000;
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setInterval(mIntentInterval * dateConversion);
-        locationRequest.setFastestInterval((mIntentInterval / 2) * dateConversion);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        Log.w(TAG, "Building location request");
-        return locationRequest;
+    private PendingIntent buildUploadPendingIntent(Intent theIntent) {
+        return PendingIntent.getBroadcast(mContext, 0, theIntent, 0);
     }
 
     /**
-     * Private method used to set the current service type and location requests
-     * appropriately. Evaluates the parameter again the current service type.
+     * Private method to create an intent for issuing alarm manager requests.
      *
-     * @param theServiceType is the currently requested service type.
+     * @return theIntent
      */
-    public void modifyServiceType(ServiceType theServiceType) {
-        mNewServiceType = theServiceType;
+    private Intent buildUploadIntent() {
+        Intent theIntent = new Intent(mContext, BackgroundLocationReceiver.class);
+        theIntent.setAction("upload");
+        return theIntent;
     }
 
     /**
-     * Private method used to add the coordinates to the display (map and overview).
-     *
-     * @param location is the current obtained location.
+     * Private method to register an instance of an AlarmManager that will issue uploads to the
+     * WebService intermittently. Default duration is one hour.
      */
-    public void addLocationToView(Location location) {
-        if (location != null) {
-            Log.w(TAG, "Location obtained is: " + location.toString());
-            mCurrentLocation = location;
-            Coordinate coord = new Coordinate(mCurrentLocation, mUserID);
-            mDbHelper.insertCoordinate(coord);
-            mAccount.addCoordinateToList(coord);
-            List<Coordinate> list = mAccount.getList();
-            mAccount.fragment.update(mCurrentLocation, list);
-        }
+    private void registerAlarmManager() {
+        mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 1, AlarmManager.INTERVAL_HOUR, buildUploadPendingIntent(buildUploadIntent()));
     }
 
     /**
-     * Private helper method used to generate a PendingIntent for use when the User requests background service
-     * within the FusedLocationApi until the Interval is changed.
-     *
-     * @return pendingIntent
+     * Private method used to cancel the alarm manager in the case that a background point service
+     * or a foreground point service are disabled.
      */
-    private PendingIntent buildPendingIntent() {
-        Log.w(TAG, "building pending intent");
-        Intent intent = new Intent(mContext, BackgroundLocationReceiver.class);
-        intent.setAction("background");
-        intent.putExtra(User.USER_ID, mUserID);
-        return PendingIntent.getBroadcast(mContext, 0, intent, 0);
+    private void unregisterAlarmManager() {
+        if (mAlarmManager != null)
+            mAlarmManager.cancel(buildUploadPendingIntent(buildUploadIntent()));
     }
 
-    /**
-     * Private helper method to return the current location listener to a FusedLocationservices Api
-     * call and build it if it does not exists.
-     *
-     * @return theCurrentLocationListener using the android.gms.location Listener API.
-     */
-    private LocationListener getLocationListener() {
-        return this;
-    }
+    /*****************************************LOCATION SERVICE REQUESTS****************************/
 
     /**
      * User passes in a requested interval polling time in seconds as an
@@ -307,7 +246,145 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     }
 
     /**
+     * Private helper method to build an Intent that will be couple with a pending intent uses
+     * for issuing background Location requests.
+     *
+     * @return theIntent
+     */
+    private Intent buildRequestIntent() {
+        Intent intent = new Intent(mContext, BackgroundLocationReceiver.class);
+        intent.setAction("background");
+        intent.putExtra(User.USER_ID, mUserID);
+        return intent;
+    }
+
+    /**
+     * Private helper method used to generate a PendingIntent for use when the User requests background service
+     * within the FusedLocationApi until the Interval is changed.
+     *
+     * @return pendingIntent
+     */
+    private PendingIntent buildRequestPendingIntent(Intent theIntent) {
+        Log.w(TAG, "building pending intent");
+        return PendingIntent.getBroadcast(mContext, 0, theIntent, 0);
+    }
+
+    /**
+     * Private method to start the Location Updates using the FusedLocation API in .the foreground.
+     */
+    private void startForegroundUpdates() {
+        Log.w(TAG, "Starting foreground updates");
+        if (googlePlayServicesInstalled()) {
+            LocalStorage.putBackgroundRequestStatus(false, mContext);
+            LocalStorage.putLocationRequestStatus(true, mContext);
+            registerAlarmManager();
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), getLocationListener());
+        }
+    }
+
+    /**
+     * Private method to start the Location Updates using the FusedLocation API in the background.
+     */
+    private void startBackgroundUpdates() {
+        Log.w(TAG, "Starting background updates");
+        if (googlePlayServicesInstalled()) {
+            LocalStorage.putBackgroundRequestStatus(true, mContext);
+            LocalStorage.putLocationRequestStatus(true, mContext);
+            registerAlarmManager();
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), buildRequestPendingIntent(buildRequestIntent()));
+        }
+    }
+
+    /**
+     * Private method to end foreground updates.
+     */
+    private void endForegroundUpdates() {
+        Log.w(TAG, "Ending foreground updates");
+        LocalStorage.putLocationRequestStatus(false, mContext);
+        LocalStorage.putLocationRequestStatus(false, mContext);
+        unregisterAlarmManager();
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getLocationListener());
+    }
+
+    /**
+     * Private method to end background updates.
+     */
+    private void endBackgroundUpdates() {
+        Log.w(TAG, "Ending background updates");
+        LocalStorage.putBackgroundRequestStatus(false, mContext);
+        LocalStorage.putLocationRequestStatus(false, mContext);
+        unregisterAlarmManager();
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, buildRequestPendingIntent(buildRequestIntent()));
+    }
+
+    /**
+     * Private helper method used to generate a LocationRequest which will be used to handle all location updates
+     * within the FusedLocationApi until the Interval is changed.
+     *
+     * @return locationRequest
+     */
+    private LocationRequest buildLocationRequest() {
+        int dateConversion = 1000;
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setInterval(mIntentInterval * dateConversion);
+        locationRequest.setFastestInterval((mIntentInterval / 2) * dateConversion);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        Log.w(TAG, "Building location request");
+        return locationRequest;
+    }
+
+    /**
+     * Private method used to set the current service type and location requests
+     * appropriately. Evaluates the parameter again the current service type.
+     *
+     * @param theServiceType is the currently requested service type.
+     */
+    public void modifyServiceType(ServiceType theServiceType) {
+        mNewServiceType = theServiceType;
+    }
+
+    /**
+     * Private method used to add the coordinates to the display (map and overview).
+     * DOES NOT HANDLE BACKGROUND STORAGE...DB Helper, etc.
+     *
+     * @param location is the current obtained location.
+     */
+    public void addLocationToView(Location location) {
+        if (location != null) {
+            Log.w(TAG, "Location obtained is: " + location.toString());
+            mCurrentLocation = location;
+            Coordinate coord = new Coordinate(mCurrentLocation, mUserID);
+            mAccount.addCoordinateToList(coord);
+            List<Coordinate> list = mAccount.getList();
+            mAccount.fragment.update(mCurrentLocation, list);
+        }
+    }
+
+
+    /******************************GETTERS FOR VARIOUS INTEGRAL DATA CHECKS************************/
+
+    /**
+     * Private helper method to return the current location listener to a FusedLocationservices Api
+     * call and build it if it does not exists.
+     *
+     * @return theCurrentLocationListener using the android.gms.location Listener API.
+     */
+    private LocationListener getLocationListener() {
+        return this;
+    }
+
+    /**
+     * Public method to return the Service Type currently being used to the calling class.
+     *
+     * @return mServiceType
+     */
+    public ServiceType getServiceType() {
+        return mCurrentServiceType;
+    }
+
+    /**
      * Public method to return the current interval within the GPSPlotter class.
+     *
      * @return mIntentInterval
      */
     public int getInterval() {
@@ -343,11 +420,25 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     }
 
     /**
+     * Private method to get the current size of the coordinate storage database helper will
+     * which in turn be used to propagate data necessary for the User's understanding.
+     *
+     * @return numLocallyStoredPoints
+     */
+    public int getNumberLocalPoints() {
+        return mDbHelper.getNumberUserCoordinates(mUserID);
+    }
+
+    /**
      * Public method to update the Parent View if it is currently null.
      */
     public void updateParentActivity() {
         mAccount = MyAccount.getInstance();
     }
+
+    /**
+     * *****************************OVERRIDDEN METHODS FROM INTERFACES IMPLEMENTED***************
+     */
 
     @Override
     public void onConnected(Bundle bundle) {

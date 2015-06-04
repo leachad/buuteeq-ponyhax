@@ -166,15 +166,14 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    GPSPlotter.getInstance(getActivity().getApplicationContext()).modifyServiceType(GPSPlotter.ServiceType.BACKGROUND);
+                    mCallBackActivity.getGPSPlotter().modifyServiceType(GPSPlotter.ServiceType.BACKGROUND);
                 } else {
-                    GPSPlotter.getInstance(getActivity().getApplicationContext()).modifyServiceType(GPSPlotter.ServiceType.FOREGROUND);
+                    mCallBackActivity.getGPSPlotter().modifyServiceType(GPSPlotter.ServiceType.FOREGROUND);
                 }
             }
         });
 
-        if (LocalStorage.getRequestingBackgroundStatus(getActivity().getApplicationContext())
-                && LocalStorage.getRequestingBackgroundStatus(getActivity().getApplicationContext())) {
+        if (mCallBackActivity.getGPSPlotter().getServiceType().equals(GPSPlotter.ServiceType.BACKGROUND)) {
             Log.w("SettingsFragment", "Default status for checkbox is on!");
             backgroundCheckbox.setChecked(true);
         } else  {
@@ -298,8 +297,10 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
      */
     private long getUnixTimeStamp(final String theBoundary) {
         if (theBoundary.matches(START_RANGE)) {
+            Log.w("SettingsFragment", "Current Start Date " + mStartCalendar.getTime().toString());
             return mStartCalendar.getTimeInMillis() / TIMESTAMP_DIVISOR;
         } else {
+            Log.w("SettingsFragment", "Current End Date " + mEndCalendar.getTime().toString());
             return mEndCalendar.getTimeInMillis() / TIMESTAMP_DIVISOR;
         }
     }
@@ -397,20 +398,39 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
          */
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            int tempYear;
+            int tempMonth;
+            int tempDay;
+            if (myBoundary.matches(START_RANGE)) {
+                tempYear = mStartCalendar.get(Calendar.YEAR);
+                tempMonth = mStartCalendar.get(Calendar.MONTH);
+                tempDay = mStartCalendar.get(Calendar.DAY_OF_MONTH);
+                mStartCalendar.set(year, monthOfYear, dayOfMonth, mStartCalendar.get(Calendar.HOUR_OF_DAY), mStartCalendar.get(Calendar.MINUTE), 0);
+            } else {
+                tempYear = mEndCalendar.get(Calendar.YEAR);
+                tempMonth = mEndCalendar.get(Calendar.MONTH);
+                tempDay = mEndCalendar.get(Calendar.DAY_OF_MONTH);
+                mEndCalendar.set(year, monthOfYear, dayOfMonth, mEndCalendar.get(Calendar.HOUR_OF_DAY), mEndCalendar.get(Calendar.MINUTE), 0);
+            }
+
             if (selectedDatesOrdered()) {
                 if (myBoundary.matches(START_RANGE)) {
-                    mStartCalendar.set(year, monthOfYear, dayOfMonth, mStartCalendar.get(Calendar.HOUR_OF_DAY), mStartCalendar.get(Calendar.MINUTE), 0);
                     mStartDate.setText(getDate(mStartCalendar.getTime()));
                     LocalStorage.putStartTime(getUnixTimeStamp(START_RANGE), getActivity());
                     Log.w("Start Date Set: ", Long.toString(getUnixTimeStamp(START_RANGE)));
                 } else {
-                    mEndCalendar.set(year, monthOfYear, dayOfMonth, mEndCalendar.get(Calendar.HOUR_OF_DAY), mEndCalendar.get(Calendar.MINUTE), 0);
                     mEndDate.setText(getDate(mEndCalendar.getTime()));
                     LocalStorage.putEndTime(getUnixTimeStamp(END_RANGE), getActivity());
                     Log.w("End Date Set: ", Long.toString(getUnixTimeStamp(END_RANGE)));
                 }
             } else {
                 Toast.makeText(getActivity(), ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
+                //Reset Calendar
+                if (myBoundary.matches(START_RANGE)) {
+                    mStartCalendar.set(tempYear, tempMonth, tempDay, mStartCalendar.get(Calendar.HOUR_OF_DAY), mStartCalendar.get(Calendar.MINUTE), 0);
+                } else {
+                    mEndCalendar.set(tempYear, tempMonth, tempDay, mEndCalendar.get(Calendar.HOUR_OF_DAY), mEndCalendar.get(Calendar.MINUTE), 0);
+                }
             }
         }
     }
@@ -439,20 +459,36 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
          */
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            int tempHour;
+            int tempMinute;
+            if (myBoundary.matches(START_RANGE)) {
+                tempHour = mStartCalendar.get(Calendar.HOUR_OF_DAY);
+                tempMinute = mStartCalendar.get(Calendar.MINUTE);
+                mStartCalendar.set(mStartCalendar.get(Calendar.YEAR), mStartCalendar.get(Calendar.MONTH), mStartCalendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute, 0);
+            } else {
+                tempHour = mEndCalendar.get(Calendar.HOUR_OF_DAY);
+                tempMinute = mEndCalendar.get(Calendar.MINUTE);
+                mEndCalendar.set(mEndCalendar.get(Calendar.YEAR), mEndCalendar.get(Calendar.MONTH), mEndCalendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute, 0);
+            }
+
             if (selectedDatesOrdered()) {
                 if (myBoundary.matches(START_RANGE)) {
-                    mStartCalendar.set(mStartCalendar.get(Calendar.YEAR), mStartCalendar.get(Calendar.MONTH), mStartCalendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute, 0);
                     mStartTime.setText(getTime(mStartCalendar.getTime()));
                     LocalStorage.putStartTime(getUnixTimeStamp(START_RANGE), getActivity());
                     Log.w("Start Time Set: ", Long.toString(getUnixTimeStamp(START_RANGE)));
                 } else {
-                    mEndCalendar.set(mEndCalendar.get(Calendar.YEAR), mEndCalendar.get(Calendar.MONTH), mEndCalendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute, 0);
                     mEndTime.setText(getTime(mEndCalendar.getTime()));
                     LocalStorage.putEndTime(getUnixTimeStamp(END_RANGE), getActivity());
                     Log.w("End Time Set: ", Long.toString(getUnixTimeStamp(END_RANGE)));
                 }
             } else {
                 Toast.makeText(getActivity(), ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
+                //Reset Calendar
+                if (myBoundary.matches(START_RANGE)) {
+                    mStartCalendar.set(mStartCalendar.get(Calendar.YEAR), mStartCalendar.get(Calendar.MONTH), mStartCalendar.get(Calendar.DAY_OF_MONTH), tempHour, tempMinute, 0);
+                } else {
+                    mEndCalendar.set(mEndCalendar.get(Calendar.YEAR), mEndCalendar.get(Calendar.MONTH), mEndCalendar.get(Calendar.DAY_OF_MONTH), tempHour, tempMinute, 0);
+                }
             }
         }
     }
