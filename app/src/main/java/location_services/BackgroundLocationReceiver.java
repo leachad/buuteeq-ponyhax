@@ -34,11 +34,8 @@ import network_power.NetworkChecker;
 
 public class BackgroundLocationReceiver extends BroadcastReceiver {
     private static final String TAG = "BLocRec: ";
-    private static final String REQUEST_ACTION = "background";
-    private static final String UPLOAD_ACTION = "upload";
     private static final String UPLOAD_ERROR_MESSAGE = "Background Service to Upload Coordinates Failed.";
     private CoordinateStorageDatabaseHelper mDbHelper;
-    private String mUserID;
 
     public BackgroundLocationReceiver() {
         //Default, no-arg constructor
@@ -46,26 +43,25 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        mUserID = intent.getStringExtra(User.USER_ID);
         if (mDbHelper == null) {
             mDbHelper = new CoordinateStorageDatabaseHelper(context);
         }
 
-        if (intent.getAction().matches(REQUEST_ACTION)) {
+        if (intent.getAction().matches(GPSPlotter.BACKGROUND_ACTION) || intent.getAction().matches(GPSPlotter.FOREGROUND_ACTION)) {
             Log.w(TAG, "BLR Received-background");
             Location location = intent.getParcelableExtra(FusedLocationProviderApi.KEY_LOCATION_CHANGED);
-            storeLocation(location, context);
+            storeLocation(location, context, intent.getStringExtra(User.USER_ID));
 
 
         } else if (intent.getAction().matches(Intent.ACTION_BOOT_COMPLETED)) {
             Log.w(TAG, "REBOOT!!!");
             initializeBackgroundServices(context);
 
-        } else if (intent.getAction().matches(UPLOAD_ACTION) && verifyConnectivity(context)) {
+        } else if (intent.getAction().matches(GPSPlotter.UPLOAD_ACTION) && verifyConnectivity(context)) {
             Log.w(TAG, "Push to Database. Connected!");
-            pushToDatabase();
+            pushToDatabase(intent.getStringExtra(User.USER_ID));
 
-        } else if (intent.getAction().matches(UPLOAD_ACTION) && !verifyConnectivity(context)) {
+        } else if (intent.getAction().matches(GPSPlotter.UPLOAD_ACTION) && !verifyConnectivity(context)) {
             Log.w(TAG, "Push to Database. Not Connected!");
             Toast.makeText(context, UPLOAD_ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
         }
@@ -101,9 +97,10 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
      * Private helper method to add points to the Coordinate Storage Database Helper.
      *
      * @param theLocation is the newly obtained Location
+     *                    @param userID is the current UUID
      */
-    private void insertCoordinateToDatabase(Location theLocation) {
-        Coordinate current = new Coordinate(theLocation, mUserID);
+    private void insertCoordinateToDatabase(Location theLocation, String userID) {
+        Coordinate current = new Coordinate(theLocation, userID);
         Log.w(TAG, current.toString());
         mDbHelper.insertCoordinate(current);
     }
@@ -114,15 +111,16 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
      *
      */
     private boolean verifyConnectivity(Context theContext) {
-        return new NetworkChecker().isOnInternet(theContext);
+        return NetworkChecker.getInstance().isOnInternet(theContext);
     }
 
     /**
      * Private method used to push the coordinates in the local sqlite database to the
      * WebService database using Async Tasks.
+     * @param userID
      */
-    private void pushToDatabase() {
-        mDbHelper.publishCoordinateBatch(mUserID);
+    private void pushToDatabase(String userID) {
+        mDbHelper.publishCoordinateBatch(userID);
     }
 
     /**
@@ -160,17 +158,18 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
      * Database, because there is no view in the foreground of the application lifecycle.
      * @param theLocation is the location obtained from the Parcelable Extra.
      *                    @param theContext is the application context.
+     *                                      @param userID is the UUID of current SUer
      */
-    private void storeLocation(Location theLocation, Context theContext) {
+    private void storeLocation(Location theLocation, Context theContext, String userID) {
         Log.w(TAG, "App is in foreground - " + Boolean.toString(isAppInForeground(theContext)));
 
         if (isAppInForeground(theContext)) {
             GPSPlotter.getInstance(theContext).updateParentActivity();
             GPSPlotter.getInstance(theContext).addLocationToView(theLocation);
-            insertCoordinateToDatabase(theLocation);
+            insertCoordinateToDatabase(theLocation, userID);
 
         } else {
-            insertCoordinateToDatabase(theLocation);
+            insertCoordinateToDatabase(theLocation, userID);
         }
     }
 

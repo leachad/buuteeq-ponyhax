@@ -228,15 +228,14 @@ public class MyAccount extends ActionBarActivity
      */
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        if (!savedInstanceState.isEmpty()) {
-            if (savedInstanceState.getBoolean(mStartButton.getText().toString())) {
-                mRadioGroup.check(mStartButton.getId());
-            } else {
-                mRadioGroup.check(mStopButton.getId());
-            }
-
-        }
         super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState.getBoolean(mStartButton.getText().toString())) {
+            mRadioGroup.check(mStartButton.getId());
+        } else {
+            mRadioGroup.check(mStopButton.getId());
+        }
+
+
     }
 
     /**
@@ -247,8 +246,9 @@ public class MyAccount extends ActionBarActivity
      */
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        outState.putBoolean(mStartButton.getText().toString(), mStartButton.isChecked());
         super.onSaveInstanceState(outState, outPersistentState);
+        outState.putBoolean(mStartButton.getText().toString(), mStartButton.isChecked());
+
     }
 
     @Override
@@ -263,9 +263,12 @@ public class MyAccount extends ActionBarActivity
     public void onPause() {
         super.onPause();
         Log.w(TAG, "Pausing...");
-        if (GPSPlotter.getInstance(getApplicationContext()).getServiceType().equals(GPSPlotter.ServiceType.FOREGROUND))
+        if (GPSPlotter.getInstance(getApplicationContext()).getServiceType().equals(GPSPlotter.ServiceType.FOREGROUND)) {
             GPSPlotter.getInstance(getApplicationContext()).endManagedLocationRequests();
+            selectStopButton();
+        }
     }
+
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         //Update fragment view on navigation selection
@@ -404,7 +407,7 @@ public class MyAccount extends ActionBarActivity
 
     @Override
     public int getNumLocallyStoredPoints() {
-        return coordHelper.getNumberUserCoordinates(LocalStorage.getUserID(getApplicationContext()));
+        return coordHelper.getNumberUserPoints(LocalStorage.getUserID(getApplicationContext()));
     }
 
     @Override
@@ -414,7 +417,7 @@ public class MyAccount extends ActionBarActivity
 
     @Override
     public void pushUpdates() {
-        if (new NetworkChecker().isOnInternet(getApplicationContext()))
+        if (NetworkChecker.getInstance().isOnInternet(getApplicationContext()))
             coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
 
     }

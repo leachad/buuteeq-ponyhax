@@ -132,19 +132,15 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Public method used to access the current number of points that the current user has
-     * accrued in the shared local database.
-     * @param theUserID is the current user's UUID.
-     * @return numberLocalPoints
+     * Public method to return the number of Coordinates "owned" by the
+     * current user.
+     *
+     * @param theUserID is the current users UUID.
+     *                  @return theNumCoordinates
      *
      */
-    public int getNumberUserCoordinates(String theUserID) {
-        Cursor cursor = getCoordinateCursor(theUserID);
-        int total = 0;
-        while (cursor.moveToNext()) {
-            total++;
-        }
-        return total;
+    public int getNumberUserPoints(String theUserID) {
+        return getAllCoordinates(theUserID).size();
     }
 
 

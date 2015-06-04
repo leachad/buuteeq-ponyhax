@@ -13,7 +13,7 @@ public class NetworkChecker {
     /**
      * Protected constructor for singleton design
      */
-    public NetworkChecker() {
+    protected NetworkChecker() {
 
     }
 

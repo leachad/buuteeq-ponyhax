@@ -173,8 +173,9 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
             }
         });
 
-        if (mCallBackActivity.getGPSPlotter().getServiceType().equals(GPSPlotter.ServiceType.BACKGROUND)) {
-            Log.w("SettingsFragment", "Default status for checkbox is on!");
+        if (mCallBackActivity.getGPSPlotter().getServiceType().equals(GPSPlotter.ServiceType.BACKGROUND)
+                && mCallBackActivity.getGPSPlotter().isRunningLocationUpdates()) {
+            Log.w("SettingsFragment", "Background on and Running!");
             backgroundCheckbox.setChecked(true);
         } else  {
             Log.w("SettingsFragment", "Default status for checkbox is off!");

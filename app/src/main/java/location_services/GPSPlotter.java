@@ -33,6 +33,9 @@ import uw.buuteeq_ponyhax.app.MyAccount;
  */
 public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
+    public static final String UPLOAD_ACTION = "upload";
+    public static final String BACKGROUND_ACTION = "background";
+    public static final String FOREGROUND_ACTION = "foreground";
     private static final String TAG = "GPSPlotter: ";
     private static final int DEFAULT_INTENT_INTERVAL = 60;
     /**
@@ -49,7 +52,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     private static String mUserID;
     private static Context mContext;
     private int mIntentInterval;
-    private boolean startTracking;
 
 
     private GPSPlotter(Context theContext) {
@@ -169,7 +171,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      */
     private Intent buildUploadIntent() {
         Intent theIntent = new Intent(mContext, BackgroundLocationReceiver.class);
-        theIntent.setAction("upload");
+        theIntent.setAction(UPLOAD_ACTION);
         return theIntent;
     }
 
@@ -179,7 +181,9 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      */
     private void registerAlarmManager() {
         mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-        mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 1, AlarmManager.INTERVAL_HOUR, buildUploadPendingIntent(buildUploadIntent()));
+        mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+                (System.currentTimeMillis() + AlarmManager.INTERVAL_FIFTEEN_MINUTES),
+                AlarmManager.INTERVAL_HOUR, buildUploadPendingIntent(buildUploadIntent()));
     }
 
     /**
@@ -251,9 +255,21 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      *
      * @return theIntent
      */
-    private Intent buildRequestIntent() {
+    private Intent buildBackgroundRequestIntent() {
         Intent intent = new Intent(mContext, BackgroundLocationReceiver.class);
-        intent.setAction("background");
+        intent.setAction(BACKGROUND_ACTION);
+        intent.putExtra(User.USER_ID, mUserID);
+        return intent;
+    }
+
+    /**
+     * Private helper method to build an Intent that will issue requests in the foreground. This
+     * is used so that all types of service calls can be issued in the same Receiver Locale.
+     * @return intent is the pending intent.
+     */
+    private Intent buildForegroundRequestIntent() {
+        Intent intent = new Intent(mContext, BackgroundLocationReceiver.class);
+        intent.setAction(FOREGROUND_ACTION);
         intent.putExtra(User.USER_ID, mUserID);
         return intent;
     }
@@ -278,7 +294,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
             LocalStorage.putBackgroundRequestStatus(false, mContext);
             LocalStorage.putLocationRequestStatus(true, mContext);
             registerAlarmManager();
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), getLocationListener());
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), buildRequestPendingIntent(buildForegroundRequestIntent()));
         }
     }
 
@@ -291,7 +307,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
             LocalStorage.putBackgroundRequestStatus(true, mContext);
             LocalStorage.putLocationRequestStatus(true, mContext);
             registerAlarmManager();
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), buildRequestPendingIntent(buildRequestIntent()));
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, buildLocationRequest(), buildRequestPendingIntent(buildBackgroundRequestIntent()));
         }
     }
 
@@ -300,10 +316,10 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      */
     private void endForegroundUpdates() {
         Log.w(TAG, "Ending foreground updates");
-        LocalStorage.putLocationRequestStatus(false, mContext);
+        LocalStorage.putBackgroundRequestStatus(false, mContext);
         LocalStorage.putLocationRequestStatus(false, mContext);
         unregisterAlarmManager();
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, getLocationListener());
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, buildRequestPendingIntent(buildForegroundRequestIntent()));
     }
 
     /**
@@ -314,7 +330,7 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         LocalStorage.putBackgroundRequestStatus(false, mContext);
         LocalStorage.putLocationRequestStatus(false, mContext);
         unregisterAlarmManager();
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, buildRequestPendingIntent(buildRequestIntent()));
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, buildRequestPendingIntent(buildBackgroundRequestIntent()));
     }
 
     /**
@@ -350,14 +366,18 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      * @param location is the current obtained location.
      */
     public void addLocationToView(Location location) {
+        Coordinate currentCoordinate = null;
         if (location != null) {
             Log.w(TAG, "Location obtained is: " + location.toString());
             mCurrentLocation = location;
-            Coordinate coord = new Coordinate(mCurrentLocation, mUserID);
-            mAccount.addCoordinateToList(coord);
+            currentCoordinate = new Coordinate(mCurrentLocation, mUserID);
+            mAccount.addCoordinateToList(currentCoordinate);
             List<Coordinate> list = mAccount.getList();
             mAccount.fragment.update(mCurrentLocation, list);
         }
+
+        if (mCurrentServiceType.equals(ServiceType.FOREGROUND))
+            mDbHelper.insertCoordinate(currentCoordinate);
     }
 
 
@@ -417,16 +437,6 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      */
     public boolean isRunningBackgroundLocationUpdates() {
         return LocalStorage.getRequestingBackgroundStatus(mContext);
-    }
-
-    /**
-     * Private method to get the current size of the coordinate storage database helper will
-     * which in turn be used to propagate data necessary for the User's understanding.
-     *
-     * @return numLocallyStoredPoints
-     */
-    public int getNumberLocalPoints() {
-        return mDbHelper.getNumberUserCoordinates(mUserID);
     }
 
     /**
