@@ -174,9 +174,15 @@ public class MyAccount extends ActionBarActivity
         /** Set the default clicked button and instantiate the radio group.*/
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupTracking);
 
-        if (myGPSPlotter.isRunningLocationUpdates()) {
+        /**
+         * Sets the start button to checked on Startup if the application is
+         * currently running location updates.
+         */
+        if (myGPSPlotter.isRunningBackgroundLocationUpdates()) {
+            Log.w(TAG, "App is running location updates at startup");
             selectStartButton();
         } else {
+            Log.w(TAG, "App is not running location updates at startup");
             selectStopButton();
         }
 

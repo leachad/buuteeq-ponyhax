@@ -172,7 +172,15 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
                 }
             }
         });
-        backgroundCheckbox.setChecked(LocalStorage.getRequestingBackgroundStatus(getActivity().getApplicationContext()));
+
+        if (LocalStorage.getRequestingBackgroundStatus(getActivity().getApplicationContext())
+                && LocalStorage.getRequestingBackgroundStatus(getActivity().getApplicationContext())) {
+            Log.w("SettingsFragment", "Default status for checkbox is on!");
+            backgroundCheckbox.setChecked(true);
+        } else  {
+            Log.w("SettingsFragment", "Default status for checkbox is off!");
+            backgroundCheckbox.setChecked(false);
+        }
 
         //Grab the current gps frequency value
         frequencyText = (TextView) getActivity().findViewById(R.id.gps_sampling_seconds);

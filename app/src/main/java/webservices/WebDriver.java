@@ -224,6 +224,7 @@ public class WebDriver {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(requestBuilder.getUserCoordinateRequest(myUserID, myStartTime, myEndTime));
             String result;
+            Log.w("WebGet:", httpPost.getURI().toString());
             List<Coordinate> loggedPoints = null;
             try {
                 HttpResponse response = httpClient.execute(httpPost);
