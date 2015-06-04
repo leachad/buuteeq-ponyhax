@@ -1,8 +1,12 @@
 package uw.buuteeq_ponyhax.app.test;
 
+import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.View;
 import android.widget.EditText;
+import android.test.InstrumentationTestCase;
 
+import com.robotium.solo.Condition;
 import com.robotium.solo.Solo;
 import uw.buuteeq_ponyhax.app.LoginActivity;
 import junit.framework.Assert;
@@ -15,7 +19,9 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
 
     private Solo mySolo;
 
-    public LoginActivityTest() {super(LoginActivity.class);}
+    public LoginActivityTest() {
+        super(LoginActivity.class);
+    }
 
     public void setUp() throws Exception {
         mySolo = new Solo(getInstrumentation(), getActivity());
@@ -41,7 +47,16 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         assertTrue("Orientation change failed", textFound);
         mySolo.clickOnButton("Login");
         Assert.assertTrue(mySolo.searchText("Overview"));
+        mySolo.clickOnActionBarHomeButton();
+        getActivity().getIntent();
+        mySolo.clickInList(4);
+        mySolo = new Solo(getInstrumentation(), getActivity());
+        mySolo.sleep(100);
+        assertTrue(mySolo.searchText("Enter Email"));
+
     }
+
+
 
     public void testIncorrectLogin() throws Exception {
 
