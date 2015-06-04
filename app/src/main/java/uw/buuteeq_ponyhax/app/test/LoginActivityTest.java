@@ -32,6 +32,13 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         EditText emial_feild = mySolo.getEditText("Enter Email");
         mySolo.enterText(emial_feild, "eprokhor@uw.edu");
         mySolo.enterText(1, "123456");
+        // Testing Orientation
+        mySolo.setActivityOrientation(Solo.LANDSCAPE);
+        boolean textFound = mySolo.searchText("eprokhor@uw.edu");
+        assertTrue("Orientation change failed", textFound);
+        mySolo.setActivityOrientation(Solo.PORTRAIT);
+        textFound = mySolo.searchText("eprokhor@uw.edu");
+        assertTrue("Orientation change failed", textFound);
         mySolo.clickOnButton("Login");
         Assert.assertTrue(mySolo.searchText("Overview"));
     }

@@ -35,8 +35,6 @@ public class RegisterActivityTest extends ActivityInstrumentationTestCase2<Login
 
     public void testRegister() throws Exception {
         mySolo.clickOnButton(1);
-        Assert.assertTrue(
-                mySolo.searchText("Application Terms and Conditions of Use"));
         mySolo.clickOnButton(1);
         mySolo.enterText(0, "eprokhor@uw.edu");
         mySolo.enterText(1, "123456");
@@ -49,14 +47,20 @@ public class RegisterActivityTest extends ActivityInstrumentationTestCase2<Login
 
         mySolo.enterText(3, "bob");
         mySolo.enterText(4, "bob");
+        // Testing Orientation
+        mySolo.setActivityOrientation(Solo.LANDSCAPE);
+        boolean textFound = mySolo.searchText("eprokhor@uw.edu");
+        assertTrue("Orientation change failed", textFound);
+        mySolo.setActivityOrientation(Solo.PORTRAIT);
+        textFound = mySolo.searchText("eprokhor@uw.edu");
+        assertTrue("Orientation change failed", textFound);
         mySolo.clickOnButton(0);
         assertTrue(mySolo.waitForText("That User already exists!"));
     }
 
     public void testRegisterIncorrect() throws Exception {
         mySolo.clickOnButton(1);
-        Assert.assertTrue(
-                mySolo.searchText("Application Terms and Conditions of Use"));
+
         mySolo.clickOnButton(1);
         mySolo.enterText(0, "eprokhor@uw.edu");
 
