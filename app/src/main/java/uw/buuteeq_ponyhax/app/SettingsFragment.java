@@ -60,8 +60,9 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
     private static final String RESET_PROMPT = "Your password can be reset with the link sent to: ";
     private static final String RESET_FAILED = "Unable to execute reset request. Please try again later.";
     private static final String FREQUENCY_KEY = "frequencyValue";
-    private Button resetPassword;
-    private Button uploadButton;
+    private Button mResetPassword;
+    private Button mUploadButton;
+    private CheckBox mShowAllBox;
     /**
      * Callback fields
      */
@@ -144,12 +145,12 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
         mEndTime.setOnTouchListener(new FieldSelectedListener());
 
         //Setup reset password
-        resetPassword = (Button) getActivity().findViewById(R.id.resetPasswordSettings);
-        resetPassword.setOnClickListener(new ResetPasswordListener());
+        mResetPassword = (Button) getActivity().findViewById(R.id.resetPasswordSettings);
+        mResetPassword.setOnClickListener(new ResetPasswordListener());
 
         //setup push updates to remote database
-        uploadButton = (Button) getActivity().findViewById(R.id.pushToRemoteButton);
-        uploadButton.setOnClickListener(new View.OnClickListener() {
+        mUploadButton = (Button) getActivity().findViewById(R.id.pushToRemoteButton);
+        mUploadButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -159,7 +160,24 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
         });
         setUploadButtonText();
 
-
+        //setup show all check box
+        mShowAllBox = (CheckBox) getActivity().findViewById(R.id.showAllCheckbox);
+        mShowAllBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    LocalStorage.putStartTime(0, getActivity().getApplicationContext());
+                    LocalStorage.putPreviousStartTime(mStartCalendar.getTimeInMillis() / TIMESTAMP_DIVISOR, getActivity().getApplicationContext());
+                    LocalStorage.putEndTime(Calendar.getInstance().getTimeInMillis() / TIMESTAMP_DIVISOR, getActivity().getApplicationContext());
+                    LocalStorage.putPreviousEndTime(mEndCalendar.getTimeInMillis() / TIMESTAMP_DIVISOR, getActivity().getApplicationContext());
+                } else {
+                    LocalStorage.putStartTime(LocalStorage.getPreviousStartTime(getActivity().getApplicationContext()), getActivity().getApplicationContext());
+                    LocalStorage.putEndTime(LocalStorage.getPreviousEndTime(getActivity().getApplicationContext()), getActivity().getApplicationContext());
+                }
+                updateAllFields();
+            }
+        });
+        mShowAllBox.setChecked(LocalStorage.getStartTime(getActivity().getApplicationContext()) == 0);
 
         //Grab the current gps frequency value
         frequencyText = (TextView) getActivity().findViewById(R.id.gps_sampling_seconds);
@@ -214,7 +232,7 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
 
     private void setUploadButtonText() {
         Log.d("SET TEXT METHOD", "SETTINGS");
-        uploadButton.setText(getResources().getString(R.string.push_points_prompt1) + " " + mCallBackActivity.getNumLocallyStoredPoints() + " " + getResources().getString(R.string.push_points_prompt2));
+        mUploadButton.setText(getResources().getString(R.string.push_points_prompt1) + " " + mCallBackActivity.getNumLocallyStoredPoints() + " " + getResources().getString(R.string.push_points_prompt2));
     }
 
     /**
@@ -489,6 +507,9 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+            if (mShowAllBox.isChecked()) {
+                mShowAllBox.setChecked(false);
+            }
             closeKeyboard(getActivity(), v.getWindowToken());
             return false;
         }

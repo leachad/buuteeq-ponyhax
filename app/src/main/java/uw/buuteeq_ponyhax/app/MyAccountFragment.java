@@ -65,15 +65,13 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
 
             if ((startTime == 0) || (coordinate.getTimeStamp() < endTime && coordinate.getTimeStamp() > startTime)) {
 
-                if (prev != null)
-                    distanceTraveledInterval += formatNumber(calcDistance(prev, coordinate, UNIT));
+                if (prev != null) distanceTraveledInterval += formatNumber(calcDistance(prev, coordinate, UNIT));
 
                 scannedCoordinates++;
 
             }
 
-            if (prev != null)
-                distanceTraveled += formatNumber(calcDistance(prev, coordinate, UNIT));
+            if (prev != null) distanceTraveled += formatNumber(calcDistance(prev, coordinate, UNIT));
 
             prev = coordinate;
         }

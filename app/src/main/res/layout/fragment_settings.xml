@@ -59,8 +59,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="2dp"
-                    android:layout_weight=".1
-                "
+                    android:layout_weight=".1"
                     android:text="@string/startOfRange" />
 
                 <LinearLayout
@@ -134,6 +133,14 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/buttonTheme"
+                    android:background="#000000"
+                    android:id="@+id/showAllCheckbox"
+                    android:text="@string/showAllText"
+                    android:buttonTint="@color/material_deep_teal_500" />
 
             </LinearLayout>
 
@@ -196,21 +203,19 @@
                 android:padding="10dp"
                 android:weightSum="1.0">
 
-
-                <Button
-                    android:id="@+id/resetPasswordSettings"
-                    style="@style/buttonTheme"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/reset_password" />
-
-
                 <Button
                     android:id="@+id/pushToRemoteButton"
                     style="@style/buttonTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/push_points_prompt1" />
+
+                <Button
+                    android:id="@+id/resetPasswordSettings"
+                    style="@style/buttonTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reset_password"/>
 
             </LinearLayout>
 

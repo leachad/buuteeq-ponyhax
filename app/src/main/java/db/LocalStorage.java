@@ -316,4 +316,26 @@ public class LocalStorage {
             mProviderType = provider;
         }
     }
+
+    public static void putPreviousStartTime(long time, Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putLong(User.PREV_START_TIME, time).apply();
+    }
+
+    public static void putPreviousEndTime(long time, Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putLong(User.PREV_END_TIME, time).apply();
+    }
+
+    public static long getPreviousStartTime(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        return sharedPreferences.getLong(User.PREV_START_TIME, 0);
+    }
+
+    public static long getPreviousEndTime(Context context) {
+        int TIMESTAMP_DIVISOR = 1000;
+        SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
+        return sharedPreferences.getLong(User.PREV_END_TIME, Calendar.getInstance().getTimeInMillis() / TIMESTAMP_DIVISOR);
+    }
+
 }
