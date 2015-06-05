@@ -35,9 +35,9 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     public static final String UPLOAD_ACTION = "upload";
     public static final String BACKGROUND_ACTION = "background";
-    public static final String FOREGROUND_ACTION = "foreground";
     private static final String TAG = "GPSPlotter: ";
     private static final int DEFAULT_INTENT_INTERVAL = 60;
+    private static final int ALARM_REGISTER_BUFFER = 60000;
     /**
      * Static fields used in both Background and Foreground Location Updates.
      */
@@ -165,12 +165,14 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     /**
      * Private method to register an instance of an AlarmManager that will issue uploads to the
-     * WebService intermittently. Default duration is one hour.
+     * WebService intermittently. Default duration is one hour. Akarm manager waits one minute
+     * from the current time before issuing the request to the background services for firing
+     * points to the database.
      */
     private void registerAlarmManager() {
         mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
-                (System.currentTimeMillis() + AlarmManager.INTERVAL_FIFTEEN_MINUTES),
+                (System.currentTimeMillis() + ALARM_REGISTER_BUFFER),
                 AlarmManager.INTERVAL_HOUR, buildUploadPendingIntent(buildUploadIntent()));
     }
 
@@ -214,11 +216,13 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
      */
     public void changeRequestIntervals(int theInterval) {
         mIntentInterval = theInterval;
-        if (isRunningLocationUpdates()) {
+        if (LocalStorage.getRequestingBackgroundStatus(mContext)) {
             endBackgroundUpdates();
             startBackgroundUpdates();
-
         }
+
+
+
     }
 
     /**

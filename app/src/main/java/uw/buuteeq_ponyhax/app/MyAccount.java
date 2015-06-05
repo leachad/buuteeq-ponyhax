@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -42,8 +41,7 @@ public class MyAccount extends ActionBarActivity
      */
     public static final String TAG = "Basic Network Demo";
     public static final String API_ERROR = "Try again soon. Api client currently disconnected.";
-    private static final int DEFAULT_INTERVAL = 60;
-    private static final int PUBLISH_INTERVAL = 5;
+    public static final String NETWORK_ERROR = "Network Unavailable, Please Try again soon.";
 
     /**
      * Booleans used for determining the state of the network.
@@ -58,12 +56,9 @@ public class MyAccount extends ActionBarActivity
     private static MyAccount mAccountActivity;
     private CoordinateStorageDatabaseHelper coordHelper;
     public UIUpdater fragment;
-    private GPSPlotter.ServiceType mServiceType;
     private GPSPlotter myGPSPlotter;
 
     protected List<Coordinate> coordinates;
-    private int mSelectedSampleRate = DEFAULT_INTERVAL;
-    private int mFragmentId = R.id.map;
     private RadioGroup mRadioGroup;
     private RadioButton mStartButton;
     private RadioButton mStopButton;
@@ -265,15 +260,12 @@ public class MyAccount extends ActionBarActivity
         switch (position) {
             case 0:
                 fragment = new MyMap();
-                mFragmentId = fragment.getId();
                 break;
             case 1:
                 fragment = new MyAccountFragment();
-                mFragmentId = fragment.getId();
                 break;
             case 2:
                 fragment = new SettingsFragment();
-                mFragmentId = fragment.getId();
                 break;
             case 3:
                 LocalStorage.clearPrefs(getApplicationContext());
@@ -405,6 +397,8 @@ public class MyAccount extends ActionBarActivity
     public void pushUpdates() {
         if (NetworkChecker.getInstance().isOnInternet(getApplicationContext())) {
             coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
+        } else {
+            Toast.makeText(getApplicationContext(), NETWORK_ERROR, Toast.LENGTH_SHORT).show();
         }
     }
 }
