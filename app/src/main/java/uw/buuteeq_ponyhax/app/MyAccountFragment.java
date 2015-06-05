@@ -51,7 +51,7 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
     private ListView mPointListView;
 
     public void update(Location currentLocation, List<Coordinate> locations) {
-
+        ArrayList<Coordinate> localList = new ArrayList<>();
         int scannedCoordinates = 0;
         long startTime = LocalStorage.getStartTime(getActivity());
         long endTime = LocalStorage.getEndTimeCurrentTimeBackup(getActivity());
@@ -66,7 +66,7 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
             if ((startTime == 0) || (coordinate.getTimeStamp() < endTime && coordinate.getTimeStamp() > startTime)) {
 
                 if (prev != null) distanceTraveledInterval += formatNumber(calcDistance(prev, coordinate, UNIT));
-
+                localList.add(coordinate);
                 scannedCoordinates++;
 
             }
@@ -76,14 +76,15 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
             prev = coordinate;
         }
 
-        if (currentLocation != null) {
-            updateListAdapter(locations);
-
-        } else {
-            if (!locations.isEmpty() && mCoordinateAdapter.isEmpty()) {
-                updateListAdapter(locations);
-            }
-        }
+//        if (currentLocation != null) {
+//            updateListAdapter(locations);
+//
+//        } else {
+////            if (!locations.isEmpty() && mCoordinateAdapter.isEmpty()) {
+//                updateListAdapter(localList);
+////            }
+//        }
+        updateListAdapter(localList);
 
         final DecimalFormat dFormatter = new DecimalFormat("###,###.######");
         String text_distanceTraveled = dFormatter.format(distanceTraveled);
@@ -195,10 +196,12 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
     /**
      * Private method used to update the contents of a List view everytime the user points are updated.
      */
-    private void updateListAdapter(List<Coordinate> theUpdatedCoordinates) {
-        mCoordinateAdapter.addAll(theUpdatedCoordinates);
+    private void updateListAdapter(ArrayList<Coordinate> theUpdatedCoordinates) {
+//        mCoordinateAdapter.addAll(theUpdatedCoordinates);
+        mCoordinateAdapter = new MyCoordinateAdapter(theUpdatedCoordinates);
         mCoordinateAdapter.sort(new CoordinateComparator());
-        mCoordinateAdapter.notifyDataSetChanged();
+//        mCoordinateAdapter.notifyDataSetChanged();
+        mPointListView.setAdapter(mCoordinateAdapter);
     }
 
     private List<Coordinate> pollCoordinates() {
