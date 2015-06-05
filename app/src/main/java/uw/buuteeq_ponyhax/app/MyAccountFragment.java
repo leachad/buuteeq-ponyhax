@@ -19,7 +19,6 @@ import android.widget.TextView;
 import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -66,13 +65,15 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
 
             if ((startTime == 0) || (coordinate.getTimeStamp() < endTime && coordinate.getTimeStamp() > startTime)) {
 
-                if (prev != null) distanceTraveledInterval += formatNumber(calcDistance(prev, coordinate, UNIT));
+                if (prev != null)
+                    distanceTraveledInterval += formatNumber(calcDistance(prev, coordinate, UNIT));
 
                 scannedCoordinates++;
 
             }
 
-            if (prev != null) distanceTraveled += formatNumber(calcDistance(prev, coordinate, UNIT));
+            if (prev != null)
+                distanceTraveled += formatNumber(calcDistance(prev, coordinate, UNIT));
 
             prev = coordinate;
         }
@@ -86,19 +87,25 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
             }
         }
 
-        DecimalFormat dFormatter = new DecimalFormat("###,###.######");
-        distanceTraveled = Double.parseDouble(dFormatter.format(distanceTraveled));
-        distanceTraveledInterval = Double.parseDouble(dFormatter.format(distanceTraveledInterval));
+        final DecimalFormat dFormatter = new DecimalFormat("###,###.######");
+        String text_distanceTraveled = dFormatter.format(distanceTraveled);
+        String text_distanceTraveledInterval = dFormatter.format(distanceTraveledInterval);
 
-        mTotalDistanceView.setText(getResources().getString(R.string.total_distance_string) + " " + distanceTraveled + " miles");
-        mIntervalDistanceView.setText(getResources().getString(R.string.total_distance_range_string) + " " + distanceTraveledInterval + " miles");
+        mTotalDistanceView.setText(getResources().getString(R.string.total_distance_string) + " " + text_distanceTraveled + " miles");
+        mIntervalDistanceView.setText(getResources().getString(R.string.total_distance_range_string) + " " + text_distanceTraveledInterval + " miles");
         mDataPointsView.setText(getResources().getString(R.string.num_data_points) + " " + scannedCoordinates);
 
 
     }
 
+    /**
+     * Helper method to format/trim the number in x decimal places.
+     * @param number
+     * @return
+     */
     private double formatNumber(double number) {
-        return ((int)(number * 1000000))/1000000.0;
+        final double decimalPlaces = 1000000.0;
+        return ((int) (number * decimalPlaces)) / decimalPlaces;
     }
 
     private double calcDistance(Coordinate first, Coordinate second, String unit) {
