@@ -5,7 +5,6 @@
 package uw.buuteeq_ponyhax.app;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -35,10 +34,13 @@ import db.LocalStorage;
  */
 public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
 
+    //Google Map object
     private GoogleMap mMap;
+    //The length of the coordinate sizes
     private int mapCoordinateSize;
+    //Reference to the last known location
     private Coordinate lastKnownLocation;
-
+    //Callback to tell main activity when it's done loading the fragment
     private MyAccountFragment.UIListUpdater mCallBackActivity;
 
     @Override
@@ -57,32 +59,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
 
     private void readFromDatabase() {
         boolean loadDB = LocalStorage.getDBFlag(getActivity());
-
-
-//        if (loadDB) {
-//            Log.w("MyMap", "MyMap is reading from database");
-//            List<Coordinate> coordinates = new ArrayList<>();
-//            try {
-//                List<Coordinate> theList = WebDriver.getLoggedCoordinates(LocalStorage.getUserID(getActivity()),
-//                        LocalStorage.getStartTime(getActivity()),
-//                        LocalStorage.getEndTimeCurrentTimeBackup(getActivity()));
-//
-//                if (theList != null) {
-//                    for (Coordinate c : theList) {
-//                        coordinates.add(c);
-//                    }
-//                }
-//            } catch (ExecutionException | InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//
-//            update(null, coordinates);
-//            LocalStorage.putDBFlag(false, getActivity());
-//
-//        }
-
         List<Coordinate> coordinates = mCallBackActivity.getList();
-        //Log.w("CALLBACK LIST:mymap", coordinates.get(0).toString());
         update(null, coordinates);
     }
 
@@ -149,6 +126,9 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
 
     }
 
+    /**
+     * This will move the map camera to the last location tracked.
+     */
     private void moveCameraToLastLocation() {
         if (lastKnownLocation != null) {
             LatLng lastLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
@@ -157,8 +137,10 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
     }
 
     /**
-     * @param currentLocation
-     * @param locations
+     * THis update method is called when the device picks up a new location.
+     *
+     * @param currentLocation The current location tracked.
+     * @param locations       A list of locations.
      */
     @Override
     public void update(Location currentLocation, List<Coordinate> locations) {
@@ -171,7 +153,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
             for (Coordinate location : locations) {
                 if ((LocalStorage.getStartTime(getActivity().getApplicationContext()) == 0) ||
                         (location.getTimeStamp() > LocalStorage.getStartTime(getActivity().getApplicationContext()) &&
-                        location.getTimeStamp() < LocalStorage.getEndTimeCurrentTimeBackup(getActivity().getApplicationContext()))) {
+                                location.getTimeStamp() < LocalStorage.getEndTimeCurrentTimeBackup(getActivity().getApplicationContext()))) {
                     addLocation(location);
                     if (previousLocation != null) {
                         addLine(previousLocation, location);
@@ -182,12 +164,6 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
             }
             Log.w("MyMap", "Initial load and location size is GREATER than one");
         }
-//        else if (mapCoordinateSize < locations.size()) {
-//            Coordinate current = locations.get(locations.size() - 1);
-//            addLocation(current);
-//            addLine(lastKnownLocation, current);
-//            Log.w("MyMap", "Adding additional coordinates");
-//        }
 
         moveCameraToLastLocation();
         mapCoordinateSize = locations.size();
