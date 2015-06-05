@@ -66,7 +66,7 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
         } else if (intent.getAction().matches(GPSPlotter.UPLOAD_ACTION) && verifyConnectivity(context)) {
             Log.w(TAG, "Push to Database. Connected!");
             pushToDatabase(intent.getStringExtra(User.USER_ID));
-            Toast.makeText(context, UPLOAD_MESSAGE, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, UPLOAD_MESSAGE, Toast.LENGTH_LONG).show();
 
         } else if (intent.getAction().matches(GPSPlotter.UPLOAD_ACTION) && !verifyConnectivity(context)) {
             Log.w(TAG, "Push to Database. Not Connected!");
