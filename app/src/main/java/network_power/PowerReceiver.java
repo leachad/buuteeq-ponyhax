@@ -20,6 +20,12 @@ public class PowerReceiver extends BroadcastReceiver {
 
     }
 
+    /**
+     * This method handles any incoming broadcasts intended for power management. This can be used to
+     * affect polling rates and the rate at which coordinates are pushed up to the web services.
+     * @param context application context
+     * @param intent the incoming intent
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, "onReceive" + intent.getAction());

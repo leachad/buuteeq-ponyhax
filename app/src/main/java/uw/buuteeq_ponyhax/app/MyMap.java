@@ -137,7 +137,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
     }
 
     /**
-     * THis update method is called when the device picks up a new location.
+     * THis update method is called when the device picks up a new location and adds all relevant points to the map.
      *
      * @param currentLocation The current location tracked.
      * @param locations       A list of locations.

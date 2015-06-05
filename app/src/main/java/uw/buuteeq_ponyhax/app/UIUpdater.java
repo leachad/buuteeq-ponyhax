@@ -12,6 +12,8 @@ import db.Coordinate;
 
 /**
  * Created by BrentYoung on 5/5/15.
+ * This interface calls for the implementing views to provide an update method that will allow for
+ * dynamic changes during the apps use.
  */
 public interface UIUpdater {
 

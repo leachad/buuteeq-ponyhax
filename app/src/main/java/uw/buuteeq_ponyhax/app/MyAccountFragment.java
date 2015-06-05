@@ -50,6 +50,13 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
     private MyCoordinateAdapter mCoordinateAdapter;
     private ListView mPointListView;
 
+    /**
+     * This method handles the on the fly updates that are required to keep this UI current and responsive.
+     * Changes include updating the list and metrics to match the date interval selected in settings should it be anything
+     * other than all points.
+     * @param currentLocation the most recent location that has come through the location manager
+     * @param locations the list of all locations for this user, this can be parsed, by date in this case
+     */
     public void update(Location currentLocation, List<Coordinate> locations) {
         ArrayList<Coordinate> localList = new ArrayList<>();
         int scannedCoordinates = 0;
@@ -76,14 +83,6 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
             prev = coordinate;
         }
 
-//        if (currentLocation != null) {
-//            updateListAdapter(locations);
-//
-//        } else {
-////            if (!locations.isEmpty() && mCoordinateAdapter.isEmpty()) {
-//                updateListAdapter(localList);
-////            }
-//        }
         updateListAdapter(localList);
 
         final DecimalFormat dFormatter = new DecimalFormat("###,###.######");
@@ -169,23 +168,8 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
         mPointListView.setDividerHeight(5);
 
 
-//        List<Coordinate> coordinates = pollCoordinates();
         mCoordinateAdapter = new MyCoordinateAdapter(new ArrayList<Coordinate>());
         mPointListView.setAdapter(mCoordinateAdapter);
-
-//        try {
-//            List<Coordinate> theList = WebDriver.getLoggedCoordinates(LocalStorage.getUserID(getActivity()),
-//                    LocalStorage.getStartTime(getActivity()),
-//                    LocalStorage.getEndTimeCurrentTimeBackup(getActivity()));
-//
-//            if (theList != null) {
-//                for (Coordinate c : theList) {
-//                    coordinates.add(c);
-//                }
-//            }
-//        } catch (ExecutionException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
 
         List<Coordinate> coordinates = mCallBackActivity.getList();
 
@@ -194,13 +178,11 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
     }
 
     /**
-     * Private method used to update the contents of a List view everytime the user points are updated.
+     * Private method used to update the contents of a List view every time the user points are updated.
      */
     private void updateListAdapter(ArrayList<Coordinate> theUpdatedCoordinates) {
-//        mCoordinateAdapter.addAll(theUpdatedCoordinates);
         mCoordinateAdapter = new MyCoordinateAdapter(theUpdatedCoordinates);
         mCoordinateAdapter.sort(new CoordinateComparator());
-//        mCoordinateAdapter.notifyDataSetChanged();
         mPointListView.setAdapter(mCoordinateAdapter);
     }
 
@@ -215,6 +197,11 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
         super.onAttach(activity);
     }
 
+    /**
+     * This interface callback defines behavior for MyAccountActivity, setting the precedent for updates
+     * for all fragments contained in the activity, allowing fragments access to the list contained in the activity,
+     * and the total number of points contained in the instace of coordinate database helper in the actiity.
+     */
     public interface UIListUpdater {
 
         List<Coordinate> getList();
@@ -247,6 +234,13 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
 
         }
 
+        /**
+         * This method defines a custom list view object that displays in the Overview fragment of this application.
+         * @param position the current position iterated to in the adapters list
+         * @param convertView the view being built
+         * @param parent the calling view
+         * @return a custom view object representing a coordinate point
+         */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
