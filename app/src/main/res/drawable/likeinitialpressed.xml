@@ -2,7 +2,7 @@
   ~ Copyright (c) 4.17.15 - Eduard Prokhor, Huy Ngo, Andrew Leach, Brent Young
   -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@android:color/black" android:state_enabled="true" />
+    <item android:drawable="@drawable/white_sectional" android:state_pressed="true" />
     <!-- pressed -->
     <item android:drawable="@drawable/sectional_background" />
     <!-- default -->

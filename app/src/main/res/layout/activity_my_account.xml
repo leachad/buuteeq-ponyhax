@@ -37,6 +37,7 @@
                 <RadioButton
                     android:id="@+id/startButton"
                     style="@style/buttonTheme"
+                    android:background="@drawable/sectional_background"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight=".5"
@@ -46,6 +47,7 @@
                 <RadioButton
                     android:id="@+id/stopButton"
                     style="@style/buttonTheme"
+                    android:background="@drawable/sectional_background"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight=".5"
