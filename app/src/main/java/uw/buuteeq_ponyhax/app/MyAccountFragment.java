@@ -16,7 +16,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.math.RoundingMode;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -79,13 +81,14 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
             updateListAdapter(locations);
 
         } else {
-            if (!locations.isEmpty() && mCoordinateAdapter.getCount() == 0) {
+            if (!locations.isEmpty() && mCoordinateAdapter.isEmpty()) {
                 updateListAdapter(locations);
             }
         }
 
         NumberFormat num = NumberFormat.getNumberInstance();
         num.setMaximumFractionDigits(6);
+        num.setRoundingMode(RoundingMode.HALF_UP);
 
         mTotalDistanceView.setText(getResources().getString(R.string.total_distance_string) + " " + num.format(distanceTraveled) + " miles");
         mIntervalDistanceView.setText(getResources().getString(R.string.total_distance_range_string) + " " + num.format(distanceTraveledInterval) + " miles");
@@ -248,8 +251,10 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
             timeView.setText(getResources().getString(R.string.time_stamp_string) + separator + dateFormatted);
 
 
-            NumberFormat num = NumberFormat.getNumberInstance();
+            DecimalFormat num = new DecimalFormat();
             num.setMaximumFractionDigits(6);
+            num.setRoundingMode(RoundingMode.HALF_UP);
+
 
             String longitude = num.format(getItem(position).getLongitude());
             TextView longView = (TextView) convertView.findViewById(R.id.long_list_text);

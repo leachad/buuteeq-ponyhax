@@ -125,6 +125,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
         mMap.addMarker(new MarkerOptions().position(location1).title(dateStamp));
         Log.w("MyMap", "Adding location " + location1.toString());
         return location1;
+
     }
 
     /**
@@ -140,7 +141,7 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
         PolylineOptions line = new PolylineOptions();
         line.add(testLocation, testLocation2);
         line.width(5);
-        line.color(Color.YELLOW);
+        line.color(getResources().getColor(R.color.material_deep_teal_500));
 
         mMap.addPolyline(line);
 
@@ -168,19 +169,25 @@ public class MyMap extends Fragment implements OnMapReadyCallback, UIUpdater {
         } else if (locations.size() > 1 && mapCoordinateSize == 0) {
             Coordinate previousLocation = null;
             for (Coordinate location : locations) {
-                addLocation(location);
-                if (previousLocation != null) {
-                    addLine(previousLocation, location);
+                if ((LocalStorage.getStartTime(getActivity().getApplicationContext()) == 0) ||
+                        (location.getTimeStamp() > LocalStorage.getStartTime(getActivity().getApplicationContext()) &&
+                        location.getTimeStamp() < LocalStorage.getEndTimeCurrentTimeBackup(getActivity().getApplicationContext()))) {
+                    addLocation(location);
+                    if (previousLocation != null) {
+                        addLine(previousLocation, location);
+                    }
+                    previousLocation = location;
+                    lastKnownLocation = location;
                 }
-                previousLocation = location;
             }
             Log.w("MyMap", "Initial load and location size is GREATER than one");
-        } else if (mapCoordinateSize < locations.size()) {
-            Coordinate current = locations.get(locations.size() - 1);
-            addLocation(current);
-            addLine(lastKnownLocation, current);
-            Log.w("MyMap", "Adding additional coordinates");
         }
+//        else if (mapCoordinateSize < locations.size()) {
+//            Coordinate current = locations.get(locations.size() - 1);
+//            addLocation(current);
+//            addLine(lastKnownLocation, current);
+//            Log.w("MyMap", "Adding additional coordinates");
+//        }
 
         moveCameraToLastLocation();
         mapCoordinateSize = locations.size();
