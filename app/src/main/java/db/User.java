@@ -4,6 +4,8 @@
 
 package db;
 
+import java.util.InvalidPropertiesFormatException;
+
 /**
  * Created by andrew on 4/6/15.
  * Instance of a new user that is being accessed from the database or
@@ -100,7 +102,11 @@ public class User {
      * @param theEmail is the user email address.
      */
     public void setEmail(final String theEmail) {
-        this.myUserEmail = theEmail;
+        if(theEmail != null) {
+            this.myUserEmail = theEmail;
+        }else {
+            throw new IllegalArgumentException("Email can't be null");
+        }
     }
 
     /**
@@ -118,7 +124,11 @@ public class User {
      * @param thePassword is the User's password.
      */
     public void setPassword(final String thePassword) {
-        this.myPassword = thePassword;
+        if (thePassword.length() >= 6){
+            this.myPassword = thePassword;
+        } else {
+            throw new IllegalArgumentException("Password is less then 6 characters long");
+        }
     }
 
     /**
