@@ -32,8 +32,7 @@ public class SplashActivity extends Activity {
             public void run() {
 
                 try {
-
-                    sleep(3000);
+                    sleep(100);
                     checkScreen();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -51,6 +50,9 @@ public class SplashActivity extends Activity {
     }
 
 
+    /**
+     * While it is displaying the splash screen, it is downloading the agreement from web services.
+     */
     private void checkScreen() {
 
         Intent myIntent;
