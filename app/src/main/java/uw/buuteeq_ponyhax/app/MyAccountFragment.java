@@ -66,13 +66,13 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
 
             if ((startTime == 0) || (coordinate.getTimeStamp() < endTime && coordinate.getTimeStamp() > startTime)) {
 
-                if (prev != null) distanceTraveledInterval += calcDistance(prev, coordinate, UNIT);
+                if (prev != null) distanceTraveledInterval += formatNumber(calcDistance(prev, coordinate, UNIT));
 
                 scannedCoordinates++;
 
             }
 
-            if (prev != null) distanceTraveled += calcDistance(prev, coordinate, UNIT);
+            if (prev != null) distanceTraveled += formatNumber(calcDistance(prev, coordinate, UNIT));
 
             prev = coordinate;
         }
@@ -86,15 +86,19 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
             }
         }
 
-        NumberFormat num = NumberFormat.getNumberInstance();
-        num.setMaximumFractionDigits(6);
-        num.setRoundingMode(RoundingMode.HALF_UP);
+        DecimalFormat dFormatter = new DecimalFormat("###,###.##");
+        distanceTraveled = Double.parseDouble(dFormatter.format(distanceTraveled));
+        distanceTraveledInterval = Double.parseDouble(dFormatter.format(distanceTraveledInterval));
 
-        mTotalDistanceView.setText(getResources().getString(R.string.total_distance_string) + " " + num.format(distanceTraveled) + " miles");
-        mIntervalDistanceView.setText(getResources().getString(R.string.total_distance_range_string) + " " + num.format(distanceTraveledInterval) + " miles");
+        mTotalDistanceView.setText(getResources().getString(R.string.total_distance_string) + " " + distanceTraveled + " miles");
+        mIntervalDistanceView.setText(getResources().getString(R.string.total_distance_range_string) + " " + distanceTraveledInterval + " miles");
         mDataPointsView.setText(getResources().getString(R.string.num_data_points) + " " + scannedCoordinates);
 
 
+    }
+
+    private double formatNumber(double number) {
+        return ((int)(number * 100))/100.0;
     }
 
     private double calcDistance(Coordinate first, Coordinate second, String unit) {
