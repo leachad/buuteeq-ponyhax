@@ -17,6 +17,12 @@ public class NetworkChecker {
 
     }
 
+    /**
+     * Method to check whether the device is on Wifi.
+     *
+     * @param context The current context of the application.
+     * @return A boolean whether the device is connected to the Wifi or not.
+     */
     public boolean isOnWifi(Context context) {
         ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -26,6 +32,12 @@ public class NetworkChecker {
             return false;
     }
 
+    /**
+     * Method that tells you whether the device is on mobile data.
+     *
+     * @param context The current application context.
+     * @return A boolean whether the device is connected to mobile data or not.
+     */
     public boolean isOnNetwork(Context context) {
         ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mNetwork = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
@@ -36,6 +48,12 @@ public class NetworkChecker {
     }
 
 
+    /**
+     * A method that tells you whether the device is connected to the internet.
+     *
+     * @param context The current application context.
+     * @return A boolean. True, if the device is connected to the internet, otherwise false.
+     */
     public boolean isOnInternet(Context context) {
         return isOnWifi(context) || isOnNetwork(context);
     }
