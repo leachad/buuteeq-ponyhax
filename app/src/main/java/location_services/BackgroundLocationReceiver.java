@@ -41,6 +41,12 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
         //Default, no-arg constructor
     }
 
+    /**
+     * This method handles any location updates received when the app is no longer in focus. Coordinates are
+     * stored in the local database and uploaded once every hour.
+     * @param context the application context
+     * @param intent
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         if (mDbHelper == null) {

@@ -207,6 +207,11 @@ public class GPSPlotter implements GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     }
 
+    /**
+     * This method handles the switch in polling rates by stopping and then starting once more the
+     * background udpates, which in turn sets the interval in another method in the call stack.
+     * @param theInterval the desired interval polling rate
+     */
     public void changeRequestIntervals(int theInterval) {
         mIntentInterval = theInterval;
         if (isRunningLocationUpdates()) {
