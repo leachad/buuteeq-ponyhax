@@ -100,8 +100,8 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
 
     /**
      * Helper method to format/trim the number in x decimal places.
-     * @param number
-     * @return
+     * @param number The number you want to format.
+     * @return The number with it's value stripped passed the desired decimal places.
      */
     private double formatNumber(double number) {
         final double decimalPlaces = 1000000.0;
