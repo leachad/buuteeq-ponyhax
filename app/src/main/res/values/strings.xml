@@ -86,7 +86,7 @@
     -->
     <string name="agreement_statement">GeoTracker will require access to: \n\nInternet and Web Services\nNetwork State\nExternal Storage\nAccessing and Reading GPS services\nAccess to Location information</string>
     <string name="disagreeButtonText">I Disagree</string>
-    <string name="agree">Agree to Terms</string>
+    <string name="agree">I Agree</string>
 
 
     <!--

@@ -58,12 +58,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:text="@string/disagreeButtonText" />
+            android:text="@string/disagreeButtonText"
+            android:layout_weight=".33" />
 
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="102" />
+            android:layout_weight=".33" />
 
         <Button
             android:id="@+id/agreeButton"
@@ -71,7 +72,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:text="@string/agree" />
+            android:text="@string/agree"
+            android:layout_weight=".33" />
 
 
     </LinearLayout>
