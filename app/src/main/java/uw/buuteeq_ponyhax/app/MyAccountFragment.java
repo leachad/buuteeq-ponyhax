@@ -86,7 +86,7 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
             }
         }
 
-        DecimalFormat dFormatter = new DecimalFormat("###,###.##");
+        DecimalFormat dFormatter = new DecimalFormat("###,###.######");
         distanceTraveled = Double.parseDouble(dFormatter.format(distanceTraveled));
         distanceTraveledInterval = Double.parseDouble(dFormatter.format(distanceTraveledInterval));
 
@@ -98,7 +98,7 @@ public class MyAccountFragment extends Fragment implements UIUpdater {
     }
 
     private double formatNumber(double number) {
-        return ((int)(number * 100))/100.0;
+        return ((int)(number * 1000000))/1000000.0;
     }
 
     private double calcDistance(Coordinate first, Coordinate second, String unit) {
