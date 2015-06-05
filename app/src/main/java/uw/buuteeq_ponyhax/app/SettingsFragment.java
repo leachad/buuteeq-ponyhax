@@ -213,6 +213,7 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
     }
 
     private void setUploadButtonText() {
+        Log.d("SET TEXT METHOD", "SETTINGS");
         uploadButton.setText(getResources().getString(R.string.push_points_prompt1) + " " + mCallBackActivity.getNumLocallyStoredPoints() + " " + getResources().getString(R.string.push_points_prompt2));
     }
 
@@ -302,9 +303,10 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
      */
     @Override
     public void update(Location currentLocation, List<Coordinate> locations) {
-        if (currentLocation != null) {
+//        if (currentLocation != null) {
+            Log.d("UPDATE METHOD SETTINGS", "UPDATER");
             setUploadButtonText();
-        }
+//        }
     }
 
     /**
