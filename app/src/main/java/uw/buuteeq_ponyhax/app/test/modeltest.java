@@ -46,6 +46,13 @@ public class modeltest extends TestCase {
         assertEquals("123456", myUser.getPassword());
     }
 
+    public void testSetSecurityQuestion() {
+        myUser.setSecurityQuestion("Whats your moms number?");
+        assertEquals("Whats your moms number?", myUser.getSecurityQuestion());
+    }
 
-    
+    public void testSetSecurityAnswer() {
+        myUser.setSecurityAnswer("2539119111");
+        assertEquals("2539119111", myUser.getSecurityAnswer());
+    }
 }
