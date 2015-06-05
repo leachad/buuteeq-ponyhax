@@ -35,6 +35,7 @@ import network_power.NetworkChecker;
 public class BackgroundLocationReceiver extends BroadcastReceiver {
     private static final String TAG = "BLocRec: ";
     private static final String UPLOAD_ERROR_MESSAGE = "Background Service to Upload Coordinates Failed.";
+    private static final String UPLOAD_MESSAGE = "Coordinate Batch Pushed to Database.";
     private CoordinateStorageDatabaseHelper mDbHelper;
 
     public BackgroundLocationReceiver() {
@@ -45,7 +46,7 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
      * This method handles any location updates received when the app is no longer in focus. Coordinates are
      * stored in the local database and uploaded once every hour.
      * @param context the application context
-     * @param intent
+     * @param intent is the pending intent
      */
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -65,6 +66,7 @@ public class BackgroundLocationReceiver extends BroadcastReceiver {
         } else if (intent.getAction().matches(GPSPlotter.UPLOAD_ACTION) && verifyConnectivity(context)) {
             Log.w(TAG, "Push to Database. Connected!");
             pushToDatabase(intent.getStringExtra(User.USER_ID));
+            Toast.makeText(context, UPLOAD_MESSAGE, Toast.LENGTH_SHORT).show();
 
         } else if (intent.getAction().matches(GPSPlotter.UPLOAD_ACTION) && !verifyConnectivity(context)) {
             Log.w(TAG, "Push to Database. Not Connected!");

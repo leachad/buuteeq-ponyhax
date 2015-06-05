@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutionException;
 import db.Coordinate;
 import db.CoordinateStorageDatabaseHelper;
 import db.LocalStorage;
+import location_services.BackgroundLocationReceiver;
 import location_services.GPSPlotter;
 import network_power.NetworkChecker;
 import webservices.WebDriver;
@@ -42,6 +43,7 @@ public class MyAccount extends ActionBarActivity
     public static final String TAG = "Basic Network Demo";
     public static final String API_ERROR = "Try again soon. Api client currently disconnected.";
     public static final String NETWORK_ERROR = "Network Unavailable, Please Try again soon.";
+    public static final String UPLOAD_MESSAGE = "Published Coordinate Batch to Database.";
 
     /**
      * Booleans used for determining the state of the network.
@@ -397,6 +399,7 @@ public class MyAccount extends ActionBarActivity
     public void pushUpdates() {
         if (NetworkChecker.getInstance().isOnInternet(getApplicationContext())) {
             coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
+            Toast.makeText(getApplicationContext(), UPLOAD_MESSAGE, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getApplicationContext(), NETWORK_ERROR, Toast.LENGTH_SHORT).show();
         }
