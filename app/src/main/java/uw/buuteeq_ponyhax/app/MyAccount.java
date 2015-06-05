@@ -403,8 +403,8 @@ public class MyAccount extends ActionBarActivity
 
     @Override
     public void pushUpdates() {
-        if (NetworkChecker.getInstance().isOnInternet(getApplicationContext()))
+        if (NetworkChecker.getInstance().isOnInternet(getApplicationContext())) {
             coordHelper.publishCoordinateBatch(LocalStorage.getUserID(getApplicationContext()));
-
+        }
     }
 }
