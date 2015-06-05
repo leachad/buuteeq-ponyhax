@@ -12,7 +12,6 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +56,10 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
+    /**
+     * This method clears the locally stored database. This should only be called once the entries
+     * have been properly uploaded to web services.
+     */
     public void wipeTable() {
         getWritableDatabase().delete(TABLE_NAME, null, null);
         Log.d("Database Table", "Successfully Wiped!");
@@ -155,6 +158,11 @@ public class CoordinateStorageDatabaseHelper extends SQLiteOpenHelper {
         return new CoordinateCursor(wrapped);
     }
 
+    /**
+     * This method returns all of the coordinates for a specific user from the local database in a list.
+     * @param userID the user for whom you wish to retrieve the coordinates
+     * @return a list comprised of coordinate points for the specified user
+     */
     public List<Coordinate> getAllCoordinates(String userID) {
         List<Coordinate> coordinates = new ArrayList<>();
         Cursor cursor = getCoordinateCursor(userID);

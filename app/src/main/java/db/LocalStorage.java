@@ -6,7 +6,6 @@ package db;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.location.LocationManager;
 
 import java.util.Calendar;
@@ -17,21 +16,6 @@ import java.util.Calendar;
  * in the LocalStorage class to aid with troubleshooting class.
  */
 public class LocalStorage {
-
-    /**
-     * Default variables for the LocationRequests.
-     */
-    public static final int DEFAULT_INTERVAL = 60;
-    public static final int DEFAULT_MIN_DISTANCE = 0;
-    public static final int TIMESTAMP_MULTIPLIER = 1000;
-
-    /**
-     * Private field to hold a reference to the LocationManager and its applicable data types
-     * shared by the Lifecycle of the application.
-     */
-    private static LocationManager mLocationManager = null;
-    private static ProviderType mProvider = null;
-    private static Location mCurrentLocation = null;
 
     /**
      * Public static method to put the UserID into the prefs.
@@ -307,6 +291,9 @@ public class LocalStorage {
 
     }
 
+    /**
+     * This method provides an enumeration of the possible providers used in the application.
+     */
     public enum ProviderType {
         GPS(LocationManager.GPS_PROVIDER), PASSIVE(LocationManager.PASSIVE_PROVIDER), NETWORK(LocationManager.NETWORK_PROVIDER);
 
@@ -317,21 +304,39 @@ public class LocalStorage {
         }
     }
 
+    /**
+     * This method stores the time stamp passed into shared preferences.
+     * @param time the time you wish to store for use later on, often when moving on to another time in the interim
+     * @param context the application context
+     */
     public static void putPreviousStartTime(long time, Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
         sharedPreferences.edit().putLong(User.PREV_START_TIME, time).apply();
     }
 
+    /**
+     * This method stores the time stamp passed into shared preferences.
+     * @param time the time you wish to store for use later on, often when moving on to another time in the interim
+     * @param context the application context
+     */
     public static void putPreviousEndTime(long time, Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
         sharedPreferences.edit().putLong(User.PREV_END_TIME, time).apply();
     }
 
+    /**
+     * This method retrieves the time stamp passed into shared preferences, usually a time that was previously used.
+     * @param context the application context
+     */
     public static long getPreviousStartTime(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
         return sharedPreferences.getLong(User.PREV_START_TIME, 0);
     }
 
+    /**
+     * This method retrieves the time stamp passed into shared preferences, usually a time that was previously used.
+     * @param context the application context
+     */
     public static long getPreviousEndTime(Context context) {
         int TIMESTAMP_DIVISOR = 1000;
         SharedPreferences sharedPreferences = context.getSharedPreferences(User.USER_PREFS, Context.MODE_PRIVATE);
