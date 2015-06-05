@@ -155,6 +155,7 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
             @Override
             public void onClick(View v) {
                 mCallBackActivity.pushUpdates();
+                numPointsCollected = 0;
                 setUploadButtonText();
             }
         });
