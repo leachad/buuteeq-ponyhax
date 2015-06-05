@@ -37,7 +37,6 @@ import java.util.concurrent.ExecutionException;
 
 import db.Coordinate;
 import db.LocalStorage;
-import location_services.GPSPlotter;
 import webservices.JsonBuilder;
 import webservices.WebDriver;
 
@@ -162,6 +161,7 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
 
         //setup show all check box
         mShowAllBox = (CheckBox) getActivity().findViewById(R.id.showAllCheckbox);
+        mShowAllBox.setChecked(LocalStorage.getStartTime(getActivity().getApplicationContext()) == 0);
         mShowAllBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -170,6 +170,7 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
                     LocalStorage.putPreviousStartTime(mStartCalendar.getTimeInMillis() / TIMESTAMP_DIVISOR, getActivity().getApplicationContext());
                     LocalStorage.putEndTime(Calendar.getInstance().getTimeInMillis() / TIMESTAMP_DIVISOR, getActivity().getApplicationContext());
                     LocalStorage.putPreviousEndTime(mEndCalendar.getTimeInMillis() / TIMESTAMP_DIVISOR, getActivity().getApplicationContext());
+                    Log.e("STORAGE OF TIME", "" + new Date(LocalStorage.getPreviousStartTime(getActivity().getApplicationContext()) * TIMESTAMP_DIVISOR).toString());
                 } else {
                     LocalStorage.putStartTime(LocalStorage.getPreviousStartTime(getActivity().getApplicationContext()), getActivity().getApplicationContext());
                     LocalStorage.putEndTime(LocalStorage.getPreviousEndTime(getActivity().getApplicationContext()), getActivity().getApplicationContext());
@@ -177,7 +178,7 @@ public class SettingsFragment extends android.support.v4.app.Fragment implements
                 updateAllFields();
             }
         });
-        mShowAllBox.setChecked(LocalStorage.getStartTime(getActivity().getApplicationContext()) == 0);
+
 
         //Grab the current gps frequency value
         frequencyText = (TextView) getActivity().findViewById(R.id.gps_sampling_seconds);
